@@ -8,6 +8,7 @@ enum Allele implements Serializable {
     A,T,G,C,U  //U means unknown
 }
 
+
 class Entry implements Serializable {
 	private long iCaseA;
 	public long getCaseA() {
@@ -34,6 +35,7 @@ class Entry implements Serializable {
 		return "iCaseA="+iCaseA+" iCaseT="+iCaseT;
 	}
 }
+
 
 class Entries implements Serializable {
 	public Vector<Entry> entries = new Vector<Entry>();
@@ -78,6 +80,8 @@ class Segment implements Serializable {
 	int begin;
 	int length;
 }
+
+
 
 class Record implements Serializable {
 	public Vector<Allele> record = new Vector<Allele>();

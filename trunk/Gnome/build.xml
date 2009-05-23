@@ -1,0 +1,43 @@
+<project name="Ant Builder" default="dist" basedir=".">
+	<description>
+        Application build file.
+    </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="build" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="lib" />
+	<!-- change this value to the name of the application -->
+	<property name="app.name" value="test"/>
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" />
+	</target>
+
+	<target name="dist" depends="compile" description="generate the distribution">
+		<!-- Create the distribution directory -->
+		<mkdir dir="${dist}/lib" />
+		<jar jarfile="${dist}/lib/${app.name}-${DSTAMP}${TSTAMP}.jar" basedir="${build}">
+			<zipfileset src="${lib}/matcher.jar"/>
+			<zipfileset src="${lib}/cream106.jar"/>
+			<zipfileset src="/home/xzhou/program/matlab/toolbox/javabuilder/jar/javabuilder.jar"/>
+            <manifest>
+                <attribute name="Main-Class" value="GWASAttack"/>
+            </manifest>
+		</jar>
+	</target>
+
+	<target name="clean" description="clean up">
+		<!-- Delete the ${build} and ${dist} directory trees -->
+		<delete dir="${build}" />
+		<delete dir="${dist}" />
+	</target>
+</project>
