@@ -38,9 +38,9 @@ import jp.ac.kobe_u.cs.cream.Solver;
 import jp.ac.kobe_u.cs.cream.TabooSearch;
 
 public class GWASAttack {
-	private Network net;
-	private Solver solver;
-	private Solution solution;
+	private Network net; 	//constraint net
+	private Solver solver;	//constraint solver
+	private Solution solution;	//one solution
 	private Vector<Record> records = new Vector<Record>();
 	public static int RSQUARE_PRECISION = 1000;
 	public static int PVALUE_PRECISION = 10000;
