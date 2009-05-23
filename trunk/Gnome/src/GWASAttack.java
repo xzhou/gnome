@@ -343,7 +343,7 @@ public class GWASAttack {
 			propagateSignOfRSquare(all_snps);
 		} else if (approachChoice == 2) { //Hapmap approach
 			//computeSignOfRSquare(all_snps);
-			SNP[] hapmap_snps = readSNPsFromFastaFile("hapmap_chr7_80SNP_CEU_haplotype.fasta", cutSNP,cutRec);
+			SNP[] hapmap_snps = readSNPsFromFastaFile("./data/hapmap_chr7_80SNP_CEU_haplotype.fasta", cutSNP,cutRec);
 			computeSignOfRSquareFromHapmap(all_snps, hapmap_snps);
 			//removeHapmapNoise(all_snps);
 		} else {
@@ -798,7 +798,7 @@ public class GWASAttack {
 			throws Exception {
 		
 		//TODO change filename
-		String fileName = "us.freq.txt";
+		String fileName = "./data/us.freq.txt";
 		
 		// Open the file
 		FileInputStream fstream = new FileInputStream(fileName);
