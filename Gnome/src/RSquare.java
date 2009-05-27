@@ -4,11 +4,16 @@ import java.util.Vector;
 
 import jp.ac.kobe_u.cs.cream.IntVariable;
 
+
+
+
 enum Allele implements Serializable {
     A,T,G,C,U  //U means unknown
 }
 
 
+
+//the count of a snp
 class Entry implements Serializable {
 	private long iCaseA;
 	public long getCaseA() {
@@ -53,8 +58,12 @@ class Entries implements Serializable {
 	}
 }
 
+
+
+//
 class ConstraintForRSquare implements Serializable { //Constraint for rsquare
-	public IntVariable vAC;
+	
+	public IntVariable vAC; 
 	public IntVariable vAD;
 	public IntVariable vBC;
 	public IntVariable vBD;
@@ -69,6 +78,8 @@ class ConstraintForRSquare implements Serializable { //Constraint for rsquare
 	}
 }
 
+
+//haplotype block
 class Segment implements Serializable { 
 	public Segment(int begin, int length) {
 		this.begin = begin;
@@ -82,7 +93,7 @@ class Segment implements Serializable {
 }
 
 
-
+//a inidividual sequence 
 class Record implements Serializable {
 	public Vector<Allele> record = new Vector<Allele>();
 	public int count; //number of record
@@ -224,6 +235,8 @@ class Record implements Serializable {
 	}
 }
 
+
+
 class ConstraintForRecord implements Serializable { //Constraint for record: the constraint between count and frequency
 	public IntVariable count;
 	public int value;
@@ -233,6 +246,7 @@ class ConstraintForRecord implements Serializable { //Constraint for record: the
 		count.ge(0);
 	}
 }
+
 
 class SNP implements Serializable {
 	private int ID;
@@ -464,6 +478,9 @@ class SNP implements Serializable {
 	}
 }
 
+
+
+
 class Block implements Serializable {
 	private int beginIndex;
 	public int getBeginIndex() {
@@ -492,9 +509,12 @@ class Block implements Serializable {
 	}
 }
 
+
+
 public class RSquare implements Serializable {
-	public SNP snp1;
-	public SNP snp2;
+	public SNP snp1;	//with allele A B
+	public SNP snp2;	//with allele C D
+	
 	
 	public int iAC=0, iAD=0, iBC=0, iBD=0;
 	public double rsquare; //r2

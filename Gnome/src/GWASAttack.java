@@ -359,7 +359,7 @@ public class GWASAttack {
 			for (int index1 = 0; index1 < snps.length - 1; index1++) {
 				undecidable = 0;
 				for (int index2 = index1 + 1; index2 < snps.length; index2++) {
-					RSquare rs = getRSquare(snps, index1, index2);
+					RSquare rs = UtilityFunctions.getRSquare(snps, index1, index2);
 
 					if (rs.rsquare < gap)
 						continue;
@@ -375,8 +375,8 @@ public class GWASAttack {
 						continue;
 					}
 
-					double i1 = computeConfidenceInterval(snps, rs, true);
-					double i2 = computeConfidenceInterval(snps, rs, false);
+					double i1 = UtilityFunctions.computeConfidenceValue(snps, rs, true);
+					double i2 = UtilityFunctions.computeConfidenceValue(snps, rs, false);
 					double d = i1 - i2;
 
 					if (d >= devi) {
@@ -398,7 +398,7 @@ public class GWASAttack {
 						undecidable++;
 					}
 				}
-				signRecoverRate(snps);
+				UtilityFunctions.signRecoverRate(snps);
 				System.out.println("undecidable=" + undecidable);
 			}
 
@@ -408,227 +408,179 @@ public class GWASAttack {
 		}
 		System.exit(0);
 	}
-
+	
+	
+	
+	/*
+	 * propagateSignOfRSquare
+	 * given a sign recovered snps, propagate the signs further
+	 */
 	private static void propagateSignOfRSquare(SNP[] snps) throws Exception {
 		boolean propagating = false;
 		double c_i = 0.5;
 		while (true) {
 			for (int index1 = 0; index1 < snps.length - 1; index1++) {
 				for (int index2 = index1 + 1; index2 < snps.length; index2++) {
-					RSquare rs = getRSquare(snps, index1, index2);
+					RSquare rSquare = UtilityFunctions.getRSquare(snps, index1, index2);
 
-					if (rs.isSignRecovered()) {
+					//if a r^2 is recovered, find another snp, 
+					if (rSquare.isSignRecovered()) {
+						//for any 3rd snp, and recover more signs
 						for (int i = 0; i < snps.length; i++) {
 							if (i == index1 || i == index2)
 								continue;
-
-							RSquare rs1 = getRSquare(snps, index1, i);
-							RSquare rs2 = getRSquare(snps, index2, i);
-							if (rs1.isSignRecovered() && rs2.isSignRecovered())
+							RSquare rs12 = UtilityFunctions.getRSquare(snps, index1, i);
+							RSquare rs13 = UtilityFunctions.getRSquare(snps, index2, i);
+							if (rs12.isSignRecovered() && rs13.isSignRecovered())
 								continue;
 
-							Vector<Double> pAB1 = new Vector<Double>();
-							Vector<Double> pAB2 = new Vector<Double>();
+							Vector<Double> pAB12 = new Vector<Double>();
+							Vector<Double> pAB13 = new Vector<Double>();
 
-							if (rs1.isSignRecovered()) {
-								pAB1.add(rs1.pAB);
+							if (rs12.isSignRecovered()) {
+								pAB12.add(rs12.pAB);
 							} else {
-								pAB1.add(rs1.v1);
-								pAB1.add(rs1.v2);
+								pAB12.add(rs12.v1);
+								pAB12.add(rs12.v2);
 							}
 
-							if (rs2.isSignRecovered()) {
-								pAB2.add(rs2.pAB);
+							if (rs13.isSignRecovered()) {
+								pAB13.add(rs13.pAB);
 							} else {
-								pAB2.add(rs2.v1);
-								pAB2.add(rs2.v2);
+								pAB13.add(rs13.v1);
+								pAB13.add(rs13.v2);
 							}
 
-							double devi = 1e-2;
-							for (int i1 = 0; i1 < pAB1.size(); i1++) {
-								for (int i2 = 0; i2 < pAB2.size(); i2++) {
+							double deviation = 1e-2;
+							//Validate each combination of p 
+							for (int i1 = 0; i1 < pAB12.size(); i1++) {
+								for (int i2 = 0; i2 < pAB13.size(); i2++) {
+									
 									boolean god = false;
-									double p23 = rs.pAB, p12 = pAB1.get(i1), p13 = pAB2
-											.get(i2);
+									double p23 = rSquare.pAB, 
+											p12 = pAB12.get(i1), 
+											p13 = pAB13.get(i2);
+									
+									//?? why larger than one
 									if (p12 > 1)
 										p12 -= 1;
 									if (p13 > 1)
 										p13 -= 1;
-
-									if (Math.abs(p12 - rs1.pAB) < devi
-											&& Math.abs(p13 - rs2.pAB) < devi) {
+									
+									if (Math.abs(p12 - rs12.pAB) < deviation
+											&& Math.abs(p13 - rs13.pAB) < deviation) {
 										god = true;
 									}
 
+									/*
+									 * r sqauare sign is god
+									 */
+									
+									/*
+									 * angel is the computed sign
+									 */
+									
 									boolean angel = isMatchByMatlab(false,
-											snps[i].getpA(), snps[index1]
-													.getpA(), snps[index2]
-													.getpA(), p23, p12, p13);
+											snps[i].getpA(), 
+											snps[index1].getpA(), 
+											snps[index2].getpA(), 
+											p23, 
+											p12, 
+											p13);
 									if (angel) {
-										if (pAB1.get(i1) < 1)
-											pAB1.set(i1, p12 + 1);
-										if (pAB2.get(i2) < 1)
-											pAB2.set(i2, p13 + 1);
-									} else if (god) {
-										isMatchByMatlab(true, snps[i].getpA(),
+										if (pAB12.get(i1) < 1)
+											pAB12.set(i1, p12 + 1);
+										if (pAB13.get(i2) < 1)
+											pAB13.set(i2, p13 + 1);
+									} 
+									
+									else if (god) {
+										isMatchByMatlab(true, 
+												snps[i].getpA(),
 												snps[index1].getpA(),
-												snps[index2].getpA(), p23, p12,
+												snps[index2].getpA(), 
+												p23, 
+												p12,
 												p13);
 										// throw new
 										// Exception("angel should be true because god is");
-										System.err
-												.println("angel should be true because god is");
+										System.err.println("angel should be true because god is");
 									}
 									// System.out.println("angel="+angel);
 								}
 							}
 
-							for (int i1 = 0; i1 < pAB1.size(); i1++) {
-								double p12 = pAB1.get(i1);
+							
+							//check recovered signs
+							for (int i1 = 0; i1 < pAB12.size(); i1++) {
+								double p12 = pAB12.get(i1);
 								if (p12 < 1) {
-									if (p12 == rs1.v1) {
-										double interval = computeConfidenceInterval(
-												snps, rs1, false);
+									if (p12 == rs12.v1) {
+										double interval = UtilityFunctions.computeConfidenceValue(
+												snps, rs12, false);
 										if (interval >= c_i) {
-											rs1.setSignRecovered(false, true);
+											rs12.setSignRecovered(false, true);
 											propagating = true;
 										}
-									} else if (p12 == rs1.v2) {
-										double interval = computeConfidenceInterval(
-												snps, rs1, true);
+									} else if (p12 == rs12.v2) {
+										double interval = UtilityFunctions.computeConfidenceValue(
+												snps, rs12, true);
 										if (interval >= c_i) {
-											rs1.setSignRecovered(true, true);
+											rs12.setSignRecovered(true, true);
 											propagating = true;
 										}
 									} else {
 										throw new Exception(
 												"error detected: p12=" + p12
-														+ ",v1=" + rs1.v1
-														+ ",v2=" + rs1.v2);
+														+ ",v1=" + rs12.v1
+														+ ",v2=" + rs12.v2);
 									}
 								}
 							}
-							for (int i2 = 0; i2 < pAB2.size(); i2++) {
-								double p13 = pAB2.get(i2);
+							
+							
+							for (int i2 = 0; i2 < pAB13.size(); i2++) {
+								double p13 = pAB13.get(i2);
 								if (p13 < 1) {
-									if (p13 == rs2.v1) {
-										double interval = computeConfidenceInterval(
-												snps, rs2, false);
+									if (p13 == rs13.v1) {
+										double interval = UtilityFunctions.computeConfidenceValue(
+												snps, rs13, false);
 										if (interval >= c_i) {
-											rs2.setSignRecovered(false, true);
+											rs13.setSignRecovered(false, true);
 											propagating = true;
 										}
-									} else if (p13 == rs2.v2) {
-										double interval = computeConfidenceInterval(
-												snps, rs2, true);
+									} else if (p13 == rs13.v2) {
+										double interval = UtilityFunctions.computeConfidenceValue(
+												snps, rs13, true);
 										if (interval >= c_i) {
-											rs2.setSignRecovered(true, true);
+											rs13.setSignRecovered(true, true);
 											propagating = true;
 										}
 									} else {
 										throw new Exception(
 												"error detected: p13=" + p13
-														+ ",v1=" + rs2.v1
-														+ ",v2=" + rs2.v2);
+														+ ",v1=" + rs13.v1
+														+ ",v2=" + rs13.v2);
 									}
 								}
 							}
 						}
-						signRecoverRate(snps);
-						saveSNPsToFile("snps.dat", snps);
+						UtilityFunctions.signRecoverRate(snps);
+						UtilityFunctions.saveSNPsToFile("snps.dat", snps);
 					}
 				}
 			}
 			if (!propagating)
 				break;
-			saveSNPsToFile("snps.dat", snps);
+			UtilityFunctions.saveSNPsToFile("snps.dat", snps);
 			System.out.println("propagating");
 			propagating = false;
 		}
 	}
+	
+
 
 	//
-	private static double computeConfidenceInterval(SNP[] snps, RSquare rs,
-			boolean pos) {
-		int index1 = rs.snp1.getID();
-		int index2 = rs.snp2.getID();
-		double p23 = rs.v2;
-		if (pos)
-			p23 = rs.v1;
-		double ret = 0;
-		int total = 0;
-		for (int i = 0; i < snps.length; i++) {
-			if (i == index1)
-				continue;
-			if (i == index2)
-				continue;
-
-			Vector<Double> pAB1 = new Vector<Double>();
-			Vector<Double> pAB2 = new Vector<Double>();
-			RSquare rs1 = getRSquare(snps, i, index1);
-			RSquare rs2 = getRSquare(snps, i, index2);
-
-			// if (!rs1.isSignRecovered()) continue;
-			// if (!rs2.isSignRecovered()) continue;
-
-			if (rs1.isSignRecovered()) {
-				pAB1.add(rs1.pAB);
-			} else {
-				pAB1.add(rs1.v1);
-				pAB1.add(rs1.v2);
-			}
-
-			if (rs2.isSignRecovered()) {
-				pAB2.add(rs2.pAB);
-			} else {
-				pAB2.add(rs2.v1);
-				pAB2.add(rs2.v2);
-			}
-
-			int count = 0, count1 = 0;
-			for (int i1 = 0; i1 < pAB1.size(); i1++) {
-				for (int i2 = 0; i2 < pAB2.size(); i2++) {
-					double p12 = pAB1.get(i1), p13 = pAB2.get(i2);
-
-					boolean angel = isMatchByMatlab(false, snps[i].getpA(),
-							snps[index1].getpA(), snps[index2].getpA(), p23,
-							p12, p13);
-					if (angel) {
-						count1++;
-					}
-					count++;
-				}
-			}
-			ret += count1 * 1.0 / count;
-			total++;
-		}
-		System.out.println("pair (" + index1 + "," + index2 + ") pos=" + pos
-				+ ",ConfidenceInterval=" + (ret / total) + ",r=" + rs.r
-				+ ",total=" + total);
-		return ret / total;
-	}
-
-	private static int signRecoverRate(SNP[] snps) {
-		int count = 0, err = 0;
-		for (int index1 = 0; index1 < snps.length - 1; index1++) {
-			for (int index2 = index1 + 1; index2 < snps.length; index2++) {
-				RSquare rs = getRSquare(snps, index1, index2);
-
-				if (rs.isSignRecovered()) {
-					count++;
-					if ((rs.r > 0 && rs.pAB == rs.v2)
-							|| (rs.r < 0 && rs.pAB == rs.v1)) {
-						err++;
-					}
-				}
-			}
-		}
-		int total = snps.length * (snps.length - 1) / 2;
-		System.out.println("" + count + " out of " + total + "("
-				+ (count * 1.0 / total) + ") are recovered,err=" + err);
-		return count;
-	}
-
 	private static boolean isMatchByMatlab(boolean print, Double p1, Double p2,
 			Double p3, Double p23, Double p12, Double p13) {
 		if (print)
@@ -676,6 +628,7 @@ public class GWASAttack {
 			index[1] = 8;
 			B.set(index, p13);
 
+			
 			// System.out.println(B);
 			result = bnb.isMatch(1, B);
 			// System.out.println("Result:");
@@ -706,8 +659,8 @@ public class GWASAttack {
 		System.out.println("SNPi SNPj r(recovered) r(real) r2");
 		for (int index1 = 0; index1 < snps.length - 1; index1++) {
 			for (int index2 = index1 + 1; index2 < snps.length; index2++) {
-				RSquare rs = getRSquare(snps, index1, index2);
-				RSquare hap_rs = getRSquare(hapmap_snps, index1, index2);
+				RSquare rs = UtilityFunctions.getRSquare(snps, index1, index2); //
+				RSquare hap_rs = UtilityFunctions.getRSquare(hapmap_snps, index1, index2);
 
 				double hap_sign = hap_rs.getSign();
 				if (hap_sign > 0) {
@@ -747,53 +700,65 @@ public class GWASAttack {
 		System.exit(0);
 	}
 
+	//6%
 	private static void computeSignOfRSquare(SNP[] snps) throws Exception {
 		int i = 0, count1 = 0, count2 = 0;
 		for (int index1 = 0; index1 < snps.length - 1; index1++) {
 			for (int index2 = index1 + 1; index2 < snps.length; index2++) {
-				RSquare rs = getRSquare(snps, index1, index2);
-				double p1 = rs.getpA();
-				double q1 = rs.getpB();
-				double p2 = 1 - p1;
-				double q2 = 1 - q1;
-				double r = Math.sqrt(rs.rsquare * p1 * p2 * q1 * q2);
-				double v1 = r + p1 * q1;
-				double v2 = -r + p1 * q1;
+				RSquare rs = UtilityFunctions.getRSquare(snps, index1, index2);
+				double pA = rs.getpA();
+				double pB = rs.getpB();
+				double pa = 1 - pA;
+				double pb = 1 - pB;
+				double r = Math.sqrt(rs.rsquare * pA * pa * pB * pb);
+				double v1 = r + pA * pB;
+				double v2 = -r + pA * pB;
 				rs.v1 = v1;
 				rs.v2 = v2;
 
 				double v = -1;
-				double devi = 0.01;
-				if (((v1 - p1) > devi || (v1 - q1) > devi)) {
+				double deviation = 0.01;
+				
+				//if v1 is invalid
+				if (((v1 - pA) > deviation || (v1 - pB) > deviation)) {
 					i++;
 					v = v2;
-				} else if ((v2 - p1) > devi || (v2 - q1) > devi) {
+				}
+				
+				//if v2 is in valid
+				else if ((v2 - pA) > deviation || (v2 - pB) > deviation) {
 					i++;
 					v = v1;
-				} else {
-					if (q2 - p1 + v1 < -devi) {
+				}
+				
+				else {
+					if (pb - pA + v1 < -deviation) {
 						i++;
 						v = v2;
-					} else if (q2 - p1 + v2 < -devi) {
+					} else if (pb - pA + v2 < -deviation) {
 						i++;
 						v = v1;
 					}
 				}
-
+				
+				//invalid
 				if (v < 0)	continue;
 				
+				//invalid
 				if ((v == v1 && rs.r < 0) || (v == v2 && rs.r > 0)) {
 					System.err.println("incorect sign");
 				}
 
+				//sign recovered 
 				rs.pAB = v;
 				rs.setSignRecovered(true);
 			}
 		}
-		signRecoverRate(snps);
+		UtilityFunctions.signRecoverRate(snps);
 		System.out.println("i=" + i + ",count1=" + count1 + ",count2=" + count2);
 	}
 
+	//read us.freq.txt
 	private static void updateRSquaresFromDefaultFile(SNP[] snps)
 			throws Exception {
 		
@@ -865,7 +830,7 @@ public class GWASAttack {
 			else if (j > 73)
 				j = j - 3;
 
-			RSquare rsquare = getRSquare(snps, i, j);
+			RSquare rsquare = UtilityFunctions.getRSquare(snps, i, j);
 
 			rsquare.realr2 = rsquare.rsquare;
 			rsquare.rsquare = getrSQUAREByPrecision(r2);
@@ -890,13 +855,12 @@ public class GWASAttack {
 		System.out.println("corSign=" + corSign);
 	}
 
+	
 	private static double getrSQUAREByPrecision(double v) {
 		return ((int) (v * RSQUARE_PRECISION)) * 1.0 / RSQUARE_PRECISION;
 	}
 
-	private static RSquare getRSquare(SNP[] snps, int i, int j) {
-		return snps[Math.max(i, j)].rsquares.get(Math.min(i, j));
-	}
+
 
 	private static void printRecords(Vector<Record> records) {
 		int k = 0;
@@ -908,299 +872,6 @@ public class GWASAttack {
 		}
 	}
 
-	private static void computeRangesForRecords(Vector<Double[]> M,
-			Vector<Double[]> N, Vector<Record> records, SNP[] snps)
-			throws Exception {
-		// N = null; //test
-		int count = 0;
-		boolean[] freeVars = null;
-		boolean removed = true;
-		while (removed) {
-			int lead = 0;
-			freeVars = new boolean[records.size()];
-			count = 0;
-			Vector<Integer> zeroRows = new Vector<Integer>();
-			for (int i = 0; i < freeVars.length; i++)
-				freeVars[i] = false;
-			int row = 0;
-			for (Enumeration<Double[]> m = M.elements(); m.hasMoreElements();) {
-				Double[] mm = m.nextElement();
-				for (int i = lead; i < mm.length; i++) {
-					if (mm[i] == 1) {
-						lead = i;
-						break;
-					}
-				}
-				if (mm[lead] != 1) {
-					zeroRows.add(row);
-					row++;
-					continue;
-				}
-				int freeCount = 0;
-				int lastFree = -1;
-				boolean gt = false;
-				for (int k = lead + 1; k < mm.length - 1; k++) {
-					if (mm[k] != 0.0) {
-						if (!freeVars[k]) {
-							freeVars[k] = true;
-							count++;
-							records.get(k).setFree(true);
-						}
-
-						freeCount++;
-						lastFree = k;
-						gt = (mm[k] > 0);
-					}
-				}
-				if (freeCount == 1 && gt && mm[mm.length - 1] == 0) {
-					records.get(lastFree).setRemovable(true);
-					records.get(lead).setRemovable(true);
-					System.out.println("remove lead " + lead);
-					System.out.println("remove free variable " + lastFree);
-					printArray(mm);
-				}
-				if (freeCount == 0 && mm[mm.length - 1] == 0) {
-					records.get(lead).setRemovable(true);
-					System.out.println("remove lead " + lead);
-					printArray(mm);
-				}
-
-				row++;
-			}
-
-			removed = false;
-			for (int i = records.size() - 1; i >= 0; i--) {
-				Record record = records.get(i);
-				if (record.isRemovable()) {
-					int ccc = calculateRecordCount(snps, record);
-					if (ccc > 0) {
-						System.out.println("error detected: record " + i + " "
-								+ record.toString()
-								+ " should not be deleted, count=" + ccc);
-						// throw new
-						// Exception("error detected: record "+i+" "+record.toString()+" should not be deleted, count="+ccc);
-					}
-					records.remove(i);
-					removeColFromMatrix(M, i);
-					if (N != null)
-						removeColFromMatrix(N, i);
-					System.out.println("record " + i + " removed");
-					removed = true;
-				}
-			}
-			for (int i = zeroRows.size() - 1; i >= 0; i--) {
-				int kk = zeroRows.get(i);
-				M.remove(kk);
-				removed = true;
-				System.out.println("Row " + kk + " of M is removed");
-			}
-		}
-		// System.exit(0);
-		System.out.println("after removing columns");
-		if (!isRealSolutionValidBeforeReduce(records, M, snps)) {
-			throw new Exception(
-					"error detected: real solution is inconsistent with M");
-		}
-		printMatrix(M);
-
-		if (N == null)
-			N = new Vector<Double[]>();
-
-		Double[][] A = new Double[M.size() + N.size()][count];
-		Double[] b = new Double[M.size() + N.size()];
-		Double[] c = new Double[count];
-		Integer[] lb = new Integer[count];
-		Integer[] ub = new Integer[count];
-		for (int i = 0; i < c.length; i++)
-			c[i] = 0.0;
-		if (c.length >= 1)
-			c[0] = 1.0;
-		int n = 0;
-		for (Enumeration<Double[]> m = M.elements(); m.hasMoreElements();) {
-			Double[] mm = m.nextElement();
-
-			count = 0;
-			for (int k = 0; k < mm.length - 1; k++) {
-				if (freeVars[k]) {
-					A[n][count] = mm[k];
-
-					count++;
-				}
-			}
-			b[n] = mm[mm.length - 1];
-
-			n++;
-		}
-
-		// System.out.println("N=");
-		// printMatrix(N);
-		for (Enumeration<Double[]> u = N.elements(); u.hasMoreElements();) {
-			Double[] uu = u.nextElement();
-			Double[] cc = new Double[uu.length - 1];
-			for (int k = 0; k < cc.length; k++)
-				cc[k] = 0.0;
-			b[n] = uu[uu.length - 1];
-			for (int k = 0; k < cc.length; k++) {
-				if (uu[k] != 0) {
-					int index = getRowByLeadIndex(M, k);
-					if (index >= 0) {
-						Double[] tmp = M.get(index);
-						for (int j = k + 1; j < cc.length; j++) {
-							cc[j] -= uu[k] * tmp[j];
-						}
-						b[n] -= uu[k] * tmp[tmp.length - 1];
-					} else {
-						cc[k] += uu[k];
-					}
-				}
-			}
-			count = 0;
-			for (int k = 0; k < cc.length; k++) {
-				if (freeVars[k]) {
-					A[n][count] = cc[k];
-
-					count++;
-				}
-			}
-
-			n++;
-		}
-
-		count = 0;
-		for (int i = 0; i < records.size(); i++) {
-			if (freeVars[i]) {
-				lb[count] = records.get(i).getLB();
-				ub[count] = records.get(i).getUB();
-				count++;
-			}
-		}
-
-		// find Xs of 0
-		for (int i = 0; i < A.length; i++) {
-			if (A[i].length > 0) {
-				boolean gt = true;
-				for (int k = 0; k < A[i].length; k++) {
-					if (A[i][k] < 0) {
-						gt = false;
-						break;
-					}
-				}
-				if (gt && (b[i] == 0)) {
-					for (int k = 0; k < A[i].length; k++) {
-						if (A[i][k] > 0) {
-							ub[k] = 0;
-						}
-					}
-				}
-			}
-		}
-		// remove entries of 0s in A
-		// if (A[0].length > 0) {
-		// int cc = 0;
-		// for (int i=0;i<A.length;i++) {
-		// if (A[i].length > 0) {
-		// boolean z = true;
-		// for (int k=0;k<A[i].length;k++) {
-		// if (A[i][k] != 0) {
-		// z = false;
-		// break;
-		// }
-		// }
-		// if (z) {
-		// b[i] = Double.MIN_VALUE;
-		// cc++;
-		// }
-		// }
-		// }
-		// if (cc != 0) {
-		// cc = b.length - cc;
-		// System.out.println("cc="+cc);
-		// Double[][] AA = new Double[cc][A[0].length];
-		// Double[] bb = new Double[cc];
-		// cc = 0;
-		// for (int kk=0;kk<b.length;kk++) {
-		// if (b[kk] != Double.MIN_VALUE) {
-		// bb[cc] = b[kk].intValue();
-		// for (int jj=0;jj<A[kk].length;jj++) {
-		// AA[cc][jj] = A[cc][jj].intValue();
-		// }
-		// cc++;
-		// }
-		// }
-		// A = AA;
-		// b = bb;
-		// }
-		// }
-
-		System.out.println("A=");
-		for (int i = 0; i < A.length; i++) {
-			for (int k = 0; k < A[i].length; k++) {
-				System.out.print("" + A[i][k] + " ");
-			}
-			System.out.println(";");
-		}
-		System.out.println("b=");
-		for (int i = 0; i < b.length; i++) {
-			System.out.print("" + b[i] + ";");
-		}
-		System.out.println();
-
-		System.out.println("c=");
-		for (int i = 0; i < c.length; i++) {
-			System.out.print("" + c[i] + ",");
-		}
-		System.out.println();
-
-		System.out.println("lb=");
-		for (int i = 0; i < lb.length; i++) {
-			System.out.print("" + lb[i] + ",");
-		}
-		System.out.println();
-		System.out.println("ub=");
-		for (int i = 0; i < ub.length; i++) {
-			System.out.print("" + ub[i] + ",");
-		}
-		System.out.println();
-
-		// if (true) System.exit(0);
-		Integer[] min = new Integer[c.length];
-		Integer[] max = new Integer[c.length];
-		if (c.length > 0) {
-			Integer[] result = cpaMatlab(c, A, b, lb, ub, records);
-			for (int k = 0; k < c.length; k++) {
-				min[k] = result[k];
-				max[k] = result[k + c.length];
-
-				System.out.println("" + k + "th SNP min=" + min[k] + ",max="
-						+ max[k]);
-			}
-		}
-
-		int k = 0;
-		int goodRecords = 0;
-		System.out.println("records.size=" + records.size());
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			Record rd = rds.nextElement();
-			if (!rd.isFree())
-				continue;
-			rd.count = min[k];
-			rd.min = min[k];
-			rd.max = max[k];
-			if (rd.min == rd.max) {
-				goodRecords++;
-			}
-			System.out.println("min=" + rd.min + ",max=" + rd.max);
-
-			k++;
-		}
-		int s = rectifySolutions(records, M, snps);
-		System.out.println("" + goodRecords + " out of " + k
-				+ " freeVariables are constant");
-		printRecords(records);
-
-		SOLUTIONS = s;
-	}
 
 	private static void printArray(Double[] a) {
 		for (int i = 0; i < a.length; i++) {
@@ -1208,470 +879,7 @@ public class GWASAttack {
 		}
 		System.out.println();
 	}
-
-	private static int rectifySolutions(Vector<Record> records,
-			Vector<Double[]> M, SNP[] snps) throws Exception {
-		Integer[] min = new Integer[records.size()];
-		Integer[] max = new Integer[records.size()];
-		long[] dim = new long[records.size()];
-		for (int k = 0; k < min.length; k++) {
-			min[k] = -1;
-			max[k] = -1;
-			dim[k] = 0;
-		}
-
-		long count = 1;
-		int k = 0;
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			Record rd = rds.nextElement();
-			if (rd.isFree()) {
-				dim[k] = rd.max - rd.min + 1;
-				count *= dim[k];
-			}
-			k++;
-		}
-
-		if (!isRealSolutionValid(records, M, snps)) {
-			throw new Exception(
-					"The real solution is not a valid solution of this problem");
-		}
-
-		int pass = 0;
-		int inconsistent = 0;
-		for (long n = 0; n < count; n++) {
-			if (n % 10000 == 0)
-				System.out.println("verifying " + n
-						+ "th possible solution, total=" + count);
-			long carry = count;
-			long[] selects = new long[records.size()];
-			long tmp = n;
-			for (k = 0; k < dim.length; k++) {
-				// System.out.println("k="+k+",len="+dim.length);
-				if (dim[k] > 0) {
-					carry = carry / dim[k];
-					selects[k] = tmp / carry;
-					tmp = tmp % carry;
-				}
-			}
-
-			k = 0;
-			boolean ok = true;
-			for (Enumeration<Record> rds = records.elements(); rds
-					.hasMoreElements();) {
-				Record rd = rds.nextElement();
-				if (!rd.isFree()) {
-					int r = getRowByLeadIndex(M, k);
-					Double[] row = M.get(r);
-					double cc = 0;
-					for (int i = k + 1; i < row.length - 1; i++) {
-						if (row[i] != 0) {
-							Record o = records.get(i);
-							o.count = records.get(i).min + ((int) selects[i]);
-							cc = cc + o.count * (-row[i]);
-						}
-					}
-					cc = cc + row[row.length - 1];
-					rd.count = check(cc);
-					if (rd.count < 0) {
-						ok = false;
-						break;
-					}
-				}
-
-				k++;
-			}
-			if (!ok)
-				continue;
-
-			// if (count == 1) {
-			// printRecordsWithRealSolution(snps,records);
-			// printMatrix(M);
-			// }
-			if (isConsistent(records, snps)) {
-				pass++;
-				for (int j = 0; j < records.size(); j++) {
-					if (min[j] == -1) {
-						min[j] = records.get(j).count;
-					} else {
-						int temp = records.get(j).count;
-						if (min[j] > temp) {
-							min[j] = temp;
-						}
-					}
-					if (max[j] == -1) {
-						max[j] = records.get(j).count;
-					} else {
-						int temp = records.get(j).count;
-						if (max[j] < temp) {
-							max[j] = temp;
-						}
-					}
-				}
-			} else {
-				inconsistent++;
-			}
-		}
-		System.out.println("" + pass + " out of " + count
-				+ " solutions passed verification");
-		System.out.println("" + inconsistent + " out of " + count
-				+ " solutions are inconsistent");
-
-		for (k = 0; k < min.length; k++) {
-			Record rd = records.get(k);
-			rd.min = min[k];
-			rd.max = max[k];
-			rd.count = min[k];
-		}
-		for (k = records.size() - 1; k >= 0; k--) {
-			Record rd = records.get(k);
-			if (rd.count == 0 && rd.min == rd.max) {
-				records.remove(k);
-			}
-		}
-
-		if (!hasRealSolution(snps, records)) {
-			printRecordsWithRealSolution(snps, records);
-			throw new Exception("Real solution is not in the solutions");
-		}
-		return pass;
-	}
-
-	private static boolean isRealSolutionValid(Vector<Record> records,
-			Vector<Double[]> M, SNP[] snps) throws Exception {
-		// test if free variables are correct
-		int p = 0;
-		for (int i = 0; i < records.size(); i++) {
-			Record rd = records.get(i);
-			if (rd.isFree()) {
-				int c = calculateRecordCount(snps, rd);
-				if (c < rd.min || c > rd.max) {
-					System.out.println("error detected: " + i + "th varialble("
-							+ p + "th free variable)=" + c + " out of range ["
-							+ rd.min + "," + rd.max + "] record="
-							+ rd.toString());
-					return false;
-				}
-				p++;
-			}
-		}
-
-		boolean ret = true;
-		Integer[] solution = calculateASolution(records, M, snps);
-		Integer[] realSolution = new Integer[records.size()];
-		for (int i = 0; i < records.size(); i++) {
-			Record rd = records.get(i);
-			realSolution[i] = calculateRecordCount(snps, rd);
-			if (realSolution[i].intValue() != solution[i].intValue()) {
-				System.out.println("i=" + i + ",real=" + realSolution[i]
-						+ ",fake=" + solution[i]);
-				ret = false;
-			}
-		}
-		if (!ret) {
-			System.out.println("solution=");
-			printArray(solution);
-			System.out.println("real solution=");
-			printArray(realSolution);
-		}
-
-		return ret;
-	}
-
-	private static void printArray(Integer[] a) {
-		for (int i = 0; i < a.length; i++) {
-			System.out.print("" + a[i] + ",");
-		}
-		System.out.println();
-	}
-
-	private static Integer[] calculateASolution(Vector<Record> records,
-			Vector<Double[]> M, SNP[] snps) throws Exception {
-		Integer[] solution = new Integer[records.size()];
-		int k = 0;
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			Record rd = rds.nextElement();
-			int r = getRowByLeadIndex(M, k);
-			if (r == -1) {
-				solution[k] = calculateRecordCount(snps, rd);
-			}
-
-			k++;
-		}
-		k = 0;
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			Record rd = rds.nextElement();
-			int r = getRowByLeadIndex(M, k);
-			if (r != -1) {
-				Double[] row = M.get(r);
-				double cc = 0;
-				for (int i = k + 1; i < row.length - 1; i++) {
-					if (row[i] != 0) {
-						cc = cc + solution[i] * (-row[i]);
-					}
-				}
-				cc = cc + row[row.length - 1];
-				solution[k] = check(cc);
-			}
-
-			k++;
-		}
-
-		return solution;
-	}
-
-	private static void printRecordsWithRealSolution(SNP[] snps,
-			Vector<Record> records) {
-		int k = 0;
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			Record rd = rds.nextElement();
-			System.out.println("" + k + ":r" + calculateRecordCount(snps, rd)
-					+ "," + rd.toString());
-			k++;
-		}
-	}
-
-	private static boolean hasRealSolution(SNP[] snps, Vector<Record> records) {
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			Record rd = rds.nextElement();
-			int count = calculateRecordCount(snps, rd);
-			if (rd.min > count || rd.max < count) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private static boolean isConsistent(Vector<Record> records, SNP[] snps) {
-		int total = 0;
-		for (Enumeration<Record> rds = records.elements(); rds
-				.hasMoreElements();) {
-			total += rds.nextElement().count;
-		}
-		if (total != CASE)
-			return false;
-		Record rd = records.get(0);
-		for (int i = 0; i < rd.record.size() - 1; i++) {
-			for (int k = i + 1; k < rd.record.size(); k++) {
-				int ID1 = rd.getSNPIDByIndex(i);
-				int ID2 = rd.getSNPIDByIndex(k);
-				if (!isPairwiseFreqMatch(records, snps, ID1, ID2))
-					return false;
-			}
-		}
-		return true;
-	}
-
-	private static boolean isPairwiseFreqMatch(Vector<Record> records,
-			SNP[] snps, int index1, int index2) {
-		RSquare rs = snps[Math.max(index1, index2)].rsquares.get(Math.min(
-				index1, index2));
-		int cAC = 0;
-		int cAD = 0;
-		int cBC = 0;
-		int cBD = 0;
-		for (Enumeration<Record> e = records.elements(); e.hasMoreElements();) {
-			Record record = e.nextElement();
-			Allele s1 = record.record.get(record.getIndexBySNPID(rs.snp1
-					.getID()));
-			Allele s2 = record.record.get(record.getIndexBySNPID(rs.snp2
-					.getID()));
-
-			if (s1 == Allele.A && s2 == Allele.A) {
-				cAC += record.count;
-			} else if (s1 == Allele.A && s2 == Allele.T) {
-				cAD += record.count;
-			} else if (s1 == Allele.T && s2 == Allele.A) {
-				cBC += record.count;
-			} else if (s1 == Allele.T && s2 == Allele.T) {
-				cBD += record.count;
-			}
-		}
-
-		if (cAC != rs.iAC)
-			return false;
-		if (cAD != rs.iAD)
-			return false;
-		if (cBC != rs.iBC)
-			return false;
-		if (cBD != rs.iBD)
-			return false;
-		return true;
-	}
-
-	private static int getRowByLeadIndex(Vector<Double[]> M, int ldIndex) {
-		int k = 0;
-		for (Enumeration<Double[]> m = M.elements(); m.hasMoreElements();) {
-			Double[] mm = m.nextElement();
-
-			if (mm[ldIndex] == 1) {
-				boolean yes = true;
-				for (int i = 0; i < ldIndex; i++) {
-					if (mm[i] != 0) {
-						yes = false;
-						break;
-					}
-				}
-				if (yes)
-					return k;
-			}
-			k++;
-		}
-		return -1;
-	}
-
-	private static Integer[] cpaMatlab(Double[] c, Double[][] A, Double[] b,
-			Integer[] lb, Integer[] ub, Vector<Record> records) {
-		MWNumericArray B = null; /* Stores input values a */
-		Object[] result = null; /* Stores the result */
-		Integer[] d = new Integer[2 * c.length];
-		try {
-			if (bnb == null) {
-				bnb = new Matcher();
-			}
-
-			int[] dims = { b.length + 3, c.length + 1 };
-			B = MWNumericArray.newInstance(dims, MWClassID.DOUBLE,
-					MWComplexity.REAL);
-			int[] index = { 1, 1 };
-			for (int col = 0; col < dims[1] - 1; col++) {
-				index[0] = 1;
-				index[1] = col + 1;
-				B.set(index, c[col]);
-			}
-			for (int col = 0; col < dims[1] - 1; col++) {
-				index[0] = 2;
-				index[1] = col + 1;
-				B.set(index, lb[col]);
-			}
-			for (int col = 0; col < dims[1] - 1; col++) {
-				index[0] = 3;
-				index[1] = col + 1;
-				B.set(index, ub[col]);
-			}
-
-			index[0] = 1;
-			index[1] = dims[1];
-			B.set(index, 100000); // MatIter
-			index[0] = 2;
-			B.set(index, 3600); // MaxTime
-			index[0] = 3;
-			B.set(index, CASE);
-
-			for (int row = 0; row < dims[0] - 3; row++) {
-				for (int col = 0; col < dims[1] - 1; col++) {
-					index[0] = row + 4;
-					index[1] = col + 1;
-					B.set(index, A[row][col]);
-				}
-			}
-			for (int row = 0; row < dims[0] - 3; row++) {
-				index[0] = row + 4;
-				index[1] = dims[1];
-				B.set(index, b[row]);
-			}
-
-			// System.out.println(B);
-			//result = bnb.linprog_bin_ex(1, B);
-			// System.out.println("Result:");
-			MWNumericArray re = (MWNumericArray) result[0];
-			for (int k = 0; k < 2 * c.length; k++) {
-				d[k] = (int) Math.round(re.getDouble(k + 1));
-			}
-		} catch (Exception e) {
-			System.out.println("Exception: " + e.toString());
-			System.exit(0);
-		}
-
-		finally {
-			/* Free native resources */
-			MWArray.disposeArray(B);
-			MWArray.disposeArray(result);
-		}
-		return d;
-	}
-
-	protected void finalize() {
-		if (bnb != null) {
-			bnb.dispose();
-		}
-	}
-
-	private static boolean isRealSolutionValidBeforeReduce(
-			Vector<Record> records, Vector<Double[]> M, SNP[] snps) {
-		Integer[] realSolution = new Integer[records.size()];
-		for (int k = 0; k < records.size(); k++) {
-			Record rd = records.get(k);
-			realSolution[k] = calculateRecordCount(snps, rd);
-			if (rd.getLB() > realSolution[k] || rd.getUB() < realSolution[k]) {
-				System.out.println("error detected: count should be in ["
-						+ rd.getLB() + "," + rd.getUB() + "], record="
-						+ rd.toString() + ",count=" + realSolution[k]);
-				return false;
-			}
-		}
-		for (Enumeration<Double[]> rows = M.elements(); rows.hasMoreElements();) {
-			Double[] row = rows.nextElement();
-			double sum = 0;
-			for (int k = 0; k < row.length - 1; k++) {
-				sum += row[k] * realSolution[k];
-			}
-			if (Math.abs(sum - row[row.length - 1]) > MAXDEVIATION) {
-				System.out.println("sum=" + sum);
-				printArray(row);
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private static void printMatrix(Vector<Double[]> M) {
-		if (M.size() == 0)
-			return;
-
-		int rowCount = M.size();
-		int colCount = M.get(0).length;
-		System.out.println("Matrix(" + rowCount + "," + colCount + ")");
-		for (int r = 0; r < rowCount; r++) {
-			int c = 0;
-			for (; c < colCount - 1; c++) {
-				System.out.print("" + M.get(r)[c] + ",");
-			}
-			System.out.print("" + M.get(r)[c] + ";");
-			if (r % 4 == 0)
-				System.out.println();
-		}
-	}
-
-	private static int check(double d) throws Exception {
-		int i = (int) Math.round(d);
-		if (Math.abs(i - d) > MAXDEVIATION) {
-			throw new Exception("error detected: check failure, d=" + d);
-		}
-		return i;
-	}
-
-	private static void removeColFromMatrix(Vector<Double[]> M, int c) {
-		int i = 0;
-		for (Enumeration<Double[]> e = M.elements(); e.hasMoreElements();) {
-			Double[] a = e.nextElement();
-			Double[] b = new Double[a.length - 1];
-			for (int k = 0; k < a.length; k++) {
-				if (k < c) {
-					b[k] = a[k];
-				} else if (k > c) {
-					b[k - 1] = a[k];
-				}
-			}
-			M.set(i, b);
-
-			i++;
-		}
-	}
+	
 	
 	private static void computeSingleSNPFrequencies(SNP[] snps, int i) {
 		Entries[] entries = new Entries[snps.length];
@@ -2192,22 +1400,6 @@ public class GWASAttack {
 		obj_out.writeObject(records);
 	}
 
-	public static void saveSNPsToFile(String fileName, SNP[] snps)
-			throws IOException {
-		// Use a FileOutputStream to send data to a file
-		// called myobject.data.
-		FileOutputStream f_out = new FileOutputStream(fileName);
-
-		// Use an ObjectOutputStream to send object data to the
-		// FileOutputStream for writing to disk.
-		ObjectOutputStream obj_out = new ObjectOutputStream(f_out);
-
-		// Pass our object to the ObjectOutputStream's
-		// writeObject() method to cause it to be written out
-		// to disk.
-		obj_out.writeObject(snps);
-	}
-
 	public static Vector<Record> readFromFile(String fileName)
 			throws IOException, ClassNotFoundException {
 		// Read from disk using FileInputStream.
@@ -2230,6 +1422,7 @@ public class GWASAttack {
 		}
 	}
 
+	
 	public static SNP[] readSNPsFromFile(String fileName) throws IOException,
 			ClassNotFoundException {
 		// Read from disk using FileInputStream.
