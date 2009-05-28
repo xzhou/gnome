@@ -346,7 +346,15 @@ public class GWASAttack {
 			SNP[] hapmap_snps = readSNPsFromFastaFile("./data/hapmap_chr7_80SNP_CEU_haplotype.fasta", cutSNP,cutRec);
 			computeSignOfRSquareFromHapmap(all_snps, hapmap_snps);
 			//removeHapmapNoise(all_snps);
-		} else {
+		} 
+		else if(approachChoice == 3)
+		{
+			//continue from 16%
+			//please first run with method 1 and then continue
+			SNP[] snps = readSNPsFromFile("snps.data");
+			SignRecover.propagateSigns4(snps);
+		}
+		else {
 			throw new Exception("unsupported approach choice "+approachChoice);
 		}
 	}
@@ -484,7 +492,7 @@ public class GWASAttack {
 									 * angel is the computed sign
 									 */
 									
-									boolean angel = isMatchByMatlab(false,
+									boolean angel = UtilityFunctions.isMatchByMatlab(false,
 											snps[i].getpA(), 
 											snps[index1].getpA(), 
 											snps[index2].getpA(), 
@@ -501,7 +509,7 @@ public class GWASAttack {
 									}
 									//not consistent, print some information
 									else if (god) {
-										isMatchByMatlab(true, 
+										UtilityFunctions.isMatchByMatlab(true, 
 												snps[i].getpA(),
 												snps[index1].getpA(),
 												snps[index2].getpA(), 
@@ -587,81 +595,17 @@ public class GWASAttack {
 
 
 	//
-	private static boolean isMatchByMatlab(boolean print, Double p1, Double p2,
-			Double p3, Double p23, Double p12, Double p13) {
-		if (print)
-			System.out.println("" + p1 + "," + p2 + "," + p3 + "," + p23 + ","
-					+ p12 + "," + p13);
-		MWNumericArray B = null; /* Stores input values a */
-		Object[] result = null; /* Stores the result */
-		boolean ret = false;
-		try {
-			if (bnb == null) {
-				bnb = new Matcher();
-			}
 
-			int[] dims = { 1, 8 };
-			B = MWNumericArray.newInstance(dims, MWClassID.DOUBLE,
-					MWComplexity.REAL);
-			int[] index = { 1, 1 };
-			double devi = -0.01;
-			// double devi = 0;
-			index[0] = 1;
-			index[1] = 1;
-			B.set(index, devi); // devi
-			double pr = 0;
-			if (print)
-				pr = 1;
-			index[0] = 1;
-			index[1] = 2;
-			B.set(index, pr); // print
-			index[0] = 1;
-			index[1] = 3;
-			B.set(index, p1);
-			index[0] = 1;
-			index[1] = 4;
-			B.set(index, p2);
-			index[0] = 1;
-			index[1] = 5;
-			B.set(index, p3);
-			index[0] = 1;
-			index[1] = 6;
-			B.set(index, p23);
-			index[0] = 1;
-			index[1] = 7;
-			B.set(index, p12);
-			index[0] = 1;
-			index[1] = 8;
-			B.set(index, p13);
 
-			
-			// System.out.println(B);
-			result = bnb.isMatch(1, B);
-			// System.out.println("Result:");
-			MWNumericArray re = (MWNumericArray) result[0];
-			if (re.getDouble(1) != 0)
-				ret = true;
-			else
-				ret = false;
-		} catch (Exception e) {
-			System.out.println("Exception: " + e.toString());
-			System.exit(0);
-		}
-
-		finally {
-			/* Free native resources */
-			MWArray.disposeArray(B);
-			MWArray.disposeArray(result);
-		}
-		return ret;
-	}
-
+	//compatible with how many snps
 	public static double computeConfidenceValue(SNP[] snps, RSquare rs,
 			boolean pos)
 	{
 		int index1 = rs.snp1.getID();
 		int index2 = rs.snp2.getID();
 		double p23 = rs.v2;
+		
+		//if it is positive
 		if (pos)
 			p23 = rs.v1;
 		double ret = 0;
@@ -701,7 +645,7 @@ public class GWASAttack {
 
 					boolean angel = false;
 					
-					angel = isMatchByMatlab(false, snps[i].getpA(),
+					angel = UtilityFunctions.isMatchByMatlab(false, snps[i].getpA(),
 							snps[index1].getpA(), snps[index2].getpA(), p23,
 							p12, p13);
 					if (angel) {
