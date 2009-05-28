@@ -567,6 +567,8 @@ public class RSquare implements Serializable {
 		}
 		
 		rsquare = calculateRSQUARE(iAC,iAD,iBC,iBD);
+		
+		//the sign of r
 		r = iAC*iBD - iAD*iBC;
 		//r = r/Math.abs(r);
 		int s1 = 1, s2 = 1;
