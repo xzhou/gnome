@@ -29,6 +29,7 @@
 			<zipfileset src="${lib}/matcher.jar"/>
 			<zipfileset src="${lib}/cream106.jar"/>
 			<zipfileset src="/home/xzhou/program/matlab/toolbox/javabuilder/jar/javabuilder.jar"/>
+			<zipfileset src="${lib}/lPSolver.jar"/>
             <manifest>
                 <attribute name="Main-Class" value="GWASAttack"/>
             </manifest>

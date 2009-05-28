@@ -11,6 +11,21 @@ import com.mathworks.toolbox.javabuilder.MWComplexity;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
 
 public class UtilityFunctions {
+	
+	static Matcher	bnb;
+	
+	public UtilityFunctions(){
+		try{
+			bnb = new Matcher();
+		}
+		catch(Exception e)
+		{
+			bnb = null;
+			System.out.println("Exception: " + e.toString());
+			System.exit(0);
+		}
+	}
+	
 	public static RSquare getRSquare(SNP[] snps, int i, int j) {
 		return snps[Math.max(i, j)].rsquares.get(Math.min(i, j));
 	}
@@ -25,8 +40,11 @@ public class UtilityFunctions {
 		boolean ret = false;
 		try {
 			
-			Matcher	bnb = new Matcher();
-
+			if(bnb == null)
+			{
+				return false;
+			}
+			
 			int[] dims = { 1, 8 };
 			B = MWNumericArray.newInstance(dims, MWClassID.DOUBLE,
 					MWComplexity.REAL);

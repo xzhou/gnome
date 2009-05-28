@@ -688,9 +688,11 @@ public class RSquare implements Serializable {
 		return this.pA;
 	}
 
+	
+	//b means if the sign has been recovered
 	public void setSignRecovered(boolean sign, boolean b) {
 		if (sign) {
-			this.pAB = v1;
+			this.pAB = v1; //false
 		} else {
 			this.pAB = v2;
 		}

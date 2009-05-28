@@ -351,7 +351,7 @@ public class GWASAttack {
 		{
 			//continue from 16%
 			//please first run with method 1 and then continue
-			SNP[] snps = readSNPsFromFile("snps.data");
+			SNP[] snps = readSNPsFromFile("snps.dat");
 			SignRecover.propagateSigns4(snps);
 		}
 		else {
@@ -466,32 +466,27 @@ public class GWASAttack {
 							for (int i1 = 0; i1 < pAB12.size(); i1++) {
 								for (int i2 = 0; i2 < pAB13.size(); i2++) {
 									
-									boolean god = false;
+									
+									//we use the snp.plotter to verify this data
+									boolean oracle = false;
 									double p23 = rSquare.pAB, 
 											p12 = pAB12.get(i1), 
 											p13 = pAB13.get(i2);
 									
-									//?? why larger than one
+									//cacel the marker
 									if (p12 > 1)
 										p12 -= 1;
 									if (p13 > 1)
 										p13 -= 1;
 									
 									
-									//god means the original sign
+									//verify wiht snp.plotter data, not available when attack
 									if (Math.abs(p12 - rs12.pAB) < deviation
 											&& Math.abs(p13 - rs13.pAB) < deviation) {
-										god = true;
+										oracle = true;
 									}
-
-									/*
-									 * r sqauare sign is god
-									 */
 									
-									/*
-									 * angel is the computed sign
-									 */
-									
+									//angel means if it is satisfiable
 									boolean angel = UtilityFunctions.isMatchByMatlab(false,
 											snps[i].getpA(), 
 											snps[index1].getpA(), 
@@ -500,7 +495,7 @@ public class GWASAttack {
 											p12, 
 											p13);
 									
-									//this is consistent
+									//satisfiable, mark the snp
 									if (angel) {
 										if (pAB12.get(i1) < 1)
 											pAB12.set(i1, p12 + 1);
@@ -508,7 +503,7 @@ public class GWASAttack {
 											pAB13.set(i2, p13 + 1);
 									}
 									//not consistent, print some information
-									else if (god) {
+									else if (oracle) {
 										UtilityFunctions.isMatchByMatlab(true, 
 												snps[i].getpA(),
 												snps[index1].getpA(),
@@ -523,11 +518,11 @@ public class GWASAttack {
 									// System.out.println("angel="+angel);
 								}
 							}
-
 							
 							//check recovered signs
 							for (int i1 = 0; i1 < pAB12.size(); i1++) {
 								double p12 = pAB12.get(i1);
+								//if p12 < 1, this snps is not marked, must be invalid
 								if (p12 < 1) {
 									if (p12 == rs12.v1) {
 										double interval = computeConfidenceValue(
