@@ -42,7 +42,7 @@ public class UtilityFunctions {
 			
 			if(bnb == null)
 			{
-				return false;
+				bnb = new Matcher();
 			}
 			
 			int[] dims = { 1, 8 };
@@ -78,8 +78,6 @@ public class UtilityFunctions {
 			index[0] = 1;
 			index[1] = 8;
 			B.set(index, p13);
-
-			
 			// System.out.println(B);
 			result = bnb.isMatch(1, B);
 			// System.out.println("Result:");
