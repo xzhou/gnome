@@ -179,6 +179,8 @@ public class UtilityFunctions {
 			obj_out.writeObject(snps);
 		}
 
+	
+	//report recovered sign
 	public static int signRecoverRate(SNP[] snps) {
 		int count = 0, err = 0;
 		for (int index1 = 0; index1 < snps.length - 1; index1++) {
@@ -199,5 +201,4 @@ public class UtilityFunctions {
 				+ (count * 1.0 / total) + ") are recovered,err=" + err);
 		return count;
 	}
-
 }
