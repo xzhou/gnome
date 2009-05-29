@@ -340,6 +340,7 @@ public class GWASAttack {
 
 		if (approachChoice == 1) {   //triangle approach
 			computeSignOfRSquare(all_snps);
+			//System.exit(1);
 			propagateSignOfRSquare(all_snps);
 		} else if (approachChoice == 2) { //Hapmap approach
 			//computeSignOfRSquare(all_snps);
@@ -351,6 +352,10 @@ public class GWASAttack {
 		{
 			//continue from 16%
 			//please first run with method 1 and then continue
+			PrintStream ps = new PrintStream(
+			        new BufferedOutputStream(new FileOutputStream(
+			        new File("./javalog.txt"))), true);
+			System.setOut(ps);
 			SNP[] snps = readSNPsFromFile("snps.dat");
 			SignRecover.propagateSigns4(snps);
 		}
