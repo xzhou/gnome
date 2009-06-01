@@ -11,8 +11,6 @@ enum Allele implements Serializable {
     A,T,G,C,U  //U means unknown
 }
 
-
-
 //the count of a snp
 class Entry implements Serializable {
 	private long iCaseA;
@@ -368,7 +366,6 @@ class SNP implements Serializable {
 		this.ID = ID;
 		for (int i=0;i<alleles.length;i++)  this.alleles.add(alleles[i]);
 		this.iCASE = iCASE;
-		
 		updateStatus();
 	}
 	
