@@ -581,22 +581,19 @@ public class GWASAttack {
 						}
 						UtilityFunctions.signRecoverRate(snps);
 						UtilityFunctions.saveSNPsToFile("snps.dat", snps);
-					}
-				}
-			}
+					}//end for new snp
+				}//end for second snp
+			}//end for first snp
 			if (!propagating)
 				break;
 			UtilityFunctions.saveSNPsToFile("snps.dat", snps);
 			System.out.println("propagating");
 			propagating = false;
-		}
-	}
+		}//end while
+	}//end of the propagation
 	
-
-
-	//
-
-
+	
+	
 	//compatible with how many snps
 	public static double computeConfidenceValue(SNP[] snps, RSquare rs,
 			boolean pos)
@@ -1244,7 +1241,7 @@ public class GWASAttack {
 		// System.exit(0);
 	}
 
-	private static SNP[] readSNPsFromFastaFile(String fileName, int cutSNP, int cutRec) {
+	public static SNP[] readSNPsFromFastaFile(String fileName, int cutSNP, int cutRec) {
 		Vector<Allele[]> alleles = new Vector<Allele[]>();
 
 		try {
@@ -1325,7 +1322,7 @@ public class GWASAttack {
 		return all_snps;
 	}
 
-	private static Vector<RSquare> computeRSquares(SNP[] snps) {
+	public static Vector<RSquare> computeRSquares(SNP[] snps) {
 		Vector<RSquare> all_rsquares = new Vector<RSquare>();
 		for (int i = 0; i < snps.length - 1; i++) {
 			for (int j = i + 1; j < snps.length; j++) {
@@ -1339,7 +1336,7 @@ public class GWASAttack {
 		return all_rsquares;
 	}
 
-	private static Allele[] getAlleleFromStr(String str) {
+	public static Allele[] getAlleleFromStr(String str) {
 		Allele[] record = new Allele[str.length()];
 		for (int i = 0; i < record.length; i++) {
 			record[i] = getAlleleFromChar(str.charAt(i));

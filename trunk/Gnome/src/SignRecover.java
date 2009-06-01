@@ -11,7 +11,6 @@ import com.mathworks.toolbox.javabuilder.MWArray;
 import com.mathworks.toolbox.javabuilder.MWClassID;
 import com.mathworks.toolbox.javabuilder.MWComplexity;
 import com.mathworks.toolbox.javabuilder.MWNumericArray;
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 import lPSolver.LPSolver;
 
 
@@ -36,7 +35,7 @@ public class SignRecover {
 	
 	private static LPSolver lpSolver;
 	
-	public static void SignRecover(){
+	public SignRecover(){
 		try{
 			lpSolver = new LPSolver();
 		}catch(Exception e)
@@ -77,7 +76,14 @@ public class SignRecover {
 								if(index1 == index2 || index1 == index3 || index1 == index4)
 									continue;
 								
+								//debug
+								
+								index1 = 71;
+								index2 = 4;
+								index3 = 14;
+								index4 = 11;
 								System.err.println("(" + index1 + "," +index2 + "," + index3 + "," +index4 + ")");	
+								
 								RSquare r2_12 = UtilityFunctions.getRSquare(snps, index1, index2);
 								RSquare r2_13 = UtilityFunctions.getRSquare(snps, index1, index3);
 								RSquare r2_14 = UtilityFunctions.getRSquare(snps, index1, index4);
@@ -144,19 +150,14 @@ public class SignRecover {
 											if(p14 > 1)
 												p14 -= 1;
 											
-											
+											//use the real data to validate
 											if(Math.abs(p12 - r2_12.pAB) < deviation
 													&& Math.abs(p13 - r2_13.pAB) < deviation
 													&& Math.abs(p14 - r2_14.pAB) < deviation)
 											{
 												oracle = true;
-											}
-											
-											/*
-											 * r square sign is good
-											 * 
-											 */
-											
+											}								
+											//check consistency
 											boolean consistent = isConsistent4(false,
 													snps[index1].getpA(),
 													snps[index2].getpA(),
@@ -167,7 +168,7 @@ public class SignRecover {
 											
 											//mark as consistent
 											if(consistent)
-											{
+											{	
 												if(pAB12.get(i12) < 1)
 													pAB12.set(i12, p12+1);
 												if(pAB13.get(i13) < 1)
@@ -175,8 +176,10 @@ public class SignRecover {
 												if(pAB14.get(i14) < 1)
 													pAB14.set(i14, p14 + 1);
 											}
+											/*
 											else if(oracle)
 											{
+												
 												isConsistent4(true,
 													snps[index1].getpA(),
 													snps[index2].getpA(),
@@ -184,9 +187,9 @@ public class SignRecover {
 													snps[index4].getpA(),
 													p12, p13, p14,
 													p23, p24, p34);
-												
-												System.err.println("should be consistent, but not consistent, this is strange");
-											} 
+												//System.out.println("should be consistent, but not consistent, this is strange");
+											}
+											*/
 										} //end i14
 									} //end i13
 								} //end i12
@@ -306,10 +309,11 @@ public class SignRecover {
 										}
 									}
 								} //end for i14	
-							}						
-							System.out.println("propergate 4 complete\n");
+								
+								System.exit(0);
+							}							
 							UtilityFunctions.signRecoverRate(snps);
-							//UtilityFunctions.saveSNPsToFile("snps.dat", snps);
+							//UtilityFunctions.saveSNPsToFile("snps_2stage.dat", snps);
 						} //end if recovered
 					} //end 3 for
 			if(!propagating)
@@ -364,7 +368,7 @@ public class SignRecover {
 			insertArray(B, 1, 11,p24);
 			insertArray(B, 1, 12, p34);
 			//System.out.println("-> call LPSolver");
-			result = lpSolver.isConsistent4(1, B);
+			result = lpSolver.isConsistent16(1, B);
 			
 			MWNumericArray re = (MWNumericArray) result[0];
 			if(re.getDouble(1) != 0)
