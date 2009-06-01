@@ -157,8 +157,8 @@ public class UtilityFunctions {
 			ret += count1 * 1.0 / count;
 			total++;
 		}
-		System.out.println("pair (" + index1 + "," + index2 + ") pos=" + pos
-				+ ",ConfidenceInterval=" + (ret / total) + ",r=" + rs.r
+		System.err.println("pair (" + index1 + "," + index2 + ") pos=" + pos
+				+ ",ConfidenceLevel=" + (ret / total) + ",r=" + rs.r
 				+ ",total=" + total);
 		return ret / total;
 	}
@@ -197,7 +197,7 @@ public class UtilityFunctions {
 			}
 		}
 		int total = snps.length * (snps.length - 1) / 2;
-		System.out.println("" + count + " out of " + total + "("
+		System.err.println("" + count + " out of " + total + "("
 				+ (count * 1.0 / total) + ") are recovered,err=" + err);
 		return count;
 	}
