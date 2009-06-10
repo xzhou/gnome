@@ -8,10 +8,8 @@ ref(col) = 0;
 for match=1.0:-0.05:ratio
     for i=1:row
         if used(i) == 1, continue; end
-    
         for j=1:rowRef
             if occur(j) ~= 0, continue; end
-
             r = similarity(A(i,:),Aref(j,:));
             if r >= match
                 a = A(i,:);

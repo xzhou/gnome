@@ -332,6 +332,8 @@ public class GWASAttack {
 
 		SNP[] all_snps = readSNPsFromFastaFile(args[0], cutSNP, cutRec); // read SNPs from fasta file
 
+		//replace the data with R dump data and set pAB, pA, pB
+		//TODO remove debug information
 		updateRSquaresFromDefaultFile(all_snps);
 
 		all_snps[sigSNPIndex1].setSigSNP(true);
@@ -355,8 +357,11 @@ public class GWASAttack {
 			PrintStream ps = new PrintStream(
 			        new BufferedOutputStream(new FileOutputStream(
 			        new File("./javalog.txt"))), true);
-			System.setOut(ps);
+			//System.setOut(ps);
+			
+			//continue the 16%
 			SNP[] snps = readSNPsFromFile("snps.dat");
+			
 			SignRecover.propagateSigns4(snps);
 		}
 		else {
@@ -822,6 +827,7 @@ public class GWASAttack {
 				k++;
 			}
 
+			//ignore some incorrect data and shift i,j
 			if (i == 73 || i == 49 || i == 64)
 				continue;
 			if (j == 73 || j == 49 || j == 64)

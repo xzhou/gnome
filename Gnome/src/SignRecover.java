@@ -50,13 +50,40 @@ public class SignRecover {
 		boolean propagating = false;
 		double confidence_level = 0.5;
 		
+		PrintStream matchResultOutStream = new PrintStream(
+		        new BufferedOutputStream(new FileOutputStream(
+		        		new File("LPresult.txt"))), true);
+		
+		PrintStream analysisFile = new PrintStream(
+		        new BufferedOutputStream(new FileOutputStream(
+				        new File("analysis.txt"))), true);
+		
+		PrintStream fpFile = new PrintStream(
+		        new BufferedOutputStream(new FileOutputStream(
+				        new File("fp.txt"))), true);
+		
+		PrintStream fnFile = new PrintStream(
+		        new BufferedOutputStream(new FileOutputStream(
+				        new File("fn.txt"))), true);
+		
+		long nTotalConbination = 0;
+		long fp = 0;	//false positive
+		long fn = 0;	//false negative
+		
+		
+		
+		long nRecovered = 0;
+		long nFalseRecovered = 0;
+		
+		
 		//repeatedly recover sign until no more sign can be recovered
 		while(true)
 		{
 			//find 3 snps whose sign is recovered
+			//partial order to reduce the complex
 			for(int index2 = 0; index2 < snps.length - 1; index2++)
-				for (int index3 = 0; index3 < snps.length - 1; index3++)
-					for(int index4 = 0; index4 < snps.length - 1; index4++)
+				for (int index3 = index2 + 1; index3 < snps.length - 1; index3++)
+					for(int index4 = index3 + 1; index4 < snps.length - 1; index4++)
 					{
 						//remove different
 						if(index2==index3 || index2 == index4 || index3 == index4)
@@ -64,7 +91,7 @@ public class SignRecover {
 						//System.out.println("(" + index2 + "," + index3 + "," +index4 + ")");
 						//get rsquare
 						RSquare r2_23 = UtilityFunctions.getRSquare(snps, index2, index3);
-						RSquare r2_24 = UtilityFunctions.getRSquare(snps, index3, index4);
+						RSquare r2_24 = UtilityFunctions.getRSquare(snps, index2, index4);
 						RSquare r2_34 = UtilityFunctions.getRSquare(snps, index3, index4);
 						
 						//we find 3 snps whose sign was recovered
@@ -75,30 +102,43 @@ public class SignRecover {
 							{
 								if(index1 == index2 || index1 == index3 || index1 == index4)
 									continue;
-								
-								//debug
-								
-								index1 = 71;
-								index2 = 4;
-								index3 = 14;
-								index4 = 11;
-								System.err.println("(" + index1 + "," +index2 + "," + index3 + "," +index4 + ")");	
-								
+
 								RSquare r2_12 = UtilityFunctions.getRSquare(snps, index1, index2);
 								RSquare r2_13 = UtilityFunctions.getRSquare(snps, index1, index3);
 								RSquare r2_14 = UtilityFunctions.getRSquare(snps, index1, index4);
-								
+
 								if(r2_12.isSignRecovered() && r2_13.isSignRecovered() && r2_14.isSignRecovered())
 								{
 									continue;
 								}
+								matchResultOutStream.print("(" + index1 + "," +index2 + "," + index3 + "," +index4 + ")");	
+								//output the correct sign
+								int x = -1;	//correct sign of 12
+								int y = -1; //correct sign of 13
+								int z = -1; //correct sign of 14
+
+								
+								if(r2_12.sign == '+')	//record the correct v
+									x = 0;
+								else
+									x = 1;
+								
+								if(r2_13.sign == '+')
+									y = 0;
+								else
+									y = 1;
+								
+								if(r2_14.sign == '+')
+									z = 0;
+								else
+									z = 1;
 								
 								Vector<Double> pAB12 = new Vector<Double>();
 								Vector<Double> pAB13 = new Vector<Double>();
 								Vector<Double> pAB14 = new Vector<Double>();
 								
 								if(r2_12.isSignRecovered())
-									pAB12.add(r2_12.pAB);
+									pAB12.add(r2_12.pAB);	//use the correct value
 								else 
 								{
 									pAB12.add(r2_12.v1);
@@ -121,6 +161,7 @@ public class SignRecover {
 									pAB14.add(r2_14.v2);
 								}
 								
+								matchResultOutStream.print("\t("+x+y+z+")\t\t");
 								double deviation = 1e-2;
 								
 								//
@@ -141,6 +182,14 @@ public class SignRecover {
 											double p12 = pAB12.get(i12);
 											double p13 = pAB13.get(i13);
 											double p14 = pAB14.get(i14);
+											
+											//TODO remove the following code 
+//											p23 = r2_23.getpAB();
+//											p24 = r2_24.getpAB();
+//											p34 = r2_34.getpAB();
+//											p12 = r2_12.getpAB();
+//											p13 = r2_13.getpAB();
+//											p14 = r2_14.getpAB();
 											
 											//cancel the marker
 											if(p12 > 1)
@@ -176,10 +225,10 @@ public class SignRecover {
 												if(pAB14.get(i14) < 1)
 													pAB14.set(i14, p14 + 1);
 											}
-											/*
+											
 											else if(oracle)
 											{
-												
+												/*
 												isConsistent4(true,
 													snps[index1].getpA(),
 													snps[index2].getpA(),
@@ -187,20 +236,49 @@ public class SignRecover {
 													snps[index4].getpA(),
 													p12, p13, p14,
 													p23, p24, p34);
-												//System.out.println("should be consistent, but not consistent, this is strange");
+												*/
+												//System.out.println();
 											}
-											*/
+											matchResultOutStream.print("("+i12+i13+i14+":"+consistent+")\t");
+											
+											nTotalConbination ++;
+											
+											//false negative
+											if(i12 == x && i13 == y && i14 == z && !consistent)
+											{
+												fn ++;
+												fnFile.print("(" + index1 + "," +index2 + "," + index3 + "," +index4 + ")");
+												fnFile.print("\t("+x+y+z+")\t");
+												fnFile.print("("+i12+i13+i14+":"+consistent+")\t");
+												fnFile.print("(" + snps[index1].getpA() + ", " + 
+													snps[index2].getpA() + ", " +
+													snps[index3].getpA() + ", " +
+													snps[index4].getpA() + ", " +
+													p12 + ", " + p13 + ", " +  p14 + ", " +
+													p23 + ", " +  p24 + ", " + p34 + ")\n");
+											}
+											
+											if( (i12 != x || i13 != y || i14 != z) && consistent)
+											{
+												fp ++;
+												fpFile.print("(" + index1 + "," +index2 + "," + index3 + "," +index4 + ")");
+												fpFile.print("\t("+x+y+z+")\t");
+												fpFile.print("("+i12+i13+i14+":"+consistent+")\t");
+												fpFile.print("(" + snps[index1].getpA() + ", " + 
+													snps[index2].getpA() + ", " +
+													snps[index3].getpA() + ", " +
+													snps[index4].getpA() + ", " +
+													p12 + ", " + p13 + ", " +  p14 + ", " +
+													p23 + ", " +  p24 + ", " + p34 + ")\n");
+											}
 										} //end i14
 									} //end i13
 								} //end i12
-								
-								
+								matchResultOutStream.println("\n");
 								//for each snps, if not marked, it is eliminated
 								for(int i12 = 0; i12 < pAB12.size(); i12++)
 								{
 									double p12 = pAB12.get(i12);
-									
-									
 									if(p12<1)
 									{
 										if(p12 == r2_12.v1)
@@ -208,8 +286,11 @@ public class SignRecover {
 											double myConfidenceLevel = UtilityFunctions.computeConfidenceValue(snps, r2_12, false);
 											if(myConfidenceLevel >= confidence_level)
 											{
-												System.err.println("(" + index1 + "," + index2 + ") recovered\n");
-												r2_12.setSignRecovered(false, true);
+												nRecovered ++;
+												System.out.println("(" + index1 + "," + index2 + ") recovered\n");
+												if (!r2_12.setSignRecovered(false, true))
+													nFalseRecovered ++;
+												//let the program continue
 												propagating = true;
 											}
 										}
@@ -218,8 +299,10 @@ public class SignRecover {
 											double myConfidenceLevel = UtilityFunctions.computeConfidenceValue(snps, r2_12, true);
 											if(myConfidenceLevel >= confidence_level)
 											{
-												System.err.println("(" + index1 + "," + index2 + ") recovered\n");
-												r2_12.setSignRecovered(true, false);
+												nRecovered ++;
+												System.out.println("(" + index1 + "," + index2 + ") recovered\n");
+												if(!r2_12.setSignRecovered(true, true))
+													nFalseRecovered ++;
 												propagating = true;
 											}
 										}
@@ -245,8 +328,10 @@ public class SignRecover {
 											double myConfidenceLevel = UtilityFunctions.computeConfidenceValue(snps, r2_13, false);
 											if(myConfidenceLevel >= confidence_level)
 											{
+												nRecovered ++;
 												System.err.println("(" + index1 + "," + index3 + ") recovered\n");
-												r2_13.setSignRecovered(false, true);
+												if (!r2_13.setSignRecovered(false, true))
+													nFalseRecovered ++;
 												propagating = true;
 											}
 										}
@@ -255,8 +340,10 @@ public class SignRecover {
 											double myConfidenceLevel = UtilityFunctions.computeConfidenceValue(snps, r2_13, true);
 											if(myConfidenceLevel >= confidence_level)
 											{
+												nRecovered ++;
 												System.err.println("(" + index1 + "," + index3 + ") recovered\n");
-												r2_13.setSignRecovered(true, false);
+												if(!r2_13.setSignRecovered(true, true))
+														nFalseRecovered ++;
 												propagating = true;
 											}
 										}
@@ -284,8 +371,10 @@ public class SignRecover {
 											
 											if(myConfidenceLevel >= confidence_level)
 											{
+												nRecovered ++;
 												System.err.println("(" + index1 + "," + index4 + ") recovered\n");
-												r2_14.setSignRecovered(false, true);
+												if(!r2_14.setSignRecovered(false, true))
+													nFalseRecovered ++;
 												propagating = true;
 											}
 										}
@@ -294,8 +383,10 @@ public class SignRecover {
 											double myConfidenceLevel = UtilityFunctions.computeConfidenceValue(snps, r2_14, true);
 											if(myConfidenceLevel >= confidence_level)
 											{
+												nRecovered ++;
 												System.err.println("(" + index1 + "," + index4 + ") recovered\n");
-												r2_14.setSignRecovered(true, false);
+												if(!r2_14.setSignRecovered(true, true))
+													nFalseRecovered++;
 												propagating = true;
 											}
 										}
@@ -309,18 +400,31 @@ public class SignRecover {
 										}
 									}
 								} //end for i14	
-								
-								System.exit(0);
 							}							
 							UtilityFunctions.signRecoverRate(snps);
 							//UtilityFunctions.saveSNPsToFile("snps_2stage.dat", snps);
 						} //end if recovered
+						else
+						{
+							//do nothing, we need 3 snps with signs recovered
+						}
+						
+						analysisFile.println("nRecovered = " + nRecovered + "nFalseRecovered= " + nFalseRecovered);
 					} //end 3 for
+			//if no more to propagate
 			if(!propagating)
 				break;
+			//reset
 			propagating = false;
-					
 		}//end while
+		
+		analysisFile.println("total = " + nTotalConbination);
+		analysisFile.println("fp = " + fp);
+		analysisFile.println("fn = " + fn);
+		analysisFile.println("nRecovered = " + nRecovered + "nFalseRecovered= " + nFalseRecovered);
+		analysisFile.close();
+		
+		matchResultOutStream.close();
 	}
 	
 	//check if it is consistent using by solving linear constraints
@@ -333,7 +437,6 @@ public class SignRecover {
 	public static boolean isConsistent4(boolean printInfo, Double pA1, Double pA2,
 			Double pA3, Double pA4, double p12, double p13, double p14,
 			double p23, double p24, double p34) {
-		// TODO Auto-generated method stub
 		if(printInfo)
 			System.out.println("isConsistent");
 		
