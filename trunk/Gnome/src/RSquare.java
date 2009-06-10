@@ -622,7 +622,9 @@ public class RSquare implements Serializable {
 		this.signRecovered  = b;
 		//System.out.println("signRecovered,r="+this.r+",r2="+this.rsquare);
 	}
-
+	
+	
+	//calculate the correct pAB
 	public double getpAB() {
 		if (snp1.getCaseAFreq()>=snp1.getCaseTFreq()) {
 			if (snp2.getCaseAFreq()>=snp2.getCaseTFreq())
@@ -687,20 +689,21 @@ public class RSquare implements Serializable {
 
 	
 	//b means if the sign has been recovered
-	public void setSignRecovered(boolean sign, boolean b) {
+	public boolean setSignRecovered(boolean sign, boolean b) {
 		if (sign) {
-			this.pAB = v1; //false
+			this.pAB = v1;
 		} else {
 			this.pAB = v2;
 		}
 		this.signRecovered = b;
 		
-		if (b) {
-			if ((sign && this.r <= 0) || (!sign && this.r >= 0)) {
+		if ((sign && this.r <= 0) || (!sign && this.r >= 0)) {
+			if(b)
 				System.err.println("error detected: incorrect sign");
-			}
+			return false;
 		}
-		System.out.println("pair ("+this.snp1.getID()+","+this.snp2.getID()+") recovered,r2="+this.rsquare);
+		return true;
+		//System.out.println("pair ("+this.snp1.getID()+","+this.snp2.getID()+") recovered,r2="+this.rsquare);
 	}
 
 	public double getRecoveredSign() throws Exception {
