@@ -7,6 +7,7 @@ Created on Jun 16, 2009
 from numpy import *
 import rpy2.robjects as robjects
 import psyco
+from genotype import Genotype
 
 psyco.full()
 r = robjects.r
@@ -26,7 +27,7 @@ def convert2StandardPEDFormat(rawGenotype):
             standardGenotype[i/2][2*j+1] = int(b)
     return standardGenotype
 
-def calcualteRFromFasta(FileName, nSnps, nIndividuals):
+def readGenotypeFromFasta(FileName, nSnps, nIndividuals):
     '''
     @param FileName:     The file name of the fasta File
     @param nSnps:        The limit of snps 
@@ -125,28 +126,14 @@ def calcualteRFromFasta(FileName, nSnps, nIndividuals):
         genotype.append(aFormatedSnp)     
     #format
     print "format complete"
+    
     pedGenotype = convert2StandardPEDFormat(rawGenotype)
     
+    realGenotype = Genotype(pedGenotype)
     
-    #calculate r value using rpy
-    for i in range(0, nSnps-1):
-        for j in range(i+1, nSnps):
-            snp1 = genotype[i]
-            snp2 = genotype[j]
-            g1 = r.genotype(snp1)
-            g2 = r.genotype(snp2)
-            result = r.rcalc(g1, g2)
-            rValue = result[0][0]
-            pAB = result[1][0]
-            pA = result[2][0]
-            pB = result[3][0]
-            rValues[i,j] = rValue
-            rValues[j,i] = rValue
-            #print i,j, rValue
-    
-    return rValues, genotype, pedGenotype
+    return realGenotype
             
 if __name__ == '__main__':
     fastaFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.fasta"
-    rValues, genotype, pedGenotype= calcualteRFromFasta(fastaFileName, 77, 100)
+    pedGenotype= readGenotypeFromFasta(fastaFileName, 77, 100)
     print rValues[0,1]
