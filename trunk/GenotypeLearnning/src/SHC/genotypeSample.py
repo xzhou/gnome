@@ -19,12 +19,15 @@ class GenotypeSample(object):
     def __init__(self, nSnps, nIndividual):
         self.nSnps = nSnps;
         self.nIndividual = nIndividual
-        self.genotype = array([[0]*(2*nSnps)]*nIndividual)   #each snp has two allele
+        self.genotype = array([[0]*(2*nSnps)]*nIndividual)   #we use the ped format
         self.generateRandomGenotypeSample(self.genotype)
-
-    
+        
     def setGenotype(self, genotype):
         self.genotype = genotype
+        (m,n) = shape(genotype)
+        self.nSnps = n/2
+        self.nIndividual = m
+        
         
     def convert2RGenotypeFormat(self, snp1):
         newsnp1 = []
@@ -63,7 +66,7 @@ class GenotypeSample(object):
             return
         nSnps = n/2
         formatedSnps = self.formateSnps()
-        rValues = array([[2]*nSnps]*nSnps);
+        rValues = array([[2.0]*nSnps]*nSnps);
         for i in range(0, len(formatedSnps)-1):
             for j in range(i+1, len(formatedSnps)):
                 snp1 = formatedSnps[i]
@@ -71,6 +74,7 @@ class GenotypeSample(object):
                 r = self.calcR2Snps(snp1, snp2)
                 rValues[i,j] = r
                 rValues[j,i] = r
+                #print i,j,r
         return rValues
     
     def generateRandomGenotypeSample(self, genotype):
@@ -87,36 +91,27 @@ class GenotypeSample(object):
                     genotype[i,j] = 2       #minor
         return genotype
 
-    def singlePointMutation(self, genotype):
-        if genotype == None:
-            genotype = self.genotype
-            
-        '''
-        newSample = GenotypeSample(77, 100)
-        newSample.genotype = self.genotype
-        newSample.nSnps = self.nSnps
-        newSample.nIndividual = self.nIndividual
-        '''
+    def singlePointMutation(self):
+        
+        genotype = self.genotype
         #create a new copy
         newSample = copy.deepcopy(self)
         
         x = random.randint(0, newSample.nIndividual)
-        y = random.randint(0, newSample(2*nSnps))
+        y = random.randint(0, 2*newSample.nSnps)
         
-        originalValue = newSample.genotype[i,j]
+        originalValue = newSample.genotype[x,y]
         if originalValue == 1:
-            newSample.genotype[i,j] = 2
+            newSample.genotype[x,y] = 2
         else:
-            newSample.genotype[i,j] = 1
+            newSample.genotype[x,y] = 1
         
         return newSample
     
     def segmentMutation(self, genotype):
         if genotype == None:
             genotype = self.genotype
-        
-        
-    
+
 if __name__ == "__main__":
     aSample = GenotypeSample(77, 100)
     rValues = aSample.calcR(aSample.genotype)

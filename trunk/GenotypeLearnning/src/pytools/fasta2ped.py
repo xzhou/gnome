@@ -39,7 +39,7 @@ def fasta2ped(fastaFileName, pedFileName):
             pedFile.write(str(pedSequence[i][j]))
             pedFile.write(" ")
         pedFile.write("\n")
-    
+    pedSequence
     pedFile.close()
     
 if __name__ == '__main__':
