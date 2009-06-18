@@ -108,7 +108,6 @@ class SHC(object):
         '''
         hill climbing 5144bd1fd5124e26a7cf4bbe34457cc5246d5178c392eb87b0f6f87b67b66612
         '''
-        T = 1
         x = makeGenotype(self.nSnps, self.nIndividuals)
         #quality = self.evaluate(x.calcR(None))
         newDiff = 1
@@ -133,7 +132,7 @@ class SHC(object):
         '''
         statistic hill climbing
         '''
-        T = 1
+        T = 0.5
         x = makeGenotype(self.nSnps, self.nIndividuals)
         #quality = self.evaluate(x.calcR(None))
         newQuality = 1
@@ -158,13 +157,13 @@ class SHC(object):
 if __name__ == "__main__":
     #realRValues = readRFromFile("../../data/sim_4000seq/80SNP_CEU_sim_4000seq.rValue");
     psyco.full()
-    nSnps = 5
-    nIndividuals = 5
+    nSnps = 10
+    nIndividuals = 10
     max_it = 1000
     #realRValues = calcualteRFromFasta("../../data/sim_4000seq/80SNP_CEU_sim_4000seq.rValue")
     realGenotype = readGenotypeFromFasta("../../data/sim_4000seq/80SNP_CEU_sim_4000seq.fasta", nSnps, nIndividuals)
     #print realGenotype
     aSHC = SHC(max_it, realGenotype)
-    aSHC.hc(aSHC.max_it, 0)
+    aSHC.shc(aSHC.max_it, 0)
     #cProfile.run(aSHC.shc(aSHC.max_it, 0))
     

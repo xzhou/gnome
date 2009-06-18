@@ -96,6 +96,9 @@ class Genotype(object):
             return
         nSnps = n/2
         formatedSnps = self.formateSnps()
+        
+        
+        
         rValues = array([[2.0]*nSnps]*nSnps);
         for i in range(0, len(formatedSnps)-1):
             for j in range(i+1, len(formatedSnps)):
