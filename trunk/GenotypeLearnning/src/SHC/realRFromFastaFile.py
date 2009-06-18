@@ -135,5 +135,5 @@ def readGenotypeFromFasta(FileName, nSnps, nIndividuals):
             
 if __name__ == '__main__':
     fastaFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.fasta"
-    pedGenotype= readGenotypeFromFasta(fastaFileName, 77, 100)
-    print rValues[0,1]
+    pedGenotype= readGenotypeFromFasta(fastaFileName, -1, -1)
+    pedGenotype.calcR(None)
