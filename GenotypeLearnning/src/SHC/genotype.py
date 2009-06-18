@@ -9,25 +9,55 @@ from rpy2 import *      #import R interface and calling optimize function
 import rpy2.robjects as robjects
 import copy
 
-class GenotypeSample(object):
+
+def fillGenotypeWithRandomValue(genotype):
+    '''
+    @param genotype:    the genotype
+    '''
+    (n,m) = shape(genotype)
+    for i in range(0, n):
+        for j in range(0,m):
+            x = random.random()
+            if x <= 0.5:
+                genotype[i,j] = 1       #major
+            else:
+                genotype[i,j] = 2       #minor
+    return genotype
+
+def makeGenotype(nSnps, nIndividual):
+    nSnps = nSnps;
+    nIndividual = nIndividual
+    genotype = array([[0]*(2*nSnps)]*nIndividual)   #we use the ped format
+    fillGenotypeWithRandomValue(genotype)
+    return Genotype(genotype)
+
+
+
+
+class Genotype(object):
     '''
     GenotypeSample represent a sample of binary encoded genotype sequence
     ''' 
     r = robjects.r
     r.library("rcalc")
     
-    def __init__(self, nSnps, nIndividual):
-        self.nSnps = nSnps;
-        self.nIndividual = nIndividual
-        self.genotype = array([[0]*(2*nSnps)]*nIndividual)   #we use the ped format
-        self.generateRandomGenotypeSample(self.genotype)
-        
+    def __init__(self, genotype):
+        (m,n) = shape(genotype)
+        self.nSnps = n/2
+        self.nIndividual = m
+        self.genotype = genotype
+
+    def getNSnps(self):
+        return self.nSnps
+    
+    def getNIndividuals(self):
+        return self.nIndividual
+    
     def setGenotype(self, genotype):
         self.genotype = genotype
         (m,n) = shape(genotype)
         self.nSnps = n/2
         self.nIndividual = m
-        
         
     def convert2RGenotypeFormat(self, snp1):
         newsnp1 = []
@@ -37,9 +67,9 @@ class GenotypeSample(object):
         return newsnp1
 
     def calcR2Snps(self, snp1, snp2):
-        g1 = GenotypeSample.r.genotype(snp1)
-        g2 = GenotypeSample.r.genotype(snp2)
-        result = GenotypeSample.r.rcalc(g1, g2)
+        g1 = Genotype.r.genotype(snp1)
+        g2 = Genotype.r.genotype(snp2)
+        result = Genotype.r.rcalc(g1, g2)
         rValue = result[0][0]
         #print "r=", result[0][0], "pAB=", result[1][0]
         return rValue
@@ -76,20 +106,6 @@ class GenotypeSample(object):
                 rValues[j,i] = r
                 #print i,j,r
         return rValues
-    
-    def generateRandomGenotypeSample(self, genotype):
-        '''
-        @param genotype:    the genotype
-        '''
-        (n,m) = shape(genotype)
-        for i in range(0, n):
-            for j in range(0,m):
-                x = random.random()
-                if x <= 0.5:
-                    genotype[i,j] = 1       #major
-                else:
-                    genotype[i,j] = 2       #minor
-        return genotype
 
     def singlePointMutation(self):
         
@@ -113,7 +129,7 @@ class GenotypeSample(object):
             genotype = self.genotype
 
 if __name__ == "__main__":
-    aSample = GenotypeSample(77, 100)
+    aSample = Genotype(77, 100)
     rValues = aSample.calcR(aSample.genotype)
     
     
