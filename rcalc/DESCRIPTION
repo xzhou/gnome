@@ -1,0 +1,11 @@
+Package: rcalc
+Version: 0.1
+Date: 2009-06-12
+Title: rcalc
+Author: Xiaoyong Zhou <zhou@indiana.edu>
+Maintainer: Xiaoyong Zhou <zhou@indiana.edu>
+Depends: R (>= 2.0.0), mygenetics, grid
+Description: Calcualte R values
+URL: http://sysseclab.informatics.indiana.edu
+Packaged: Wed Jan 17 14:57:30 2009; Zhou
+License: GPL version 2 or newe

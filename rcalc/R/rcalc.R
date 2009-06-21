@@ -3,9 +3,10 @@
 # Author: xzhou
 ###############################################################################
 
-#function calcAllR will calculate the r value for all pair of genotypes 
+#function calcAllR will calculate the r value for all pair of genotypes
 calcAllR <- function(g1,...)
 {
+
 	gvars <- sapply( g1, function(x) (is.genotype(x) && nallele(x)==2) )
 	if(any(gvars==FALSE))
 	{
@@ -16,9 +17,6 @@ calcAllR <- function(g1,...)
 		)
 		g1 <- g1[,gvars]
 	}
-	
-	
-	
 	#do some thing here, I must try to recover those error
 	#those column is invalid
 	fnames = which(!gvars)
@@ -26,116 +24,28 @@ calcAllR <- function(g1,...)
 	P <- matrix(nrow=ncol(g1),ncol=ncol(g1))
 	rownames(P) <- colnames(g1)
 	colnames(P) <- colnames(g1)
-	
-	
 	#add by xzhou@indiana, dump pA, pB, pAB
-	P <- D <- Dprime <- nobs <- chisq <- p.value <- corr <- R.2 <- pA <- nameA <- namea <- pB <- nameB <- nameb <- pAB <- cAMax <-cAMin <- cANA <-cBMax <-cBMin <- cBNA <- P
-	P <- n11 <- n12 <- n13 <- n21 <- n22 <- n23 <- n31 <- n32 <- n33 <- P
-	P <- R.1 <- P
+	P<-r<-pAB<-pA<-pB<-P
 	
-	cat("@LD(g1...) ncol=", ncol(g1))
-	cat("@LD(pA...) ncol=", ncol(pA))
+	#cat("@LD(g1...) ncol=", ncol(g1))
+	#cat("@LD(pA...) ncol=", ncol(pA))
 	
 	for(i in 1:(ncol(g1)-1) )
 		for(j in (i+1):ncol(g1) )
 		{
-			ld <- LD( g1[,i], g1[,j] )
-			
-			D      [i,j] <- ld$D
-			Dprime [i,j] <- ld$"D'"
-			
-			
-			if(FALSE && abs(ld$"r") <= 0.1)
-			{
-				corr   [i,j] <- 1.0
-			}
-			else
-			{
-				corr   [i,j] <- ld$"r"
-			}
-			
-			#cut lower triangle
-			if(FALSE)
-			{
-				corr   [i,j] <- ld$"r"
-				if((j-i)>=40)
-				{
-					corr   [i,j] = 1.0
-				}
-			}
-			
-			R.2    [i,j] <- ld$"R^2"
-			nobs   [i,j] <- ld$"n"
-			chisq  [i,j] <- ld$"X^2"
-			p.value[i,j] <- ld$"P-value"
+			ld <- rcalc( g1[,i], g1[,j] )
+			r[i,j] <- ld$"r"
 			pA[i,j] <- ld$"pA"
-			cAMax[i, j] <- ld$"cAMax"
-			cAMin[i, j] <- ld$"cAMin"
-			cANA[i, j] <- ld$"cANA"
-			
 			pB[i,j] <- ld$"pB"
-			cBMax[i,j] <- ld$"cBMax"
-			cBMin[i,j] <- ld$"cBMin"
-			cBNA[i,j] <- ld$"cBNA"
-			
 			pAB[i,j] <- ld$"pAB"
-			
-			nameA[i,j] <- ld$"mA"
-			nameB[i,j] <- ld$"mB"
-			namea[i,j] <- ld$"ma"
-			nameb[i,j] <- ld$"mb"
-			
-			n11[i,j] <- ld$"n11"
-			n12[i,j] <- ld$"n12"
-			n13[i,j] <- ld$"n13"
-			n21[i,j] <- ld$"n21"
-			n22[i,j] <- ld$"n22"
-			n23[i,j] <- ld$"n23"
-			n31[i,j] <- ld$"n31"
-			n32[i,j] <- ld$"n32"
-			n33[i,j] <- ld$"n33"
 		}
-	
 	#out put the value
-	
-	
 	retval <- list(
-			call=match.call(),
-			"D"=D,
-			"D'"=Dprime,
-			"r" = corr,
-			"R^2" = R.2,
-			"n"=nobs,
-			"X^2"=chisq,
-			"P-value"=p.value,
+			"r" = r,
 			"pA"=pA,
 			"pB"=pB,
-			"pAB"=pAB,
-			"cAMax"=cAMax,
-			"cAMin"=cAMin,
-			"cANA"=cANA,
-			"cBMax"=cBMax,
-			"cBMin"=cBMin,
-			"cBNA"=cBNA,
-			"nameA"=nameA,
-			"nameB"=nameB,
-			"namea"=namea,
-			"nameb"=nameb,
-			
-			"n11" = n11,
-			"n12" = n12,
-			"n13" = n13,
-			"n21" = n21,
-			"n22" = n22,
-			"n23" = n23,
-			"n31" = n31,
-			"n32" = n32,
-			"n33" = n33,
-			"fnames" = fnames
+			"pAB"=pAB
 	)
-	
-	class(retval) <- "LD.data.frame"
-	
 	retval
 }
 	
@@ -145,8 +55,6 @@ rcalc <- function(g1, g2, ...)
 	if(nallele(g1) != 2 || nallele(g2) != 2)
 	{
 		#warning("Program only support 2-allele genotype")
-		#g1
-		#g2
 		retval <- list("r" = 0.0, "pAB" = 0.0, "pA" = 0.0, "pB" = 0.0)
 		return(retval)
 	}
@@ -238,7 +146,7 @@ rcalc <- function(g1, g2, ...)
 	
 	#return r
 	
-	retval <- list("r" = corr, "pAB" = pAB, "pA" = pA, "pB" = pB)
+	retval <- list("r"=corr, "pAB"=pAB, "pA"=pA, "pB"=pB)
 	
 	retval
 }
