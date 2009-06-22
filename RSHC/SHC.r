@@ -4,7 +4,7 @@
 ###############################################################################
 source("rcalc.R")
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 1000, nIndividuals = 100, nSnps = 10)
+shcMain <- function(targetGenotypeFileName = "", max_it = 1000, nIndividuals = 10, nSnps = 10)
 {
 	# read the file from ped file and convert it to standard genotype matrix
 	readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
@@ -195,12 +195,11 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 1000, nIndividuals = 1
 		}
 		#print(sampleRValues)
 		#print(targetRValues)
-		
 		for(i in 1:m)
 		{
 			for(j in 1:n)
 			{
-				diff = targetRValues[i,j] - sampleRValues[i,j]
+				diff = targetRValues[i,j]*targetRValues[i,j] - sampleRValues[i,j]*sampleRValues[i,j]
 				totalDifference = totalDifference + abs(diff)
 				totalSigns = totalSigns + 1
 				if((targetRValues[i,j]*sampleRValues[i,j]) >= 0)
@@ -234,9 +233,8 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 1000, nIndividuals = 1
 				currentQuality <-  newQuality
 				#sim <-  similarity(var.targetGenoData, newx)
 				sim <- NULL
-				cat(t, "\n RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\t similarity=", sim, "\n")
+				cat(t, " RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\t similarity=", sim, "\n")
 				#print(x)
-				cat("\n\n")
 			}
 			else
 			{
