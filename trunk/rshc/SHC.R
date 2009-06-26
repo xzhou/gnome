@@ -60,7 +60,7 @@ findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 	GenoBlocks
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 1000, nIndividuals = 100, nSnps = 20)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 100, nSnps = 20)
 {
 	# read the file from ped file and convert it to standard genotype matrix
 	readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
