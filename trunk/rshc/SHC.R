@@ -202,6 +202,52 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 		rValue <- retValue$r
 	}
 	
+	sortMatrixByRow <- function(aGenotype, ...)
+	{
+		m = nrow(aGenotype)
+		n = ncol(aGenotype)
+		
+		more <- function(a, b)
+		{
+			len = length(a)
+			for(i in 1:len)
+			{
+				if(a[i] > b[i])
+				{
+					return(TRUE)
+				}
+				else if(a[i] < b[i])
+				{
+					return(FALSE)
+				}
+			}
+			#the same
+			return(FALSE)
+		}
+		
+		#bubble sort
+		swapped = FALSE
+		for(i in 1:(m-1))
+		{
+			for (j in 1:(m-i))
+			{				
+				print(aGenotype[j,])
+				print(aGenotype[j+1, ])
+				cat("j = ", j, "\n")
+				if(more(aGenotype[j,], aGenotype[j+1,]))
+				{
+					temp = aGenotype[j, ]
+					aGenotype[j,] = aGenotype[j+1, ]
+					aGenotype[j+1, ] = temp
+					swapped = TRUE
+				}
+			}
+			if(!swapped)
+				break
+		}
+		aGenotype
+	}
+	
 	similarity <- function(targetGenotype, sampleGenotype)
 	{
 		#majorize both of the genotype
@@ -219,18 +265,17 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 			warning("incompatible geno type")
 			stop()
 		}
+		#sort the genotype to compare
+		targetGenotype = sortMatrixByRow(targetGenotype)
+		sampleGenotype = sortMatrixByRow(sampleGenotype)
 		
-		total <-  m*n*1.0
-		correct <-  0.0
-		for(i in 1:m)
-			for(j in i:n)
-			{
-				if(targetGenotype[i,j] == sampleGenotype[i,j])
-				{
-					correct = correct + 1
-				}
-			}
-		rate <- correct/total
+		rowSimilar <- function(a,b)
+		{
+			#TODO
+		}
+
+		#TODO
+			
 	}
 	
 	
