@@ -231,9 +231,9 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 		{
 			for (j in 1:(m-i))
 			{				
-				print(aGenotype[j,])
-				print(aGenotype[j+1, ])
-				cat("j = ", j, "\n")
+				#print(aGenotype[j,])
+				#print(aGenotype[j+1, ])
+				#cat("j = ", j, "\n")
 				if(more(aGenotype[j,], aGenotype[j+1,]))
 				{
 					temp = aGenotype[j, ]
@@ -269,13 +269,21 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 		targetGenotype = sortMatrixByRow(targetGenotype)
 		sampleGenotype = sortMatrixByRow(sampleGenotype)
 		
-		rowSimilar <- function(a,b)
+		totalElement = m*n
+		correct = 0.0
+		for(i in 1:m)
 		{
-			#TODO
+			for(j in 1:n)
+			{
+				if(targetGenotype[i,j] == sampleGenotype[i,j])
+				{
+					correct = correct + 1
+				}
+			}
 		}
-
-		#TODO
-			
+		
+		#return the rate
+		correct/totalElement
 	}
 	
 	
@@ -314,9 +322,43 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 		ret <- list("diff"=totalDifference, "recoverRate" = correctSings/totalSigns)
 	}
 
-
+	stocasticHillClim <- function(var,...)
+	{
+		cat("start stocastic hill climbing with max_it = ", var.max_it, "T = ", var.T, "\n")
+		x <- generateRandomSample(var.nIndividuals, var.nSnps)
+		currentRValues <- calculateRValues(x)	#get the R values
+		
+		currentQuality <- evaluate(currentRValues, var.targetRValue)
+		
+		#print(currentQuality)
+		
+		t <- 0
+		
+		while(t < var.max_it && currentQuality$diff != 0)
+		{
+			t <-  t + 1
+			newx <- singlePointMutate(x)
+			newRValues <- calculateRValues(newx)
+			newQuality <- evaluate(newRValues, var.targetRValue)
+			
+			diff <-  newQuality$diff - currentQuality$diff
+			p <- 1/(1+exp(diff/var.T))
+			aRandomNumber = runif(1, 0, 1)			
+			if(aRandomNumber  < p){
+				x <- newx
+				currentQuality <-  newQuality
+				cat(t, "RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\n")
+			}
+			else
+			{
+				cat(t, "\n")
+				#cat(t, "p =", p)
+			}
+		}
+		
+	}
 	
-	stocasticHillClimb <- function(var, targetRValues, max_it, nIndividuals, nSnps)
+	hillClimb <- function(var, targetRValues, max_it, nIndividuals, nSnps)
 	{
 		x <- generateRandomSample(nIndividuals, nSnps)
 		#print(x[1,])
@@ -335,8 +377,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 			{
 				x <- newx
 				currentQuality <-  newQuality
-				#sim <-  similarity(var.targetGenoData, newx)
-				sim <- NULL
+				sim <-  similarity(var.targetGenoData, newx)
 				cat(t, " RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\t similarity=", sim, "\n")
 				#print(x)
 			}
@@ -348,6 +389,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 	}
 	
 	#-------------------------VARIABLES--------------------------------
+	#var is the configuration variable
 	var.targetGenoData <- NULL
 	var.max_it <- NULL
 	var.nIndividuals <- NULL
@@ -360,6 +402,8 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 	var.nIndividuals <- nIndividuals
 	var.nSnps <- nSnps
 	
+	var.T <- 0.5
+	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
 	cat("complete \n")
@@ -369,7 +413,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 	cat("complete ", nrow(var.targetRValue), "X", ncol(var.targetRValue), "\n")
         
 	cat("start HC\n")
-	stocasticHillClimb(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
+	stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
 }
 #run the function as default config
 #debug(findGenotypeBlocks)
