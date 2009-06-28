@@ -329,9 +329,9 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 		cat("start simulated annealing algorithm\n")
 		#init
 		
-		T <- 100	#the init T
-		t <- 1		#iteration counter
-		i <- 1		#the iteration
+		T <- saConf.initT	#the init T
+		t <- 1				#iteration counter
+		i <- 1				#the iteration
 		x <- generateRandomSample(var.nIndividuals, var.nSnps)
 		cat(ncol(x), nrow(x), "\n")
 		currentRValues <- calculateRValues(x)
@@ -368,7 +368,8 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 				t = t + 1
 			}
 			
-			T <- saConf.beta*T #cool down
+			T <- saConf.beta*T #cool downc
+			cat("cool down", T, "\n")
 		}
 		#sink()
 		
@@ -459,8 +460,9 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	
 	var.T <- 0.5	#for statistic hill climbing
 	
+	saConf.initT <- 10
 	saConf.Tmin <- 0	#minial temperature
-	saConf.beta <- 0.9	#exponetial decreasing temperature
+	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
 	
 	cat("reading genodata from fasta file ...")
