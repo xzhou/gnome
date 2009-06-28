@@ -60,7 +60,7 @@ findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 	GenoBlocks
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 100, nSnps = 20)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 20)
 {
 	# read the file from ped file and convert it to standard genotype matrix
 	readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
@@ -322,6 +322,59 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 		ret <- list("diff"=totalDifference, "recoverRate" = correctSings/totalSigns)
 	}
 
+	#simulated annealing algorithm 
+	sa <- function(var, saConf, ...)
+	{
+		#sink(file="sa.log")
+		cat("start simulated annealing algorithm\n")
+		#init
+		
+		T <- 100	#the init T
+		t <- 1		#iteration counter
+		i <- 1		#the iteration
+		x <- generateRandomSample(var.nIndividuals, var.nSnps)
+		cat(ncol(x), nrow(x), "\n")
+		currentRValues <- calculateRValues(x)
+		currentQuality	<- evaluate(currentRValues, var.targetRValue)
+		
+		while(T >= saConf.Tmin)
+		{
+			for(i in 1:saConf.k)
+			{
+				newx <- singlePointMutate(x)
+				newRValues <- calculateRValues(newx)
+				newQuality <- evaluate(newRValues, var.targetRValue)
+				
+				if(newQuality$diff < currentQuality$diff)
+				{
+					x <- newx
+					currentRValue <- newRValues
+					currentQuality <- newQuality
+					cat(t, "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\n")
+				}
+				else
+				{
+					delta <-  newQuality$diff - currentQuality$diff
+					p <- exp(-delta/T)
+					randomV <- runif(1, 0, 1)
+					if(randomV < p)
+					{
+						x <- newx
+						currentRValue <- newRValues
+						currentQuality <- newQuality
+						cat(t, "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\n")
+					}
+				}
+				t = t + 1
+			}
+			
+			T <- saConf.beta*T #cool down
+		}
+		#sink()
+		
+	}
+	
+	#stacastic algorithm
 	stocasticHillClim <- function(var,...)
 	{
 		cat("start stocastic hill climbing with max_it = ", var.max_it, "T = ", var.T, "\n")
@@ -347,6 +400,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 			if(aRandomNumber  < p){
 				x <- newx
 				currentQuality <-  newQuality
+				currentRValues <- newRValues
 				cat(t, "RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\n")
 			}
 			else
@@ -377,6 +431,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 			{
 				x <- newx
 				currentQuality <-  newQuality
+				currentRValues <- newRValues
 				sim <-  similarity(var.targetGenoData, newx)
 				cat(t, " RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\t similarity=", sim, "\n")
 				#print(x)
@@ -402,7 +457,11 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 	var.nIndividuals <- nIndividuals
 	var.nSnps <- nSnps
 	
-	var.T <- 0.5
+	var.T <- 0.5	#for statistic hill climbing
+	
+	saConf.Tmin <- 0	#minial temperature
+	saConf.beta <- 0.9	#exponetial decreasing temperature
+	saConf.k <- 100		#number of iterations for each level of temperature
 	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
@@ -411,9 +470,10 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000, nIndividuals = 
 	#var.targetRValue <- calculateRValues(var.targetGenoData)
 	load("rValue")
 	cat("complete ", nrow(var.targetRValue), "X", ncol(var.targetRValue), "\n")
-        
-	cat("start HC\n")
-	stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
+    
+	#stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
+	#debug(sa)
+	sa(var, saConf)
 }
 #run the function as default config
 #debug(findGenotypeBlocks)
