@@ -60,6 +60,56 @@ findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 	GenoBlocks
 }
 
+#it is difficult to compare the distance between to genotype since the 
+#individual is not aligned, 
+maxWeightSimilarity <- function(g1, g2, ...)
+{
+	m1 = nrow(g1)
+	n1 = ncol(g1)
+	m2 = nrow(g2)
+	n2 = ncol(g2)
+	
+	if(m1 != m2 || n1 != n2)
+	{
+		warning("inconsistent matrix")
+		stop()
+	}
+	
+	similarityMatrix = matrix(0.0, m1, m2)
+	#calculate the distance of each row pairwise
+	for(i in 1:m1)
+	{
+		for(j in 1:m2)
+		{
+			r1 = g1[i,]
+			r2 = g2[j,]
+			diff = r1 - r2
+			sim = length(which(diff == 0))
+			similarityMatrix[i,j] = sim
+		}
+	}
+	
+	m = similarityMatrix
+	
+	#greedy algorithm
+	totalSim = 0.0
+	for(i in 1:m1)
+	{
+		x = which.max(m)
+
+		colIndex = ceiling(x/m1)
+		rowIndex = x%%m1
+		
+		cat("<", colIndex, rowIndex, "> max = ", m[x], "\n")
+		
+		totalSim = m[x] + totalSim
+		if(i != m1)
+			m = m[-rowIndex,-colIndex]
+	}
+	totalSim
+}
+
+
 shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {
 	# read the file from ped file and convert it to standard genotype matrix
@@ -248,14 +298,9 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 		aGenotype
 	}
 	
-	#it is difficult to compare the distance between to genotype since the 
-	#individual is not aligned
-	minWeightSimilarity <- function(g1, g2, ...)
-	{
-		
-	}
+
 	
-	
+
 	similarity <- function(targetGenotype, sampleGenotype)
 	{
 		#majorize both of the genotype
@@ -333,6 +378,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	#simulated annealing algorithm 
 	sa <- function(var, saConf, ...)
 	{
+		finalPopList = list()
 		for(ti in 1:saConf.totalIt)
 		{
 			#sink(file="sa.log")
@@ -383,10 +429,15 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 				}
 				T <- saConf.beta*T #cool downc
 				cat("cool down", T, "\n")
+				
+				if(currentQuality$diff < saConf.minDiff)
+					break
 			}
 			fileName = paste("finalPop", ti, sep="")
+			finalPopList[i] = x
 			save(x, file = fileName)
 		}
+		save(finalPopList, file = "finalPopList")
 	}
 	
 	#stacastic algorithm
@@ -480,7 +531,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	saConf.k <- 100		#number of iterations for each level of temperature
 	saConf.totalIt = 10		#repeat sa algorithm for times to see if you have 
 							#multiple local optimal value
-	
+	saConf.minDiff = 0.001
 	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
@@ -496,4 +547,4 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 }
 #run the function as default config
 #debug(findGenotypeBlocks)
-shcMain()
+#shcMain()
