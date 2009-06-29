@@ -350,7 +350,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 					x <- newx
 					currentRValue <- newRValues
 					currentQuality <- newQuality
-					cat(t, "\t-\t", "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\n")
+					cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
 				}
 				else
 				{
@@ -362,7 +362,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 						x <- newx
 						currentRValue <- newRValues
 						currentQuality <- newQuality
-						cat(t, "\t+\t", "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
+						cat(t, "\t+\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
 					}
 					else
 					{
@@ -462,10 +462,10 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	var.nIndividuals <- nIndividuals
 	var.nSnps <- nSnps
 	
-	var.T <- 0.5	#for statistic hill climbing
+	var.T <- 0.1	#for statistic hill climbing
 	
 	saConf.initT <- 0.1
-	saConf.Tmin <- 0	#minial temperature
+	saConf.Tmin <- 0.001	#minial temperature
 	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
 	
