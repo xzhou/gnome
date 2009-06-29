@@ -60,7 +60,7 @@ findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 	GenoBlocks
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 2000, nSnps = 77)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {
 	# read the file from ped file and convert it to standard genotype matrix
 	readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
@@ -325,58 +325,60 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	#simulated annealing algorithm 
 	sa <- function(var, saConf, ...)
 	{
-		#sink(file="sa.log")
-		cat("start simulated annealing algorithm\n")
-		#init
-		
-		T <- saConf.initT	#the init T
-		t <- 1				#iteration counter
-		i <- 1				#the iteration
-		x <- generateRandomSample(var.nIndividuals, var.nSnps)
-		cat(ncol(x), nrow(x), "\n")
-		currentRValues <- calculateRValues(x)
-		currentQuality	<- evaluate(currentRValues, var.targetRValue)
-		
-		while(T >= saConf.Tmin)
+		for(ti in 1:saConf.totalIt)
 		{
-			for(i in 1:saConf.k)
+			#sink(file="sa.log")
+			cat("start simulated annealing algorithm\n")
+			T <- saConf.initT	#the init T
+			t <- 1				#iteration counter
+			i <- 1				#the iteration
+			x <- generateRandomSample(var.nIndividuals, var.nSnps)
+			cat(ncol(x), nrow(x), "\n")
+			currentRValues <- calculateRValues(x)
+			currentQuality	<- evaluate(currentRValues, var.targetRValue)
+			
+			while(T >= saConf.Tmin)
 			{
-				newx <- singlePointMutate(x)
-				newRValues <- calculateRValues(newx)
-				newQuality <- evaluate(newRValues, var.targetRValue)
-				
-				if(newQuality$diff < currentQuality$diff)
+				for(i in 1:saConf.k)
 				{
-					x <- newx
-					currentRValue <- newRValues
-					currentQuality <- newQuality
-					cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
-				}
-				else
-				{
-					delta <-  newQuality$diff - currentQuality$diff
-					p <- exp(-delta/T)
-					randomV <- runif(1, 0, 1)
-					if(randomV < p)
+					newx <- singlePointMutate(x)
+					newRValues <- calculateRValues(newx)
+					newQuality <- evaluate(newRValues, var.targetRValue)
+					
+					if(newQuality$diff < currentQuality$diff)
 					{
 						x <- newx
 						currentRValue <- newRValues
 						currentQuality <- newQuality
-						cat(t, "\t+\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
+						cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
+						save(x, file = "currentPop")
 					}
 					else
 					{
-						cat(t, "\tX\t Rej\n")
+						delta <-  newQuality$diff - currentQuality$diff
+						p <- exp(-delta/T)
+						randomV <- runif(1, 0, 1)
+						if(randomV < p)
+						{
+							x <- newx
+							currentRValue <- newRValues
+							currentQuality <- newQuality
+							cat(t, "\t+\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
+							save(x, file = "currentPop")
+						}
+						else
+						{
+							cat(t, "\tX\t Rej\n")
+						}
 					}
+					t = t + 1
 				}
-				t = t + 1
+				T <- saConf.beta*T #cool downc
+				cat("cool down", T, "\n")
 			}
-			
-			T <- saConf.beta*T #cool downc
-			cat("cool down", T, "\n")
+			fileName = paste("finalPop", ti, sep="")
+			save(x, file = fileName)
 		}
-		#sink()
-		
 	}
 	
 	#stacastic algorithm
@@ -468,6 +470,9 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	saConf.Tmin <- 0.001	#minial temperature
 	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
+	saConf.totalIt = 10		#repeat sa algorithm for times to see if you have 
+							#multiple local optimal value
+	
 	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
