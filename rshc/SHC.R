@@ -248,6 +248,14 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 		aGenotype
 	}
 	
+	#it is difficult to compare the distance between to genotype since the 
+	#individual is not aligned
+	minWeightSimilarity <- function(g1, g2, ...)
+	{
+		
+	}
+	
+	
 	similarity <- function(targetGenotype, sampleGenotype)
 	{
 		#majorize both of the genotype
