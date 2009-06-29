@@ -60,7 +60,7 @@ findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 	GenoBlocks
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 20)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 50, nSnps = 10)
 {
 	# read the file from ped file and convert it to standard genotype matrix
 	readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
@@ -350,7 +350,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 					x <- newx
 					currentRValue <- newRValues
 					currentQuality <- newQuality
-					cat(t, "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\n")
+					cat(t, "\t-\t", "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\n")
 				}
 				else
 				{
@@ -362,7 +362,11 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 						x <- newx
 						currentRValue <- newRValues
 						currentQuality <- newQuality
-						cat(t, "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\n")
+						cat(t, "\t+\t", "diff = ", currentQuality$diff, "signRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
+					}
+					else
+					{
+						cat(t, "\tX\t Rej\n")
 					}
 				}
 				t = t + 1
@@ -460,7 +464,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	
 	var.T <- 0.5	#for statistic hill climbing
 	
-	saConf.initT <- 10
+	saConf.initT <- 0.1
 	saConf.Tmin <- 0	#minial temperature
 	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
