@@ -109,6 +109,34 @@ maxWeightSimilarity <- function(g1, g2, ...)
 	totalSim
 }
 
+checkSimlarity <- function()
+{
+	crossCompare <- matrix(0.0, 10, 10)
+	popList <- list()
+	for(i in 1:10)
+	{
+		fileName = paste("finalPop", i, sep = "")
+		x <- load(fileName)
+		popList <- c(popList, list(x))
+	}
+	
+	for(i in 1:9)
+	{
+		for(j in (i+1):10)
+		{
+			g1 = popList[i]
+			g2 = popList[j]
+			
+			sim <- maxWeightSimilarity(g1, g2)
+			crossCompare[i, j] <- sim
+			crossCompare[j, i] <- sim
+		}
+	}
+	
+	print(crossCompare)
+	
+}
+
 
 shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {
