@@ -98,13 +98,16 @@ maxWeightSimilarity <- function(g1, g2, ...)
 		x = which.max(m)
 
 		colIndex = ceiling(x/m1)
-		rowIndex = x%%m1
+		rowIndex = x - (m1*(colIndex-1))
 		
 		cat("<", colIndex, rowIndex, "> max = ", m[x], "\n")
 		
 		totalSim = m[x] + totalSim
-		if(i != m1)
-			m = m[-rowIndex,-colIndex]
+		
+		m[,colIndex] = -1
+		m[rowIndex, ] = -1
+		
+		print(m)
 	}
 	totalSim
 }
