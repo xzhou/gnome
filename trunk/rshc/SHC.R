@@ -115,23 +115,22 @@ checkSimlarity <- function()
 {
 	crossCompare <- matrix(0.0, 10, 10)
 	popList <- list()
-	for(i in 1:10)
-	{
-		fileName = paste("finalPop", i, sep = "")
-		x <- load(fileName)
-		popList <- c(popList, list(x))
-	}
-	
 	for(i in 1:9)
 	{
+		fileName = paste("finalPop", i, sep = "")
+		load(fileName)
+		y = x
 		for(j in (i+1):10)
 		{
-			g1 = popList[i]
-			g2 = popList[j]
+			fileName = paste("finalPop", j, sep = "")
+			load(fileName)
+			z = x
+
+			sim = maxWeightSimilarity(y, z)
 			
-			sim <- maxWeightSimilarity(g1, g2)
-			crossCompare[i, j] <- sim
-			crossCompare[j, i] <- sim
+			crossCompare[i,j] = sim
+			crossCompare[j,i] = sim
+			cat("<", i, j, "> = ", sim, "\n")
 		}
 	}
 	
