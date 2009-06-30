@@ -100,14 +100,13 @@ maxWeightSimilarity <- function(g1, g2, ...)
 		colIndex = ceiling(x/m1)
 		rowIndex = x - (m1*(colIndex-1))
 		
-		cat("<", colIndex, rowIndex, "> max = ", m[x], "\n")
+		#cat("<", colIndex, rowIndex, "> max = ", m[x], "\n")
 		
 		totalSim = m[x] + totalSim
 		
 		m[,colIndex] = -1
 		m[rowIndex, ] = -1
-		
-		
+
 	}
 	totalSim
 }
