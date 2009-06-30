@@ -107,7 +107,7 @@ maxWeightSimilarity <- function(g1, g2, ...)
 		m[,colIndex] = -1
 		m[rowIndex, ] = -1
 		
-		print(m)
+		
 	}
 	totalSim
 }
