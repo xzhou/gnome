@@ -4,12 +4,93 @@
 ###############################################################################
 source("rcalc.R")
 
-#calculate real R value
-calculateRealR <- function(fastaFilename = "/home/xzhou/research_linux/gnome/workspace/GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode")
+#calculate real R value using haplotype to see if any imporovements
+calculateRealR <- function(genotype)
 {
+	m <- nrow(genotype)
+	n <- ncol(genotype)
 	
+	nIndividuals <- m
+	nSnps <- round(n/2)
+	
+	combinedGenotyp <- matrix(0, 2*m, nSnps)
+	
+	#rearrange snps
+	for(j in seq(1, n, 2))
+	{
+		left <- genotype[,j]
+		right <- genotype[,j+1]
+		
+		colIndex = (j+1)/2
+		
+		for(i in seq(1, 2*m, 2))
+		{
+			rowIndex <- (i+1)/2
+			combinedGenotyp[i, colIndex] <- left[rowIndex]
+			combinedGenotyp[i+1, colIndex] <- right[rowIndex]
+		}
+	}
+	
+	m <- nrow(combinedGenotyp)
+	n <- ncol(combinedGenotyp)
+	
+	r <- matrix(-2, n, n)
+	
+	diag(r) <- 0
+	
+	for(i in seq(1, n-1))
+	{
+		for(j in seq(i+1, n))
+		{
+			c00 <- c01 <- c10 <- c11 <- 0
+			
+			snp1 = combinedGenotyp[,i]
+			snp2 = combinedGenotyp[,j]
+			
+			len <- length(snp1)
+			
+			#modify the code for
+			for(k in seq(1, len))
+			{
+				if(snp1[k] == 1 && snp2[k] == 1)
+					c00 = c00 + 1
+				else if(snp1[k] == 1 && snp2[k] == 2)
+					c01 = c01 + 1
+				else if(snp1[k] == 2 && snp2[k] == 1)
+					c10 = c10 + 1
+				else if(snp1[k] == 2 && snp2[k] == 2)
+					c11 = c11 + 1
+				else
+				{
+					warning("error reading genotype")
+					stop()
+				}
+			}
+			
+			c0x <- c00 + c01
+			c1x <- c10 + c11
+			cx0 <- c00 + c10
+			cx1 <- c01 + c11
+			
+			D = c00*c11 - c01*c10 + 0.0
+			L = c0x*c1x*cx0*cx1
+			
+			if(L == 0)
+			{
+				r[i, j] = 0
+			}
+			else
+			{
+				r[j,i] <- r[i,j] <-  D/sqrt(L)
+				#cat(i,j, r[i,j], "\n")
+			}
+			
+		}
+	}
+	
+	#print(r)
+	r
 }
-
 
 diffR <- function(estR, realR)
 {
@@ -258,41 +339,40 @@ checkFinalPop <- function()
 	}
 }
 
+# read the file from ped file and convert it to standard genotype matrix
+readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
+{
+	genoData <- read.table(fileName,
+			header = FALSE)
+	
+	#DEBUG
+	#print(genoData[1:2,])
+	
+	m <- nrow(genoData)
+	n <- ncol(genoData)
+	
+	#DEBUG
+	#cat(class(genoData), "nRow = ", m, "nCol = ", n, "\n")
+	
+	if(nIndividuals == -1)
+		nIndividuals = m
+	
+	if(nSnps == -1)
+		nSnps = n/2
+	
+	if(m < nIndividuals || n < 2*nSnps)
+	{
+		cat("not enough snps")
+		stop()
+	}
+	
+	#cut
+	genoData <- genoData[1:nIndividuals, 1:(2*nSnps)]
+	#as.character(genoData)
+}
 
 shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {
-	# read the file from ped file and convert it to standard genotype matrix
-	readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
-	{
-		genoData <- read.table(fileName,
-				header = FALSE)
-		
-		#DEBUG
-		#print(genoData[1:2,])
-		
-		m <- nrow(genoData)
-		n <- ncol(genoData)
-		
-		#DEBUG
-		#cat(class(genoData), "nRow = ", m, "nCol = ", n, "\n")
-		
-		if(nIndividuals == -1)
-			nIndividuals = m
-		
-		if(nSnps == -1)
-			nSnps = n/2
-		
-		if(m < nIndividuals || n < 2*nSnps)
-		{
-			cat("not enough snps")
-			stop()
-		}
-		
-		#cut
-		genoData <- genoData[1:nIndividuals, 1:(2*nSnps)]
-		#as.character(genoData)
-	}
-	
 
 	#generate a genotype matrix of nIndividuals X nSnps
 	generateRandomSample <- function(nIndividual, nSnps)
@@ -610,16 +690,24 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
-	save(var.targetGenoData, file="targetGenoData")
+	save(var.targetGenoData, file = "targetGenoData")
 	cat("complete \n")
 	cat("calculating estimated R value ... ... ...")
 	var.targetRValue <- calculateRValues(var.targetGenoData)
+	var.targetRealRValue <- calculateRealR(var.targetGenoData)
+	
+	rValueDiff = var.targetRValue - var.targetRealRValue
+	
+	diff_square <- rValueDiff * rValueDiff
+	
+	print(diff_square)
+	#print(summary(matrix(diff_square, nSnps*nSnps, 1)))
+	
 	#load("rValue")
 	cat("complete ", nrow(var.targetRValue), "X", ncol(var.targetRValue), "\n")
-    
 	#stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
 	#debug(sa)
-	sa(var, saConf)
+	#sa(var, saConf)
 }
 #run the function as default config
 #debug(findGenotypeBlocks)
