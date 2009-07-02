@@ -43,13 +43,10 @@ calcAllR <- function(g1,...)
 			pAB[i,j] <- pAB[j,i]<- ld$"pAB"
 		}
 	
-	for(i in 1:(ncol(g1)))
-	{
-		r[i,i] = 1
-		pA[i,i] = 1
-		pB[i,i] = 1
-		pAB[i,i] = 1
-	}
+	diag(r) = 0
+	diag(pA) = 0
+	diag(pB) = 0
+	diag(pAB) = 0
 	
 	#out put the value
 	retval <- list(
@@ -148,6 +145,7 @@ rcalc <- function(g1, g2, ...)
 		estDp <- estD / Dmax
 	else
 		estDp <- estD / Dmin
+	
 	n <-  sum(n3x3)
 	
 	corr <- estD / sqrt( pA * pB * pa * pb )
