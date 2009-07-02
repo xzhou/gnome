@@ -4,6 +4,21 @@
 ###############################################################################
 source("rcalc.R")
 
+#calculate real R value
+calculateRealR <- function(fastaFilename = "/home/xzhou/research_linux/gnome/workspace/GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode")
+{
+	
+}
+
+
+diffR <- function(estR, realR)
+{
+	fileName <- "/home/xzhou/research_linux/gnome/workspace/GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.rValue"
+	realR <- read.table(filename)
+	
+}
+
+
 #locate 
 findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 {
@@ -61,7 +76,8 @@ findGenotypeBlocks <- function(rValue, avgThreshold = 0.3, minBlockSize = 1)
 }
 
 #it is difficult to compare the distance between to genotype since the 
-#individual is not aligned, 
+#individual is not aligned, we use a greedy algorithm to determine the distance
+
 maxWeightSimilarity <- function(g1, g2, ...)
 {
 	m1 = nrow(g1)
@@ -136,6 +152,110 @@ checkSimlarity <- function()
 	
 	print(crossCompare)
 	
+}
+
+convert <- function()
+{
+	for(i in 1:10)
+	{
+		fileName = paste("finalPop", i, sep="")
+		load(fileName)
+		write.table(x, file = paste(fileName, ".txt", sep=""), col.names=FALSE, row.names=FALSE)
+	}
+}
+
+
+
+#calculate the R values
+calculateRValues <- function(genoData)
+{
+	formatedGenotype <- NULL
+	n <-  ncol(genoData)
+	
+	#DEBUG
+	#cat("genoData", nrow(genoData), ncol(genoData), "\n")
+	
+	for(i in seq(1, n, by = 2))
+	{
+		formatedGenotype = cbind(formatedGenotype, cbind(paste(genoData[,i], genoData[,i+1], sep="/")))
+	}
+	
+	#debug
+	#print(formatedGenotype[,77])
+	
+	n <-  ncol(formatedGenotype)
+	m <-  nrow(formatedGenotype)
+	
+	#cat("formated", m,n)
+	
+	plotGenoData <- data.frame(formatedGenotype)
+	
+	#DEBUG
+	#cat("plotGenoData", nrow(plotGenoData), ncol(plotGenoData), "\n")
+	
+	for(i in seq(1, n))
+	{
+		plotGenoData[,i] <- genotype(formatedGenotype[,i])
+	}
+	
+	#print(plotGenoData[,77])
+	retValue <- calcAllR(plotGenoData)
+	
+	#DEBUG
+	#stop("Debug check @calculateRValue")
+	
+	rValue <- retValue$r
+}
+
+evaluate <- function(sampleRValues, targetRValues, ...) 
+{
+	#sampleRValues <- calculateRValues(genoData)
+	totalDifference = 0.0
+	totalSigns = 0.0
+	correctSings = 0.0
+	m = nrow(sampleRValues)
+	n = ncol(sampleRValues)
+	
+	if( m != n)
+	{
+		warning("different matrix")
+		stop()
+	}
+	#print(sampleRValues)
+	#print(targetRValues)
+	for(i in 1:m)
+	{
+		for(j in 1:n)
+		{
+			#calculate the R square difference as the 
+			diff = targetRValues[i,j]*targetRValues[i,j] - sampleRValues[i,j]*sampleRValues[i,j]
+			totalDifference = totalDifference + abs(diff)
+			totalSigns = totalSigns + 1
+			if((targetRValues[i,j]*sampleRValues[i,j]) >= 0)
+			{
+				correctSings = correctSings + 1
+			}
+		}
+	}
+	
+	ret <- list("diff"=totalDifference, "recoverRate" = correctSings/totalSigns)
+}
+
+
+#comfirm the result
+checkFinalPop <- function()
+{
+	load("rValue")				#load var.targetRValue
+	load("targetGenoData")		#load var.targetGenoData
+	
+	for(i in 1:10)
+	{
+		fileName <- paste("finalPop", i, sep = "")
+		load(fileName)			#load x
+		sampleR <- calculateRValues(x)
+		result <- evaluate(sampleR, var.targetRValue)
+		cat(i, "totalDiff = ", result$diff, "signRecoverRate", result$recoverRate, "\n")
+	}
 }
 
 
@@ -240,47 +360,6 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 		mGenoData
 	}
 	
-	#calculate the R values
-	calculateRValues <- function(genoData)
-	{
-		formatedGenotype <- NULL
-		n <-  ncol(genoData)
-		
-		#DEBUG
-		#cat("genoData", nrow(genoData), ncol(genoData), "\n")
-		
-		for(i in seq(1, n, by = 2))
-		{
-			formatedGenotype = cbind(formatedGenotype, cbind(paste(genoData[,i], genoData[,i+1], sep="/")))
-		}
-		
-		#debug
-		#print(formatedGenotype[,77])
-		
-		n <-  ncol(formatedGenotype)
-		m <-  nrow(formatedGenotype)
-		
-		#cat("formated", m,n)
-		
-		plotGenoData <- data.frame(formatedGenotype)
-		
-		#DEBUG
-		#cat("plotGenoData", nrow(plotGenoData), ncol(plotGenoData), "\n")
-		
-		for(i in seq(1, n))
-		{
-			plotGenoData[,i] <- genotype(formatedGenotype[,i])
-		}
-		
-		#print(plotGenoData[,77])
-		retValue <- calcAllR(plotGenoData)
-		
-		#DEBUG
-		#stop("Debug check @calculateRValue")
-		
-		rValue <- retValue$r
-	}
-	
 	sortMatrixByRow <- function(aGenotype, ...)
 	{
 		m = nrow(aGenotype)
@@ -328,7 +407,6 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	}
 	
 
-	
 
 	similarity <- function(targetGenotype, sampleGenotype)
 	{
@@ -370,39 +448,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	
 	
 	#evaluate the population
-	evaluate <- function(sampleRValues, targetRValues, ...) 
-	{
-		#sampleRValues <- calculateRValues(genoData)
-		totalDifference = 0.0
-		totalSigns = 0.0
-		correctSings = 0.0
-		m = nrow(sampleRValues)
-		n = ncol(sampleRValues)
-		
-		if( m != n)
-		{
-			warning("different matrix")
-			stop()
-		}
-		#print(sampleRValues)
-		#print(targetRValues)
-		for(i in 1:m)
-		{
-			for(j in 1:n)
-			{
-				#calculate the R square difference as the 
-				diff = targetRValues[i,j]*targetRValues[i,j] - sampleRValues[i,j]*sampleRValues[i,j]
-				totalDifference = totalDifference + abs(diff)
-				totalSigns = totalSigns + 1
-				if((targetRValues[i,j]*sampleRValues[i,j]) >= 0)
-				{
-					correctSings = correctSings + 1
-				}
-			}
-		}
-		
-		ret <- list("diff"=totalDifference, "recoverRate" = correctSings/totalSigns)
-	}
+
 
 	#simulated annealing algorithm 
 	sa <- function(var, saConf, ...)
@@ -564,10 +610,11 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
+	save(var.targetGenoData, file="targetGenoData")
 	cat("complete \n")
-	cat("calculating real R value ... ... ...")
-	#var.targetRValue <- calculateRValues(var.targetGenoData)
-	load("rValue")
+	cat("calculating estimated R value ... ... ...")
+	var.targetRValue <- calculateRValues(var.targetGenoData)
+	#load("rValue")
 	cat("complete ", nrow(var.targetRValue), "X", ncol(var.targetRValue), "\n")
     
 	#stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
@@ -576,4 +623,4 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 }
 #run the function as default config
 #debug(findGenotypeBlocks)
-#shcMain()
+shcMain()
