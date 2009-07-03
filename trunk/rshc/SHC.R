@@ -371,7 +371,7 @@ readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_
 	#as.character(genoData)
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 10)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = -1, nSnps = -1)
 {
 
 	#generate a genotype matrix of nIndividuals X nSnps
@@ -696,11 +696,14 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	var.targetRValue <- calculateRValues(var.targetGenoData)
 	var.targetRealRValue <- calculateRealR(var.targetGenoData)
 	
+	write.table(var.targetRValue, file="estR.txt")
+	write.table(var.targetRealRValue, file = "realR.txt")
+	
 	rValueDiff = var.targetRValue - var.targetRealRValue
 	
 	diff_square <- rValueDiff * rValueDiff
 	
-	print(diff_square)
+	#print(diff_square)
 	#print(summary(matrix(diff_square, nSnps*nSnps, 1)))
 	
 	#load("rValue")
