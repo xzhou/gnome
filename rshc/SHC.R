@@ -371,7 +371,7 @@ readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_
 	#as.character(genoData)
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = -1, nSnps = -1)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {
 
 	#generate a genotype matrix of nIndividuals X nSnps
@@ -528,7 +528,70 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	
 	
 	#evaluate the population
-
+	realRSA <- function(var, saConf, ...)
+	{
+		finalPopList = list()
+		for(ti in 1:saConf.totalIt)
+		{
+			#sink(file="sa.log")
+			cat("start simulated annealing algorithm\n")
+			T <- saConf.initT	#the init T
+			t <- 1				#iteration counter
+			i <- 1				#the iteration
+			x <- generateRandomSample(var.nIndividuals, var.nSnps)
+			cat(ncol(x), nrow(x), "\n")
+			#currentRValues <- calculateRValues(x)
+			currentRValue <- calculateRealR(x)
+			currentQuality	<- evaluate(currentRValue, var.realR)
+			
+			while(T >= saConf.Tmin)
+			{
+				for(i in 1:saConf.k)
+				{
+					newx <- singlePointMutate(x)
+					newRValues <- calculateRealR(newx)
+					newQuality <- evaluate(newRValues, var.realR)
+					
+					if(newQuality$diff < currentQuality$diff)
+					{
+						x <- newx
+						currentRValue <- newRValues
+						currentQuality <- newQuality
+						cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
+						save(x, file = "currentPop")
+					}
+					else
+					{
+						delta <-  newQuality$diff - currentQuality$diff
+						p <- exp(-delta/T)
+						randomV <- runif(1, 0, 1)
+						if(randomV < p)
+						{
+							x <- newx
+							currentRValue <- newRValues
+							currentQuality <- newQuality
+							cat(t, "\t+\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
+							save(x, file = "currentPop")
+						}
+						else
+						{
+							cat(t, "\tX\t Rej\n")
+						}
+					}
+					t = t + 1
+				}
+				T <- saConf.beta*T #cool downc
+				cat("cool down", T, "\n")
+				
+				if(currentQuality$diff < saConf.minDiff)
+					break
+			}
+			fileName = paste("finalPop", ti, sep="")
+			finalPopList[i] = x
+			save(x, file = fileName)
+		}
+		save(finalPopList, file = "finalPopList")
+	}
 
 	#simulated annealing algorithm 
 	sa <- function(var, saConf, ...)
@@ -594,6 +657,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 		}
 		save(finalPopList, file = "finalPopList")
 	}
+	
 	
 	#stacastic algorithm
 	stocasticHillClim <- function(var,...)
@@ -694,12 +758,12 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	cat("complete \n")
 	cat("calculating estimated R value ... ... ...")
 	var.targetRValue <- calculateRValues(var.targetGenoData)
-	var.targetRealRValue <- calculateRealR(var.targetGenoData)
+	var.realR <- calculateRealR(var.targetGenoData)
 	
 	write.table(var.targetRValue, file="estR.txt")
-	write.table(var.targetRealRValue, file = "realR.txt")
+	write.table(var.realR, file = "realR.txt")
 	
-	rValueDiff = var.targetRValue - var.targetRealRValue
+	rValueDiff = var.targetRValue - var.realR
 	
 	diff_square <- rValueDiff * rValueDiff
 	
@@ -711,6 +775,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	#stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
 	#debug(sa)
 	#sa(var, saConf)
+	realRSA(var, saConf...)
 }
 #run the function as default config
 #debug(findGenotypeBlocks)
