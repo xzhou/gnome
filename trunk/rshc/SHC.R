@@ -304,6 +304,7 @@ evaluate <- function(sampleRValues, targetRValues, ...)
 	}
 	#print(sampleRValues)
 	#print(targetRValues)
+	
 	for(i in 1:m)
 	{
 		for(j in 1:n)
@@ -371,7 +372,7 @@ readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_
 	#as.character(genoData)
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 100, nSnps = 20)
+shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 200, nSnps = 10)
 {
 
 	#generate a genotype matrix of nIndividuals X nSnps
@@ -530,6 +531,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	#evaluate the population
 	realRSA <- function(var, saConf, ...)
 	{
+		cat("starting realRSA\n")
 		finalPopList = list()
 		for(ti in 1:saConf.totalIt)
 		{
@@ -587,10 +589,11 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 					break
 			}
 			fileName = paste("finalPop", ti, sep="")
-			finalPopList[i] = x
+			#finalPopList[i] = x
 			save(x, file = fileName)
 		}
 		save(finalPopList, file = "finalPopList")
+		cat("realRSA complete\n")
 	}
 
 	#simulated annealing algorithm 
@@ -745,10 +748,10 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	var.T <- 0.1	#for statistic hill climbing
 	
 	saConf.initT <- 0.1
-	saConf.Tmin <- 0.001	#minial temperature
+	saConf.Tmin <- 0.000001	#minial temperature
 	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
-	saConf.totalIt = 10		#repeat sa algorithm for times to see if you have 
+	saConf.totalIt = 1		#repeat sa algorithm for times to see if you have 
 							#multiple local optimal value
 	saConf.minDiff = 0.001
 	
@@ -758,25 +761,27 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	cat("complete \n")
 	cat("calculating estimated R value ... ... ...")
 	var.targetRValue <- calculateRValues(var.targetGenoData)
+	cat("complete \n")
+	cat("calculate real R... ... ...")
 	var.realR <- calculateRealR(var.targetGenoData)
+	cat("complete\n")
 	
 	write.table(var.targetRValue, file="estR.txt")
 	write.table(var.realR, file = "realR.txt")
 	
-	rValueDiff = var.targetRValue - var.realR
+	rDiff = abs(var.targetRValue - var.realR)
+	rsDiff = abs(var.targetRValue*var.targetRValue - var.realR*var.realR)
 	
-	diff_square <- rValueDiff * rValueDiff
+	rDiffList = matrix(rDiff, ncol = 1)
+	rsDiffList = matrix(rsDiff, ncol = 1)
 	
-	#print(diff_square)
-	#print(summary(matrix(diff_square, nSnps*nSnps, 1)))
-	
-	#load("rValue")
+	cat("R Diff\tmax = ", max(rDiff), "min = ", min(rDiff), "mean = ", mean(rDiff), "var = ", var(rDiffList), "\n", file = "report")
+	cat("RS Diff\t max = ", max(rsDiff), "min = ", min(rsDiff), "mean = ", mean(rsDiff), "var = ", var(rsDiffList), "\n", file = "report", append = T)
+
 	cat("complete ", nrow(var.targetRValue), "X", ncol(var.targetRValue), "\n")
-	#stocasticHillClim(var, var.targetRValue, var.max_it, var.nIndividuals, var.nSnps)
-	#debug(sa)
-	#sa(var, saConf)
-	realRSA(var, saConf...)
+	
+	realRSA(var, saConf)
 }
 #run the function as default config
-#debug(findGenotypeBlocks)
+
 shcMain()
