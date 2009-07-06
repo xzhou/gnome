@@ -766,7 +766,7 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 	saConf.Tmin <- 0.000001	#minial temperature
 	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
-	saConf.totalIt = 1		#repeat sa algorithm for times to see if you have 
+	saConf.totalIt = 10		#repeat sa algorithm for times to see if you have 
 							#multiple local optimal value
 	saConf.minDiff = 0.001
 	
