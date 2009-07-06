@@ -335,6 +335,52 @@ calculateRValues <- function(genoData)
 	rValue <- retValue$r
 }
 
+#calculate single allele frequency
+calculateSingleAlleleFrequence <- function(genotype, ...)
+{
+	m <- nrow(genotype)
+	n <- ncol(genotype)
+	
+	if(n%%2 != 0)
+	{
+		warning("genotype should have even number of alleles")
+		stop()
+	}
+	
+	nSnps <- round(n/2)
+	
+	singleAlleleFrequency = matrix(-1, nrow = 2, ncol = nSnps) 
+	
+	for(i in 1:nSnps)
+	{
+		snp <- c(genotype[,2*i-1], genotype[,2*i])
+		fct <- as.factor(snp)
+		smr <- summary(fct[!is.na(fct)])
+		
+		if(length(smr) == 1)
+		{
+			majorCount <- max(smr)
+			minorCount <- 0
+		}
+		else if(length(smr) == 2)
+		{
+			majorCount <- max(smr)
+			minorCount <- min(smr)
+		}
+		else
+		{
+			warning("each allele should have only ")
+			stop()
+		}
+		
+		singleAlleleFrequency[1, i] <- majorCount
+		singleAlleleFrequency[2, i] <- minorCount
+	}
+	
+	singleAlleleFrequency
+}
+
+
 evaluate <- function(sampleRValues, targetRValues, ...) 
 {
 	#sampleRValues <- calculateRValues(genoData)
@@ -530,6 +576,8 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 		#return the rate
 		correct/totalElement
 	}
+	
+	
 	
 	
 	#evaluate the population
