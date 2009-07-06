@@ -22,8 +22,6 @@ majorize <- function(genoData, ...)
 		major.A = combined[which.max(combined)]
 		major.a = combined[which.min(combined)]
 		
-		
-		
 		for (j in 1:m)
 		{
 			if(snp1[j] == major.A)
