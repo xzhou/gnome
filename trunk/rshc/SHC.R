@@ -4,9 +4,57 @@
 ###############################################################################
 source("rcalc.R")
 
+
+#change 1 and 2 according to the 1 as major and 2 as minor
+majorize <- function(genoData, ...)
+{
+	mGenoData <- NULL
+	
+	n <- ncol(genoData)
+	m <- nrow(genoData)
+	for(i in seq(1, n, by = 2))
+	{
+		snp1 = genoData[,i]
+		snp2 = genoData[,i+1]
+		
+		combined = c(snp1, snp2)	
+		
+		major.A = combined[which.max(combined)]
+		major.a = combined[which.min(combined)]
+		
+		
+		
+		for (j in 1:m)
+		{
+			if(snp1[j] == major.A)
+				snp1[j] = 1
+			else
+			{
+				snp1[j] = 2
+			}
+			
+			if(snp2[j] == major.A)
+			{
+				snp2[j] = 1
+			}
+			else
+			{
+				snp2[j] = 2
+			}
+		}
+		mGenoData <- cbind(mGenoData,  snp1, snp2)	
+	}
+	names(mGenoData) = NULL
+	mGenoData
+}
+
+
 #calculate real R value using haplotype to see if any imporovements
 calculateRealR <- function(genotype)
 {
+	
+	genotype <- majorize(genotype)
+	
 	m <- nrow(genotype)
 	n <- ncol(genotype)
 	
@@ -31,6 +79,8 @@ calculateRealR <- function(genotype)
 		}
 	}
 	
+	#print(combinedGenotyp)
+	
 	m <- nrow(combinedGenotyp)
 	n <- ncol(combinedGenotyp)
 	
@@ -40,7 +90,7 @@ calculateRealR <- function(genotype)
 	
 	for(i in seq(1, n-1))
 	{
-		for(j in seq(i+1, n))
+		for(j in (i+1):n)
 		{
 			c00 <- c01 <- c10 <- c11 <- 0
 			
@@ -77,11 +127,11 @@ calculateRealR <- function(genotype)
 			
 			if(L == 0)
 			{
-				r[i, j] = 0
+				r[j,i] <- r[i,j] <- 0
 			}
 			else
 			{
-				r[j,i] <- r[i,j] <-  D/sqrt(L)
+				r[j,i] <- r[i,j] <- D/sqrt(L)
 				#cat(i,j, r[i,j], "\n")
 			}
 			
@@ -96,7 +146,6 @@ diffR <- function(estR, realR)
 {
 	fileName <- "/home/xzhou/research_linux/gnome/workspace/GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.rValue"
 	realR <- read.table(filename)
-	
 }
 
 
@@ -304,10 +353,9 @@ evaluate <- function(sampleRValues, targetRValues, ...)
 	}
 	#print(sampleRValues)
 	#print(targetRValues)
-	
-	for(i in 1:m)
+	for(i in 1:(m-1))
 	{
-		for(j in 1:n)
+		for(j in (i+1):n)
 		{
 			#calculate the R square difference as the 
 			diff = targetRValues[i,j]*targetRValues[i,j] - sampleRValues[i,j]*sampleRValues[i,j]
@@ -372,7 +420,7 @@ readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_
 	#as.character(genoData)
 }
 
-shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals = 200, nSnps = 10)
+shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {
 
 	#generate a genotype matrix of nIndividuals X nSnps
@@ -398,49 +446,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 			genoData[i,j] = 1
 		genoData	
 	}
-	
-	
-	#change 1 and 2 according to the 1 as major and 2 as minor
-	majorize <- function(genoData, ...)
-	{
-		mGenoData <- NULL
-		
-		n <- ncol(genoData)
-		m <- nrow(genoData)
-		for(i in seq(1, n, by = 2))
-		{
-			snp1 = genoData[,i]
-			snp2 = genoData[,i+1]
-			
-			combined = c(snp1, snp2)
-			
-			major.A = combined[which.max(combined)]
-			major.a = combined[which.min(combined)]
-			
-			for (j in 1:m)
-			{
-				if(snp1[j] == major.A)
-					snp1[j] = 1
-				else
-				{
-					snp1[j] = 2
-				}
-				
-				if(snp2[j] == major.A)
-				{
-					snp2[j] = 1
-				}
-				else
-				{
-					snp2[j] = 2
-				}
-			}
-			mGenoData <- cbind(mGenoData,  snp1, snp2)	
-		}
-		names(mGenoData) = NULL
-		mGenoData
-	}
-	
+
 	sortMatrixByRow <- function(aGenotype, ...)
 	{
 		m = nrow(aGenotype)
@@ -546,7 +552,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 			currentRValue <- calculateRealR(x)
 			currentQuality	<- evaluate(currentRValue, var.realR)
 			
-			while(T >= saConf.Tmin)
+			while(T >= saConf.Tmin && currentQuality$diff > 0)
 			{
 				for(i in 1:saConf.k)
 				{
@@ -561,6 +567,15 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 						currentQuality <- newQuality
 						cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
 						save(x, file = "currentPop")
+						if(currentQuality$diff == 0)
+						{
+							#print(var.targetGenoData)
+							#print(x)
+							print(rbind(var.targetGenoData, x))
+							save(var.targetGenoData, file = "targetGenotype")
+							save(x, file = "sampleGenoType")
+							break
+						}		
 					}
 					else
 					{
@@ -612,7 +627,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 			currentRValues <- calculateRValues(x)
 			currentQuality	<- evaluate(currentRValues, var.targetRValue)
 			
-			while(T >= saConf.Tmin)
+			while(T >= saConf.Tmin && currentQuality$diff > 0)
 			{
 				for(i in 1:saConf.k)
 				{
@@ -627,6 +642,8 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 						currentQuality <- newQuality
 						cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
 						save(x, file = "currentPop")
+						if(currentQuality$diff == 0)
+							break
 					}
 					else
 					{
@@ -655,7 +672,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 					break
 			}
 			fileName = paste("finalPop", ti, sep="")
-			finalPopList[i] = x
+			#finalPopList[i] = x
 			save(x, file = fileName)
 		}
 		save(finalPopList, file = "finalPopList")
@@ -758,6 +775,7 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
 	save(var.targetGenoData, file = "targetGenoData")
+	print(var.targetGenoData)
 	cat("complete \n")
 	cat("calculating estimated R value ... ... ...")
 	var.targetRValue <- calculateRValues(var.targetGenoData)
@@ -784,4 +802,4 @@ shcMain <- function(targetGenotypeFileName = "", max_it = 10000000, nIndividuals
 }
 #run the function as default config
 
-shcMain()
+#shcMain()
