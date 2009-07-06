@@ -572,6 +572,7 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 							print(rbind(var.targetGenoData, x))
 							save(var.targetGenoData, file = "targetGenotype")
 							save(x, file = "sampleGenoType")
+							stop()
 							break
 						}		
 					}
@@ -590,7 +591,7 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 						}
 						else
 						{
-							cat(t, "\tX\t Rej\n")
+							#cat(t, "\tX\t Rej\n")
 						}
 					}
 					t = t + 1
@@ -639,7 +640,7 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 						currentRValue <- newRValues
 						currentQuality <- newQuality
 						cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
-						save(x, file = "currentPop")
+						save(x, file = "currentPop0diff")
 						if(currentQuality$diff == 0)
 							break
 					}
@@ -762,8 +763,8 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 	
 	var.T <- 0.1	#for statistic hill climbing
 	
-	saConf.initT <- 0.1
-	saConf.Tmin <- 0.000001	#minial temperature
+	saConf.initT <- 0.01
+	saConf.Tmin <- 1e-7	#minial temperature
 	saConf.beta <- 0.8	#exponetial decreasing temperature
 	saConf.k <- 100		#number of iterations for each level of temperature
 	saConf.totalIt = 10		#repeat sa algorithm for times to see if you have 

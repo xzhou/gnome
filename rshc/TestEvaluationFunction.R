@@ -13,6 +13,8 @@ sampleGenotype = as.data.frame(matrix(c(1,2,1,2,1,1,1,1,1,1,1,2,2,1,1,1,1,2,2,1)
 
 rValues <- calculateRealR(targetGenotype)
 sampleR <- calculateRealR(sampleGenotype)
+
+
 result <- evaluate(rValues,rValues)
 
 print(result)

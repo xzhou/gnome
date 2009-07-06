@@ -6,4 +6,4 @@
 
 source("SHC.R")
 
-shcMain(nIndividual = 4, nSnp = 20)
+shcMain(nIndividual = 3, nSnp = 10)
