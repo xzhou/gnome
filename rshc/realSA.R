@@ -6,97 +6,105 @@
 
 source("SHC.R")
 
-runRealRSA <- function()
+#' using real R value for simulated annealing
+#' 
+#' @param var include some global information 
+#' @param saConf is the configuration
+realRSA <- function(var, saConf, ...)
 {
+	#debug(evaluate)
+	print(var$targetGenoData)
+	target <- list()
+	target$RValues <- calculateRealR(var$targetGenoData)
+	target$singleAlleleFreq <- calculateSingleAlleleFrequence(var$targetGenoData)
 	
-	#' using real R value for simulated annealing
-	#' @param var include some global information 
-	#' @param saConf is the configuration
-	realRSA <- function(var, saConf, ...)
+	cat("starting realRSA\n")
+	finalPopList = list()
+	for(ti in 1:saConf$totalIt)
 	{
-		#debug(evaluate)
-		print(var$targetGenoData)
-		target <- list()
-		target$RValues <- calculateRealR(var$targetGenoData)
-		target$singleAlleleFreq <- calculateSingleAlleleFrequence(var$targetGenoData)
+		#sink(file="sa.log")
+		cat("start simulated annealing algorithm\n")
+		T <- saConf$initT	#the init T
+		t <- 1				#iteration counter
+		i <- 1				#the iteration
+		x <- generateRandomSample(var$nIndividuals, var$nSnps)
+		cat(ncol(x), nrow(x), "\n")
+		initSample <- list()
+		initSample$genotype <- x
+		initSample$RValues <- calculateRealR(x)
+		initSample$singleAlleleFreq <- calculateSingleAlleleFrequence(x)
+		currentQuality	<- evaluate(initSample, target)
 		
-		cat("starting realRSA\n")
-		finalPopList = list()
-		for(ti in 1:saConf$totalIt)
+		print("init quality\n")
+		print(currentQuality)
+		
+		
+		while(T >= saConf$Tmin && currentQuality$quality > 0)
 		{
-			#sink(file="sa.log")
-			cat("start simulated annealing algorithm\n")
-			T <- saConf$initT	#the init T
-			t <- 1				#iteration counter
-			i <- 1				#the iteration
-			x <- generateRandomSample(var$nIndividuals, var$nSnps)
-			cat(ncol(x), nrow(x), "\n")
-			initSample <- list()
-			initSample$genotype <- x
-			initSample$RValues <- calculateRealR(x)
-			initSample$singleAlleleFreq <- calculateSingleAlleleFrequence(x)
-			currentQuality	<- evaluate(initSample, target)
-			
-			while(T >= saConf$Tmin && currentQuality$quality > 0)
+			for(i in 1:saConf$k)
 			{
-				for(i in 1:saConf$k)
+				newx <- singlePointMutate(x)
+				sample <- list()
+				sample$RValues <- calculateRealR(newx)
+				sample$singleAlleleFreq <- calculateSingleAlleleFrequence(newx)
+				newQuality <- evaluate(sample, target)
+				
+				if(newQuality$quality < currentQuality$quality)
 				{
-					newx <- singlePointMutate(x)
-					sample <- list()
-					sample$RValues <- calculateRealR(newx)
-					sample$singleAlleleFreq <- calculateSingleAlleleFrequence(newx)
-					newQuality <- evaluate(sample, target)
-					
-					if(newQuality$quality < currentQuality$quality)
+					x <- newx
+					currentQuality <- newQuality
+					cat(t, " - ", "qdiff = ", currentQuality$quality, "  signRecoverRate = ", currentQuality$recoverRate)
+					cat("  ", "rdiff = ", currentQuality$normalizedRdiff, "  fdiff = ", currentQuality$normalizedFeqDiff, "\n")
+					save(x, file = "currentPop")
+					if(currentQuality$quality == 0)
+					{
+						#print(var$targetGenoData)
+						#print(x)
+						print(rbind(var$targetGenoData, x))
+						save(var$targetGenoData, file = "targetGenotype")
+						save(x, file = "sampleGenoType")
+						stop()
+						break
+					}		
+				}
+				else
+				{
+					delta <-  newQuality$quality - currentQuality$quality
+					p <- exp(-delta/T)
+					randomV <- runif(1, 0, 1)
+					if(randomV < p)
 					{
 						x <- newx
 						currentQuality <- newQuality
-						cat(t, "\t-\t", "diff = ", currentQuality$quality, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
+						cat(t, " + ", "qdiff = ", currentQuality$quality, "  signRecoverRate = ", currentQuality$recoverRate)
+						cat("  ", "rdiff = ", currentQuality$normalizedRdiff, "  fdiff = ", currentQuality$normalizedFeqDiff)
+						cat("  ", "p = ", p, "\n")
 						save(x, file = "currentPop")
-						if(currentQuality$quality == 0)
-						{
-							#print(var$targetGenoData)
-							#print(x)
-							print(rbind(var$targetGenoData, x))
-							save(var$targetGenoData, file = "targetGenotype")
-							save(x, file = "sampleGenoType")
-							stop()
-							break
-						}		
 					}
 					else
 					{
-						delta <-  newQuality$quality - currentQuality$quality
-						p <- exp(-delta/T)
-						randomV <- runif(1, 0, 1)
-						if(randomV < p)
-						{
-							x <- newx
-							currentQuality <- newQuality
-							cat(t, "\t+\t", "diff = ", currentQuality$quality, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
-							save(x, file = "currentPop")
-						}
-						else
-						{
-							#cat(t, "\tX\t Rej\n")
-						}
+						#cat(t, "\tX\t Rej\n")
 					}
-					t = t + 1
 				}
-				T <- saConf$beta*T #cool downc
-				cat("cool down", T, "\n")
-				
-				if(currentQuality$quality < saConf$minDiff)
-					break
+				t = t + 1
 			}
-			fileName = paste("finalPop", ti, sep="")
-			#finalPopList[i] = x
-			save(x, file = fileName)
+			T <- saConf$beta*T #cool downc
+			cat("cool down", T, "\n")
+			
+			if(currentQuality$quality < saConf$minDiff)
+				break
 		}
-		save(finalPopList, file = "finalPopList")
-		cat("realRSA complete\n")
+		fileName = paste("finalPop", ti, sep="")
+		#finalPopList[i] = x
+		save(x, file = fileName)
 	}
-	
+	save(finalPopList, file = "finalPopList")
+	cat("realRSA complete\n")
+}
+
+
+runRealRSA <- function()
+{
 	#-------------------------VARIABLES--------------------------------
 	#var is the global configuration variable
 	var <- list()
