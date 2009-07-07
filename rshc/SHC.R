@@ -343,7 +343,7 @@ calculatePairwiseAlleleFreq <- function(genotype)
 	m <- nrow(genotype)
 	n <- ncol(genotype)
 	
-	pairwiseFreq <- matrix(0, m*5, n*5)
+	
 	
 	for(i in 1:(n-1))
 	{
@@ -371,7 +371,9 @@ calculateSingleAlleleFrequence <- function(genotype, ...)
 	
 	nSnps <- round(n/2)
 	
-	singleAlleleFrequency = matrix(-1, nrow = 2, ncol = nSnps) 
+	#first row = major counts
+	#second row = minor counts
+	singleAlleleFrequency = matrix(-1, nrow = 2, ncol = nSnps)
 	
 	for(i in 1:nSnps)
 	{
@@ -404,16 +406,18 @@ calculateSingleAlleleFrequence <- function(genotype, ...)
 
 
 
-
-evaluate <- function(sampleGenotype, target, rWeight = 0.7, freqWeight = 0.3, ...) 
+#' Evaluate a sample
+#' 
+#' @param sample the sample genotype with sample.RValues, sample.singleAlleleFreq
+#' @param target the target
+evaluate <- function(sample, target, rWeight = 0.7, freqWeight = 0.3, ...) 
 {
-	sampleRValues <- calculateRealR(sampleGenotype)
-	sampleSingleAlleleFreq <- calculateSingleAlleleFrequence(sampleGenotype)
+	sampleRValues <- sample$RValues
+	sampleSingleAlleleFreq <- sample$singleAlleleFreq
 	
-	targetRValues <- target.targetRValues
-	targetSingleAlleleFreq <- target.targetSingleAlleleFreq
+	targetRValues <- target$RValues
+	targetSingleAlleleFreq <- target$singleAlleleFreq
 	
-	totalDifference = 0.0
 	totalSigns = 0.0
 	correctSigns = 0.0
 	m = nrow(sampleRValues)
@@ -436,12 +440,12 @@ evaluate <- function(sampleGenotype, target, rWeight = 0.7, freqWeight = 0.3, ..
 			totalSigns = totalSigns + 1
 			if(targetRValues[i,j] != 0 && sampleRValues[i,j] != 0)
 			{
-				if(targetRValuesp[i,j] * sampleRValues > 0)
+				if(targetRValues[i,j] * sampleRValues[i,j] > 0)
 				{
 					correctSigns = correctSigns + 1
 				}
 			}
-			else if(targetRValues[i, j] == 0 && sampleRValues[i, j] == 0)
+			else if(targetRValues[i,j] == 0 && sampleRValues[i,j] == 0)
 			{
 				correctSigns = correctSigns + 1
 			}
@@ -453,14 +457,13 @@ evaluate <- function(sampleGenotype, target, rWeight = 0.7, freqWeight = 0.3, ..
 	rdiff = sum(abs(targetRValues*targetRValues - sampleRValues*sampleRValues))
 	normalizedRDiff <- rdiff/sum(targetRValues*targetRValues)
 	
-	
 #	sampleUT <- sampleRValues(upper.tri(sampleRValues))
 #	targetUT <- targetRValues(upper.tri(targetRValues))
 #	mul <- sampleUT*targetUT
 #	signRecoverRate <- length(mul[mul>=0])/length(sampleUT)
 	
-	freqDiff = sum(abs(sampleSingleAlleleFreq - target.targetSingleAlleleFreq))
-	normalizedFreqDiff = freqDiff*1.0/sum(target.targetSingleAlleleFreq)
+	freqDiff = sum(abs(sampleSingleAlleleFreq - targetSingleAlleleFreq))
+	normalizedFreqDiff = freqDiff*1.0/sum(targetSingleAlleleFreq)
 	
 	quality = rWeight*normalizedRDiff + freqWeight * normalizedFreqDiff
 	
@@ -514,341 +517,264 @@ readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_
 	#cut
 	genoData <- genoData[1:nIndividuals, 1:(2*nSnps)]
 	#as.character(genoData)
+	genoData
 }
 
-shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", max_it = 10000000, nIndividuals = 100, nSnps = 10)
-{
 
-	#generate a genotype matrix of nIndividuals X nSnps
-	generateRandomSample <- function(nIndividual, nSnps)
+
+#generate a genotype matrix of nIndividuals X nSnps
+generateRandomSample <- function(nIndividual, nSnps)
+{
+	x = rbinom(nIndividual*2*nSnps, 1, 0.5) + 1
+	sampleGenoData <- matrix(x, nrow = nIndividual, ncol = 2*nSnps)
+	as.data.frame(sampleGenoData)
+}
+
+#mutate a single point
+singlePointMutate <- function(genoData, ...)
+{
+	m <- nrow(genoData)
+	n <- ncol(genoData)
+	
+	i <- round(runif(1, 1, m))
+	j <- round(runif(1, 1, n))
+	
+	if(genoData[i,j] == 1)
+		genoData[i,j] = 2
+	else if(genoData[i,j] == 2)
+		genoData[i,j] = 1
+	genoData	
+}
+
+sortMatrixByRow <- function(aGenotype, ...)
+{
+	m = nrow(aGenotype)
+	n = ncol(aGenotype)
+	
+	more <- function(a, b)
 	{
-		x = rbinom(nIndividual*2*nSnps, 1, 0.5) + 1
-		sampleGenoData <- matrix(x, nrow = nIndividual, ncol = 2*nSnps)
-		as.data.frame(sampleGenoData)
+		len = length(a)
+		for(i in 1:len)
+		{
+			if(a[i] > b[i])
+			{
+				return(TRUE)
+			}
+			else if(a[i] < b[i])
+			{
+				return(FALSE)
+			}
+		}
+		#the same
+		return(FALSE)
 	}
 	
-	#mutate a single point
-	singlePointMutate <- function(genoData, ...)
+	#bubble sort
+	swapped = FALSE
+	for(i in 1:(m-1))
 	{
-		m <- nrow(genoData)
-		n <- ncol(genoData)
-		
-		i <- round(runif(1, 1, m))
-		j <- round(runif(1, 1, n))
-		
-		if(genoData[i,j] == 1)
-			genoData[i,j] = 2
-		else if(genoData[i,j] == 2)
-			genoData[i,j] = 1
-		genoData	
-	}
-
-	sortMatrixByRow <- function(aGenotype, ...)
-	{
-		m = nrow(aGenotype)
-		n = ncol(aGenotype)
-		
-		more <- function(a, b)
-		{
-			len = length(a)
-			for(i in 1:len)
+		for (j in 1:(m-i))
+		{				
+			#print(aGenotype[j,])
+			#print(aGenotype[j+1, ])
+			#cat("j = ", j, "\n")
+			if(more(aGenotype[j,], aGenotype[j+1,]))
 			{
-				if(a[i] > b[i])
-				{
-					return(TRUE)
-				}
-				else if(a[i] < b[i])
-				{
-					return(FALSE)
-				}
+				temp = aGenotype[j, ]
+				aGenotype[j,] = aGenotype[j+1, ]
+				aGenotype[j+1, ] = temp
+				swapped = TRUE
 			}
-			#the same
-			return(FALSE)
 		}
-		
-		#bubble sort
-		swapped = FALSE
-		for(i in 1:(m-1))
+		if(!swapped)
+			break
+	}
+	aGenotype
+}
+
+
+
+similarity <- function(targetGenotype, sampleGenotype)
+{
+	#majorize both of the genotype
+	targetGenotype <- majorize(targetGenotype)
+	sampleGenotype <- majorize(sampleGenotype)
+	
+	m <- mt <-  nrow(targetGenotype)
+	n <- nt <-  ncol(sampleGenotype)
+	
+	ms <-  nrow(sampleGenotype)
+	ns <-  ncol(sampleGenotype)
+	
+	if( mt != ms || ns != ns)
+	{
+		warning("incompatible geno type")
+		stop()
+	}
+	#sort the genotype to compare
+	targetGenotype = sortMatrixByRow(targetGenotype)
+	sampleGenotype = sortMatrixByRow(sampleGenotype)
+	
+	totalElement = m*n
+	correct = 0.0
+	for(i in 1:m)
+	{
+		for(j in 1:n)
 		{
-			for (j in 1:(m-i))
-			{				
-				#print(aGenotype[j,])
-				#print(aGenotype[j+1, ])
-				#cat("j = ", j, "\n")
-				if(more(aGenotype[j,], aGenotype[j+1,]))
-				{
-					temp = aGenotype[j, ]
-					aGenotype[j,] = aGenotype[j+1, ]
-					aGenotype[j+1, ] = temp
-					swapped = TRUE
-				}
+			if(targetGenotype[i,j] == sampleGenotype[i,j])
+			{
+				correct = correct + 1
 			}
-			if(!swapped)
+		}
+	}
+	
+	#return the rate
+	correct/totalElement
+}
+
+#TODO change code to accomodate the new evluate function
+#simulated annealing algorithm 
+sa <- function(var, saConf, ...)
+{
+	finalPopList = list()
+	for(ti in 1:saConf.totalIt)
+	{
+		#sink(file="sa.log")
+		cat("start simulated annealing algorithm\n")
+		T <- saConf.initT	#the init T
+		t <- 1				#iteration counter
+		i <- 1				#the iteration
+		x <- generateRandomSample(var.nIndividuals, var.nSnps)
+		cat(ncol(x), nrow(x), "\n")
+		#currentRValues <- calculateRValues(x)
+		currentQuality	<- evaluate(currentRValues, var.targetRValue)
+		
+		while(T >= saConf.Tmin && currentQuality$diff > 0)
+		{
+			for(i in 1:saConf.k)
+			{
+				newx <- singlePointMutate(x)
+				newRValues <- calculateRValues(newx)
+				newQuality <- evaluate(newRValues, var.targetRValue)
+				
+				if(newQuality$diff < currentQuality$diff)
+				{
+					x <- newx
+					currentRValue <- newRValues
+					currentQuality <- newQuality
+					cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
+					save(x, file = "currentPop0diff")
+					if(currentQuality$diff == 0)
+						break
+				}
+				else
+				{
+					delta <-  newQuality$diff - currentQuality$diff
+					p <- exp(-delta/T)
+					randomV <- runif(1, 0, 1)
+					if(randomV < p)
+					{
+						x <- newx
+						currentRValue <- newRValues
+						currentQuality <- newQuality
+						cat(t, "\t+\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
+						save(x, file = "currentPop")
+					}
+					else
+					{
+						cat(t, "\tX\t Rej\n")
+					}
+				}
+				t = t + 1
+			}
+			T <- saConf.beta*T #cool downc
+			cat("cool down", T, "\n")
+			
+			if(currentQuality$diff < saConf.minDiff)
 				break
 		}
-		aGenotype
+		fileName = paste("finalPop", ti, sep="")
+		#finalPopList[i] = x
+		save(x, file = fileName)
 	}
-	
+	save(finalPopList, file = "finalPopList")
+}
 
 
-	similarity <- function(targetGenotype, sampleGenotype)
+#stacastic algorithm
+stocasticHillClim <- function(var,...)
+{
+	cat("start stocastic hill climbing with max_it = ", var.max_it, "T = ", var.T, "\n")
+	x <- generateRandomSample(var.nIndividuals, var.nSnps)
+	currentRValues <- calculateRValues(x)	#get the R values
+	
+	currentQuality <- evaluate(currentRValues, var.targetRValue)
+	
+	#print(currentQuality)
+	
+	t <- 0
+	
+	while(t < var.max_it && currentQuality$diff != 0)
 	{
-		#majorize both of the genotype
-		targetGenotype <- majorize(targetGenotype)
-		sampleGenotype <- majorize(sampleGenotype)
+		t <-  t + 1
+		newx <- singlePointMutate(x)
+		newRValues <- calculateRValues(newx)
+		newQuality <- evaluate(newRValues, var.targetRValue)
 		
-		m <- mt <-  nrow(targetGenotype)
-		n <- nt <-  ncol(sampleGenotype)
-		
-		ms <-  nrow(sampleGenotype)
-		ns <-  ncol(sampleGenotype)
-		
-		if( mt != ms || ns != ns)
-		{
-			warning("incompatible geno type")
-			stop()
+		diff <-  newQuality$diff - currentQuality$diff
+		p <- 1/(1+exp(diff/var.T))
+		aRandomNumber = runif(1, 0, 1)			
+		if(aRandomNumber  < p){
+			x <- newx
+			currentQuality <-  newQuality
+			currentRValues <- newRValues
+			cat(t, "RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\n")
 		}
-		#sort the genotype to compare
-		targetGenotype = sortMatrixByRow(targetGenotype)
-		sampleGenotype = sortMatrixByRow(sampleGenotype)
-		
-		totalElement = m*n
-		correct = 0.0
-		for(i in 1:m)
+		else
 		{
-			for(j in 1:n)
-			{
-				if(targetGenotype[i,j] == sampleGenotype[i,j])
-				{
-					correct = correct + 1
-				}
-			}
+			cat(t, "\n")
+			#cat(t, "p =", p)
 		}
-		
-		#return the rate
-		correct/totalElement
 	}
 	
-	#evaluate the population
-	realRSA <- function(var, saConf, ...)
-	{
-		target.targetRValues <- calculateRealR(var.targetGenoData)
-		target.targetSingleAlleleFreq <- calculateSingleAlleleFrequence(var.targetGenoData)
-		
-		cat("starting realRSA\n")
-		finalPopList = list()
-		for(ti in 1:saConf.totalIt)
-		{
-			#sink(file="sa.log")
-			cat("start simulated annealing algorithm\n")
-			T <- saConf.initT	#the init T
-			t <- 1				#iteration counter
-			i <- 1				#the iteration
-			x <- generateRandomSample(var.nIndividuals, var.nSnps)
-			cat(ncol(x), nrow(x), "\n")
-			#currentRValues <- calculateRValues(x)
-			#currentRValue <- calculateRealR(x)
-			currentQuality	<- evaluate(x, target)
-			
-			while(T >= saConf.Tmin && currentQuality$quality > 0)
-			{
-				for(i in 1:saConf.k)
-				{
-					newx <- singlePointMutate(x)
-					newRValues <- calculateRealR(newx)
-					newQuality <- evaluate(newRValues, var.realR)
-					
-					if(newQuality$quality < currentQuality$quality)
-					{
-						x <- newx
-						currentRValue <- newRValues
-						currentQuality <- newQuality
-						cat(t, "\t-\t", "diff = ", currentQuality$quality, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
-						save(x, file = "currentPop")
-						if(currentQuality$quality == 0)
-						{
-							#print(var.targetGenoData)
-							#print(x)
-							print(rbind(var.targetGenoData, x))
-							save(var.targetGenoData, file = "targetGenotype")
-							save(x, file = "sampleGenoType")
-							stop()
-							break
-						}		
-					}
-					else
-					{
-						delta <-  newQuality$quality - currentQuality$quality
-						p <- exp(-delta/T)
-						randomV <- runif(1, 0, 1)
-						if(randomV < p)
-						{
-							x <- newx
-							currentRValue <- newRValues
-							currentQuality <- newQuality
-							cat(t, "\t+\t", "diff = ", currentQuality$quality, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
-							save(x, file = "currentPop")
-						}
-						else
-						{
-							#cat(t, "\tX\t Rej\n")
-						}
-					}
-					t = t + 1
-				}
-				T <- saConf.beta*T #cool downc
-				cat("cool down", T, "\n")
-				
-				if(currentQuality$diff < saConf.minDiff)
-					break
-			}
-			fileName = paste("finalPop", ti, sep="")
-			#finalPopList[i] = x
-			save(x, file = fileName)
-		}
-		save(finalPopList, file = "finalPopList")
-		cat("realRSA complete\n")
-	}
+}
 
-	#simulated annealing algorithm 
-	sa <- function(var, saConf, ...)
+hillClimb <- function(var, targetRValues, max_it, nIndividuals, nSnps)
+{
+	x <- generateRandomSample(nIndividuals, nSnps)
+	#print(x[1,])
+	currentRValues = calculateRValues(x)
+	#print(currentRValues)
+	currentQuality <- evaluate(currentRValues, targetRValues)
+	cat("0 RDiff =", currentQuality$diff, "\t signRecoverate =", currentQuality$recoverRate,"\n")
+	t <- 0
+	while (t < max_it && currentQuality$diff != 0 && currentQuality$recoverRate != 1)
 	{
-		finalPopList = list()
-		for(ti in 1:saConf.totalIt)
+		t <- t + 1
+		newx <- singlePointMutate(x)
+		newRValues <- calculateRValues(newx)
+		newQuality <- evaluate(newRValues, targetRValues)
+		if (newQuality$diff < currentQuality$diff)
 		{
-			#sink(file="sa.log")
-			cat("start simulated annealing algorithm\n")
-			T <- saConf.initT	#the init T
-			t <- 1				#iteration counter
-			i <- 1				#the iteration
-			x <- generateRandomSample(var.nIndividuals, var.nSnps)
-			cat(ncol(x), nrow(x), "\n")
-			#currentRValues <- calculateRValues(x)
-			currentQuality	<- evaluate(currentRValues, var.targetRValue)
-			
-			while(T >= saConf.Tmin && currentQuality$diff > 0)
-			{
-				for(i in 1:saConf.k)
-				{
-					newx <- singlePointMutate(x)
-					newRValues <- calculateRValues(newx)
-					newQuality <- evaluate(newRValues, var.targetRValue)
-					
-					if(newQuality$diff < currentQuality$diff)
-					{
-						x <- newx
-						currentRValue <- newRValues
-						currentQuality <- newQuality
-						cat(t, "\t-\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\n")
-						save(x, file = "currentPop0diff")
-						if(currentQuality$diff == 0)
-							break
-					}
-					else
-					{
-						delta <-  newQuality$diff - currentQuality$diff
-						p <- exp(-delta/T)
-						randomV <- runif(1, 0, 1)
-						if(randomV < p)
-						{
-							x <- newx
-							currentRValue <- newRValues
-							currentQuality <- newQuality
-							cat(t, "\t+\t", "diff = ", currentQuality$diff, "\tsignRecoverRate = ", currentQuality$recoverRate, "\t", p, "\n")
-							save(x, file = "currentPop")
-						}
-						else
-						{
-							cat(t, "\tX\t Rej\n")
-						}
-					}
-					t = t + 1
-				}
-				T <- saConf.beta*T #cool downc
-				cat("cool down", T, "\n")
-				
-				if(currentQuality$diff < saConf.minDiff)
-					break
-			}
-			fileName = paste("finalPop", ti, sep="")
-			#finalPopList[i] = x
-			save(x, file = fileName)
+			x <- newx
+			currentQuality <-  newQuality
+			currentRValues <- newRValues
+			sim <-  similarity(var.targetGenoData, newx)
+			cat(t, " RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\t similarity=", sim, "\n")
+			#print(x)
 		}
-		save(finalPopList, file = "finalPopList")
-	}
-	
-	
-	#stacastic algorithm
-	stocasticHillClim <- function(var,...)
-	{
-		cat("start stocastic hill climbing with max_it = ", var.max_it, "T = ", var.T, "\n")
-		x <- generateRandomSample(var.nIndividuals, var.nSnps)
-		currentRValues <- calculateRValues(x)	#get the R values
-		
-		currentQuality <- evaluate(currentRValues, var.targetRValue)
-		
-		#print(currentQuality)
-		
-		t <- 0
-		
-		while(t < var.max_it && currentQuality$diff != 0)
+		else
 		{
-			t <-  t + 1
-			newx <- singlePointMutate(x)
-			newRValues <- calculateRValues(newx)
-			newQuality <- evaluate(newRValues, var.targetRValue)
-			
-			diff <-  newQuality$diff - currentQuality$diff
-			p <- 1/(1+exp(diff/var.T))
-			aRandomNumber = runif(1, 0, 1)			
-			if(aRandomNumber  < p){
-				x <- newx
-				currentQuality <-  newQuality
-				currentRValues <- newRValues
-				cat(t, "RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\n")
-			}
-			else
-			{
-				cat(t, "\n")
-				#cat(t, "p =", p)
-			}
-		}
-		
-	}
-	
-	hillClimb <- function(var, targetRValues, max_it, nIndividuals, nSnps)
-	{
-		x <- generateRandomSample(nIndividuals, nSnps)
-		#print(x[1,])
-		currentRValues = calculateRValues(x)
-		#print(currentRValues)
-		currentQuality <- evaluate(currentRValues, targetRValues)
-		cat("0 RDiff =", currentQuality$diff, "\t signRecoverate =", currentQuality$recoverRate,"\n")
-		t <- 0
-		while (t < max_it && currentQuality$diff != 0 && currentQuality$recoverRate != 1)
-		{
-			t <- t + 1
-			newx <- singlePointMutate(x)
-			newRValues <- calculateRValues(newx)
-			newQuality <- evaluate(newRValues, targetRValues)
-			if (newQuality$diff < currentQuality$diff)
-			{
-				x <- newx
-				currentQuality <-  newQuality
-				currentRValues <- newRValues
-				sim <-  similarity(var.targetGenoData, newx)
-				cat(t, " RDiff=", currentQuality$diff,"\t signRecoverate", currentQuality$recoverRate, "\t similarity=", sim, "\n")
-				#print(x)
-			}
-			else
-			{
-				cat(t, "\n")
-			}
+			cat(t, "\n")
 		}
 	}
-	
+}
+
+
+shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", max_it = 10000000, nIndividuals = 100, nSnps = 10)
+{	
 	#-------------------------VARIABLES--------------------------------
-	#var is the configuration variable
+	#var is the global configuration variable
 	var.targetGenoData <- NULL
 	var.max_it <- NULL
 	var.nIndividuals <- NULL
@@ -873,33 +799,9 @@ shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000
 	
 	cat("reading genodata from fasta file ...")
 	var.targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var.nIndividuals, nSnps = var.nSnps)
-	
-	
-	
+
 	save(var.targetGenoData, file = "targetGenoData")
 	print(var.targetGenoData)
 	cat("complete \n")
-#	cat("calculating estimated R value ... ... ...")
-#	var.targetRValue <- calculateRValues(var.targetGenoData)
-#	cat("complete \n")
-#	cat("calculate real R... ... ...")
-#	#var.realR <- calculateRealR(var.targetGenoData)
-	
-#	write.table(var.targetRValue, file="estR.txt")
-#	write.table(var.realR, file = "realR.txt")
-#	
-#	rDiff = abs(var.targetRValue - var.realR)
-#	rsDiff = abs(var.targetRValue*var.targetRValue - var.realR*var.realR)
-#	
-#	rDiffList = matrix(rDiff, ncol = 1)
-#	rsDiffList = matrix(rsDiff, ncol = 1)
-#	
-#	cat("R Diff\tmax = ", max(rDiff), "min = ", min(rDiff), "mean = ", mean(rDiff), "var = ", var(rDiffList), "\n", file = "report")
-#	cat("RS Diff\t max = ", max(rsDiff), "min = ", min(rsDiff), "mean = ", mean(rsDiff), "var = ", var(rsDiffList), "\n", file = "report", append = T)
-#	cat("complete ", nrow(var.targetRValue), "X", ncol(var.targetRValue), "\n")
-	
-	realRSA(var, saConf)
+	#realRSA(var, saConf)
 }
-#run the function as default config
-
-#shcMain()
