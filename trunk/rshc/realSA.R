@@ -34,9 +34,10 @@ realRSA <- function(var, saConf, ...)
 		initSample$RValues <- calculateRealR(x)
 		initSample$singleAlleleFreq <- calculateSingleAlleleFrequence(x)
 		currentQuality	<- evaluate(initSample, target)
+		currentSample <- list()
 		
-		print("init quality\n")
-		print(currentQuality)
+		#print("init quality\n")
+		#print(currentQuality)
 		
 		
 		while(T >= saConf$Tmin && currentQuality$quality > 0)
@@ -47,12 +48,14 @@ realRSA <- function(var, saConf, ...)
 				sample <- list()
 				sample$RValues <- calculateRealR(newx)
 				sample$singleAlleleFreq <- calculateSingleAlleleFrequence(newx)
+				sample$genotype <- newx
 				newQuality <- evaluate(sample, target)
 				
 				if(newQuality$quality < currentQuality$quality)
 				{
 					x <- newx
 					currentQuality <- newQuality
+					currentSample <- sample
 					cat(t, " - ", "qdiff = ", currentQuality$quality, "  signRecoverRate = ", currentQuality$recoverRate)
 					cat("  ", "rdiff = ", currentQuality$normalizedRdiff, "  fdiff = ", currentQuality$normalizedFeqDiff, "\n")
 					save(x, file = "currentPop")
@@ -60,13 +63,15 @@ realRSA <- function(var, saConf, ...)
 					{
 						#print(var$targetGenoData)
 						#print(x)
-						print(rbind(var$targetGenoData, x))
-						save(var$targetGenoData, file = "targetGenotype")
+						print(rbind(majorize(var$targetGenoData), majorize(x)))
 						save(x, file = "sampleGenoType")
+						evaluate(sample = currentSample, target = target)	
+						warning("target achieved\n")
 						stop()
 						break
 					}		
 				}
+				#
 				else
 				{
 					delta <-  newQuality$quality - currentQuality$quality
@@ -76,6 +81,7 @@ realRSA <- function(var, saConf, ...)
 					{
 						x <- newx
 						currentQuality <- newQuality
+						currentSample <- sample
 						cat(t, " + ", "qdiff = ", currentQuality$quality, "  signRecoverRate = ", currentQuality$recoverRate)
 						cat("  ", "rdiff = ", currentQuality$normalizedRdiff, "  fdiff = ", currentQuality$normalizedFeqDiff)
 						cat("  ", "p = ", p, "\n")
@@ -117,7 +123,7 @@ runRealRSA <- function()
 	#-------------------------START FROM HERE--------------------------
 	#configuration
 	var$max_it <- 1000000
-	var$nIndividuals <- 100
+	var$nIndividuals <- 2
 	var$nSnps <- 10
 	
 	var$T <- 0.1	#for statistic hill climbing
@@ -131,7 +137,8 @@ runRealRSA <- function()
 	
 	cat("reading genodata from fasta file ...")
 	var$targetGenoData <- readGenotypeFromFastaFile(nIndividuals = var$nIndividuals, nSnps = var$nSnps)
-	#save(var$targetGenoData, file = "targetGenoData")
+	targetGenoData <- var$targetGenoData
+	save(targetGenoData, file = "targetGenoData")
 	cat("complete \n")
 	#print(var$targetGenoData)
 	realRSA(var, saConf)

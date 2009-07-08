@@ -6,7 +6,7 @@ source("rcalc.R")
 
 
 #change 1 and 2 according to the 1 as major and 2 as minor
-majorize <- function(genoData, ...)
+majorize <- function(genoData, verbose = F, ...)
 {
 	mGenoData <- NULL
 	
@@ -50,7 +50,7 @@ majorize <- function(genoData, ...)
 #calculate real R value using haplotype to see if any imporovements
 calculateRealR <- function(genotype)
 {
-	
+	#calculare major
 	genotype <- majorize(genotype)
 	
 	m <- nrow(genotype)
@@ -410,13 +410,22 @@ calculateSingleAlleleFrequence <- function(genotype, ...)
 #' 
 #' @param sample the sample genotype with sample.RValues, sample.singleAlleleFreq
 #' @param target the target
-evaluate <- function(sample, target, rWeight = 0.7, freqWeight = 0.3, ...) 
+evaluate <- function(sample = NULL, target = NULL, rWeight = 0.7, freqWeight = 0.3, verbose = F) 
 {
 	sampleRValues <- sample$RValues
 	sampleSingleAlleleFreq <- sample$singleAlleleFreq
 	
 	targetRValues <- target$RValues
 	targetSingleAlleleFreq <- target$singleAlleleFreq
+	
+	if(verbose)
+	{
+		cat("sample r values \n")
+		print(sampleRValues)
+		
+		cat("real r values \n")
+		print(targetRValues)
+	}
 	
 	totalSigns = 0.0
 	correctSigns = 0.0
@@ -456,11 +465,6 @@ evaluate <- function(sample, target, rWeight = 0.7, freqWeight = 0.3, ...)
 	#calc R diff
 	rdiff = sum(abs(targetRValues*targetRValues - sampleRValues*sampleRValues))
 	normalizedRDiff <- rdiff/sum(targetRValues*targetRValues)
-	
-#	sampleUT <- sampleRValues(upper.tri(sampleRValues))
-#	targetUT <- targetRValues(upper.tri(targetRValues))
-#	mul <- sampleUT*targetUT
-#	signRecoverRate <- length(mul[mul>=0])/length(sampleUT)
 	
 	freqDiff = sum(abs(sampleSingleAlleleFreq - targetSingleAlleleFreq))
 	normalizedFreqDiff = freqDiff*1.0/sum(targetSingleAlleleFreq)
