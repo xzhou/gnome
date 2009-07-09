@@ -16,7 +16,12 @@ testCalculateRealR <- function()
 	rValue
 }
 
-testCalculateRealR()
+testFreq <- function()
+{
+	genotype <- matrix(round(runif(20, 1, 2)), 2, 10)
+}
+
+#testCalculateRealR()
 
 
 
