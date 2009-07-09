@@ -17,10 +17,44 @@ majorize <- function(genoData, verbose = F, ...)
 		snp1 = genoData[,i]
 		snp2 = genoData[,i+1]
 		
-		combined = c(snp1, snp2)	
+		combined = c(snp1, snp2)
+		c1 = length(combined[combined == 1])
+		c2 = length(combined[combined == 2])
 		
-		major.A = combined[which.max(combined)]
-		major.a = combined[which.min(combined)]
+		if(c1 >= c2 )
+		{
+			major.A = 1
+			major.a = 2
+		}
+		else
+		{
+			major.A = 2
+			major.a = 1
+		}	
+#		
+#		#major.A = combined[which.max(combined)]
+#		#major.a = combined[which.min(combined)]
+#		fct <- as.factor(combined)
+#		smr <- summary(fct[!is.na(fct)])
+#		
+#		if(length(smr) == 1)
+#		{
+#			major.A = 1
+#			minor.A = 2
+#		}
+#		else if(length(smr) == 2)
+#		{
+#			major.A = as.numeric(names(which.max(smr)))
+#			minor.A = as.numeric(names(which.min(smr)))
+#		}
+#		else
+#		{
+#			warning("each allele should have 2 types of nucleotide")
+#			stop()
+#		}
+		
+		
+		
 		
 		for (j in 1:m)
 		{
