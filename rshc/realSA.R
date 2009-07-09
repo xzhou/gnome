@@ -123,8 +123,8 @@ runRealRSA <- function()
 	#-------------------------START FROM HERE--------------------------
 	#configuration
 	var$max_it <- 1000000
-	var$nIndividuals <- 30
-	var$nSnps <- 20
+	var$nIndividuals <- 1000
+	var$nSnps <- 10
 	var$T <- 0.1	#for statistic hill climbing
 	
 	saConf$initT <- 0.01
