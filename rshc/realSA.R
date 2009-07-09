@@ -129,8 +129,8 @@ runRealRSA <- function()
 	
 	saConf$initT <- 0.01
 	saConf$Tmin <- 1e-7	#minial temperature
-	saConf$beta <- 0.8	#exponetial decreasing temperature
-	saConf$k <- 1000		#number of iterations for each level of temperature
+	saConf$beta <- 0.9	#exponetial decreasing temperature
+	saConf$k <- 10000		#number of iterations for each level of temperature
 	saConf$totalIt = 10		#repeat the whole algorithm
 	saConf$minDiff = 0.001
 	
