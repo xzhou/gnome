@@ -439,6 +439,35 @@ calculateSingleAlleleFrequence <- function(genotype, ...)
 }
 
 
+singRecoverate <- function(sampleRValues, targetRValues, verbose = F)
+{
+	m = nrow(sampleRValues)
+	n = ncol(targetRValues)
+	
+	totalSigns = 0.0
+	correctSigns = 0.0
+	
+	for(i in 1:(m-1))
+	{
+		for(j in (i+1):n)
+		{
+			totalSigns = totalSigns + 1
+			if(targetRValues[i,j] != 0 && sampleRValues[i,j] != 0)
+			{
+				if(targetRValues[i,j] * sampleRValues[i,j] > 0)
+				{
+					correctSigns = correctSigns + 1
+				}
+			}
+			else if(targetRValues[i,j] == 0 && sampleRValues[i,j] == 0)
+			{
+				correctSigns = correctSigns + 1
+			}
+		}
+	}
+	signRecoverRate <- correctSigns/totalSigns
+}
+
 
 #' Evaluate a sample
 #' 

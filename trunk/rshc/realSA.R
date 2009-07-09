@@ -63,7 +63,7 @@ realRSA <- function(var, saConf, ...)
 					{
 						#print(var$targetGenoData)
 						#print(x)
-						print(rbind(majorize(var$targetGenoData), majorize(x)))
+						print(rbind(sortMatrixByRow(majorize(var$targetGenoData)), sortMatrixByRow(majorize(x))))
 						save(x, file = "sampleGenoType")
 						evaluate(sample = currentSample, target = target)	
 						warning("target achieved\n")
@@ -123,14 +123,14 @@ runRealRSA <- function()
 	#-------------------------START FROM HERE--------------------------
 	#configuration
 	var$max_it <- 1000000
-	var$nIndividuals <- 1000
+	var$nIndividuals <- 2
 	var$nSnps <- 10
 	var$T <- 0.1	#for statistic hill climbing
 	
 	saConf$initT <- 0.01
 	saConf$Tmin <- 1e-7	#minial temperature
 	saConf$beta <- 0.8	#exponetial decreasing temperature
-	saConf$k <- 100		#number of iterations for each level of temperature
+	saConf$k <- 1000		#number of iterations for each level of temperature
 	saConf$totalIt = 10		#repeat the whole algorithm
 	saConf$minDiff = 0.001
 	
