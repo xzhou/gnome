@@ -52,10 +52,6 @@ majorize <- function(genoData, verbose = F, ...)
 #			warning("each allele should have 2 types of nucleotide")
 #			stop()
 #		}
-		
-		
-		
-		
 		for (j in 1:m)
 		{
 			if(snp1[j] == major.A)
@@ -82,7 +78,7 @@ majorize <- function(genoData, verbose = F, ...)
 
 
 #calculate real R value using haplotype to see if any imporovements
-calculateRealR <- function(genotype)
+calculateRealR <- function(genotype, verbose = F)
 {
 	#calculare major
 	genotype <- majorize(genotype)
@@ -170,7 +166,11 @@ calculateRealR <- function(genotype)
 		}
 	}
 	
-	#print(r)
+	if(verbose == T)
+	{
+		print(r)
+	}
+	
 	r
 }
 
