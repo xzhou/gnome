@@ -18,6 +18,8 @@ realRSA <- function(var, saConf, ...)
 	target$RValues <- calculateRealR(var$targetGenoData)
 	target$singleAlleleFreq <- calculateSingleAlleleFrequence(var$targetGenoData)
 	
+	solutions = sortMatrixByRow(majorize(var$targetGenoData))	
+	
 	cat("starting realRSA\n")
 	finalPopList = list()
 	for(ti in 1:saConf$totalIt)
@@ -67,7 +69,8 @@ realRSA <- function(var, saConf, ...)
 						save(x, file = "sampleGenoType")
 						evaluate(sample = currentSample, target = target)	
 						warning("target achieved\n")
-						stop()
+						solutions = rbind(solutions, sortMatrixByRow(majorize(x)))
+						#stop()
 						break
 					}		
 				}
@@ -103,13 +106,14 @@ realRSA <- function(var, saConf, ...)
 		fileName = paste("finalPop", ti, sep="")
 		#finalPopList[i] = x
 		save(x, file = fileName)
+		save(solutions, file = "solutions")
 	}
 	save(finalPopList, file = "finalPopList")
 	cat("realRSA complete\n")
 }
 
 
-runRealRSA <- function()
+runRealRSA <- function(nIndividuals = 1000, nSnps = 77)
 {
 	#-------------------------VARIABLES--------------------------------
 	#var is the global configuration variable
@@ -123,15 +127,15 @@ runRealRSA <- function()
 	#-------------------------START FROM HERE--------------------------
 	#configuration
 	var$max_it <- 1000000
-	var$nIndividuals <- 100
-	var$nSnps <- 10
+	var$nIndividuals <- nIndividuals
+	var$nSnps <- nSnps
 	var$T <- 0.1	#for statistic hill climbing
 	
 	saConf$initT <- 0.01
 	saConf$Tmin <- 1e-7	#minial temperature
 	saConf$beta <- 0.9	#exponetial decreasing temperature
 	saConf$k <- 10000		#number of iterations for each level of temperature
-	saConf$totalIt = 10		#repeat the whole algorithm
+	saConf$totalIt = 100	#repeat the whole algorithm
 	saConf$minDiff = 0.001
 	
 	cat("reading genodata from fasta file ...")
@@ -143,4 +147,4 @@ runRealRSA <- function()
 	realRSA(var, saConf)
 }
 #debug(runRealRSA)
-runRealRSA()
+#runRealRSA(100, 10)
