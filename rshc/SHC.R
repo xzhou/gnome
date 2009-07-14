@@ -326,6 +326,39 @@ convert <- function()
 	}
 }
 
+formateGenotype <- function(genoData)
+{
+	formatedGenotype <- NULL
+	n <-  ncol(genoData)
+	
+	#DEBUG
+	#cat("genoData", nrow(genoData), ncol(genoData), "\n")
+	
+	for(i in seq(1, n, by = 2))
+	{
+		formatedGenotype = cbind(formatedGenotype, cbind(paste(genoData[,i], genoData[,i+1], sep="/")))
+	}
+	
+	#debug
+	#print(formatedGenotype[,77])
+	
+	n <-  ncol(formatedGenotype)
+	m <-  nrow(formatedGenotype)
+	
+	#cat("formated", m,n)
+	
+	plotGenoData <- data.frame(formatedGenotype)
+	
+	#DEBUG
+	#cat("plotGenoData", nrow(plotGenoData), ncol(plotGenoData), "\n")
+	
+	for(i in seq(1, n))
+	{
+		plotGenoData[,i] <- genotype(formatedGenotype[,i])
+	}
+	
+	plotGenoData
+}
 
 
 #calculate the R values
