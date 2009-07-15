@@ -39,7 +39,7 @@ calculateCounts <- function(genotype)
 		}
 	}
 	
-	c00 <- matrix(0, nSnps, nSnps)
+	c00 <- matrix(0.0, nSnps, nSnps)
 	c00 <- c01 <- c02 <- c10 <- c11 <- c12 <- c20 <- c21 <- c22 <- c00
 	
 	for(i in seq(1, nSnps - 1))
@@ -123,59 +123,88 @@ testCountsDiff <- function()
 		yriSample = yriGenotype[1:nSnp, 1:(2*nSnp)]
 		
 		cat("calculate ceuSample\n")
-		ceuCounts = calculateCounts(ceuSample)
+		#ceuCounts = calculateCounts(ceuSample)
+		#save(ceuCounts, file = "ceuCounts")
+		load("ceuCounts")
 		
-		cat("calculate ceuSample\n")
-		yriCounts = calculateCounts(yriSample)
+		cat("calculate yriSample\n")
+		#yriCounts = calculateCounts(yriSample)
+		#save(yriCounts, file = "yriCounts")
+		load("yriCounts")
+		
+		upperIndex = upper.tri(ceuCounts$c00)
 		
 		#count diff
-		d00 = abs(ceuCounts$c00 - yriCounts$c00)
-		d01 = abs(ceuCounts$c01 - yriCounts$c01)
-		d02 = abs(ceuCounts$c02 - yriCounts$c02)
-		d10 = abs(ceuCounts$c10 - yriCounts$c10)
-		d11 = abs(ceuCounts$c11 - yriCounts$c11)
-		d12 = abs(ceuCounts$c12 - yriCounts$c12)
-		d20 = abs(ceuCounts$c20 - yriCounts$c20)
-		d21 = abs(ceuCounts$c21 - yriCounts$c21)
-		d22 = abs(ceuCounts$c22 - yriCounts$c22)
+		d00 = (abs(ceuCounts$c00 - yriCounts$c00))[upperIndex]
+		d01 = (abs(ceuCounts$c01 - yriCounts$c01))[upperIndex]
+		d02 = (abs(ceuCounts$c02 - yriCounts$c02))[upperIndex]
+		d10 = (abs(ceuCounts$c10 - yriCounts$c10))[upperIndex]
+		d11 = (abs(ceuCounts$c11 - yriCounts$c11))[upperIndex]
+		d12 = (abs(ceuCounts$c12 - yriCounts$c12))[upperIndex]
+		d20 = (abs(ceuCounts$c20 - yriCounts$c20))[upperIndex]
+		d21 = (abs(ceuCounts$c21 - yriCounts$c21))[upperIndex]
+		d22 = (abs(ceuCounts$c22 - yriCounts$c22))[upperIndex]
+		#print(d00)
 		
 		#percentage diff
-		p00 = d00/ceuCounts$c00
-		p01 = d01/ceuCounts$c01
-		p02 = d02/ceuCounts$c02
-		p10 = d10/ceuCounts$c10
-		p11 = d11/ceuCounts$c11
-		p12 = d12/ceuCounts$c12
-		p20 = d20/ceuCounts$c20
-		p21 = d21/ceuCounts$c21
-		p22 = d22/ceuCounts$c22
+		p00 = d00/(ceuCounts$c00[upperIndex])
+		p01 = d01/(ceuCounts$c01[upperIndex])
+		p02 = d02/(ceuCounts$c02[upperIndex])
+		p10 = d10/(ceuCounts$c10[upperIndex])
+		p11 = d11/(ceuCounts$c11[upperIndex])
+		p12 = d12/(ceuCounts$c12[upperIndex])
+		p20 = d20/(ceuCounts$c20[upperIndex])
+		p21 = d21/(ceuCounts$c21[upperIndex])
+		p22 = d22/(ceuCounts$c22[upperIndex])
+		
+		print(p00)
+
 		
 		diff = list("d00" = d00, "d01" = d01, "d02" = d02,
 				"d10" = d10, "d10" = d11, "d02" = d12,
 				"d20" = d20, "d21" = d21, "d22" = d22)
 		
 		#print diff
-		mean = matrix(c(mean(d00), mean(d01), mean(d02), 
+		meandiff = matrix(c(mean(d00), mean(d01), mean(d02), 
 						mean(d10), mean(d11), mean(d12),
-						mean(d20), mean(d21), mean(d22)), 3, 3)
+						mean(d20), mean(d21), mean(d22)), 3, 3, byrow = TRUE)
 		
-		max = matrix(c(max(d00), max(d01), max(d02), 
+		maxdiff = matrix(c(max(d00), max(d01), max(d02), 
 				max(d10), max(d11), max(d12),
-				max(d20), max(d21), max(d22)), 3, 3)
+				max(d20), max(d21), max(d22)), 3, 3, byrow = TRUE)
 
-		min = matrix(c(min(d00), min(d01), min(d02), 
+		mindiff = matrix(c(min(d00), min(d01), min(d02), 
 				min(d10), min(d11), min(d12),
-				min(d20), min(d21), min(d22)), 3, 3)
+				min(d20), min(d21), min(d22)), 3, 3, byrow = TRUE)
+
+		meanCounts = matrix(c(mean(ceuCounts$c00), mean(ceuCounts$c01), mean(ceuCounts$c02),
+						mean(ceuCounts$c10), mean(ceuCounts$c11), mean(ceuCounts$c12),
+						mean(ceuCounts$c20), mean(ceuCounts$c21), mean(ceuCounts$c22)), 3, 3, byrow = T)
 		
-		print(mean)
-		print(max)
-		print(min)
+		
+		maxCounts =  matrix(c(max(ceuCounts$c00), max(ceuCounts$c01), max(ceuCounts$c02),
+						max(ceuCounts$c10), max(ceuCounts$c11), max(ceuCounts$c12),
+						max(ceuCounts$c20), max(ceuCounts$c21), max(ceuCounts$c22)), 3, 3, byrow = T)
 		
 		pmean = matrix(c(mean(p00), mean(p01), mean(p02), 
 						mean(p10), mean(p11), mean(p12),
-						mean(p20), mean(p21), mean(p22)), 3, 3)
+						mean(p20), mean(p21), mean(p22)), 3, 3)		
+		
+		
+		#pmean = meandiff/meanCounts
+		#pmax = maxdiff/maxCounts
+		
+
+		print(meandiff)
+		print(maxdiff)
+		
+		print(meanCounts)
+		print(maxCounts)
 		
 		print(pmean)
+		#print(pmax)
+
+
 }
 
 testCountsDiff()
