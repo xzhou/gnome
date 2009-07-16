@@ -44,7 +44,7 @@ calculateCounts <- function(genotype)
 	
 	for(i in seq(1, nSnps - 1))
 	{
-		for(j in seq(1, nSnps))
+		for(j in seq(i+1, nSnps))
 		{
 			snp1 = combinedGenotype[,i]
 			snp2 = combinedGenotype[,j]
@@ -82,6 +82,23 @@ calculateCounts <- function(genotype)
 		}
 	}
 	
+	for(i in 1:(nSnps-1))
+	{
+		for(j in (i+1):nSnps)
+		{
+			c00[j,i] = c00[i,j]
+			c01[j,i] = c01[i,j]
+			c02[j,i] = c02[i,j]
+			c10[j,i] = c10[i,j]
+			c11[j,i] = c11[i,j]
+			c12[j,i] = c12[i,j]
+			c20[j,i] = c20[i,j]
+			c21[j,i] = c21[i,j]
+			c22[j,i] = c22[i,j]
+		}
+	}
+	
+	diag(c00) <- diag(c01) <- diag(c02) <- diag(c10) <- diag(c11) <- diag(c12) <- diag(c20) <- diag(c21) <- diag(c22) <- NA
 	
 	ret = list("c00" = c00,
 			"c01" = c01,
@@ -107,20 +124,22 @@ testCountsDiff <- function()
 	cat("complete\n")
 	
 	nCeuInd = nrow(ceuGenotype)
-	nCeuSnp = ncol(ceuGenotype/2)
+	nCeuSnp = ncol(ceuGenotype/4)
 	
 	nYriInd = nrow(yriGenotype)
-	nYriSnp = ncol(yriGenotype/2)
+	nYriSnp = ncol(yriGenotype/4)
 	
 	cat("nCeuInd = ", nCeuInd, "nCeuSnp = ", nCeuSnp, "nYriInd = ", nYriInd, "nYriSnp = ", nYriSnp, "\n")
 	
 	nInd = min(nCeuInd, nYriInd)
 	nSnp = min(nCeuInd, nYriSnp)
 
+	nInd = 100
+	nSnp = 50
 	
 		#select 
-		ceuSample = ceuGenotype[1:nSnp, 1:(2*nSnp)]
-		yriSample = yriGenotype[1:nSnp, 1:(2*nSnp)]
+		ceuSample = ceuGenotype[1:nInd, 1:(4*nSnp)]
+		yriSample = yriGenotype[1:nInd, 1:(4*nSnp)]
 		
 		cat("calculate ceuSample\n")
 		#ceuCounts = calculateCounts(ceuSample)
@@ -134,30 +153,41 @@ testCountsDiff <- function()
 		
 		upperIndex = upper.tri(ceuCounts$c00)
 		
-		#count diff
-		d00 = (abs(ceuCounts$c00 - yriCounts$c00))[upperIndex]
-		d01 = (abs(ceuCounts$c01 - yriCounts$c01))[upperIndex]
-		d02 = (abs(ceuCounts$c02 - yriCounts$c02))[upperIndex]
-		d10 = (abs(ceuCounts$c10 - yriCounts$c10))[upperIndex]
-		d11 = (abs(ceuCounts$c11 - yriCounts$c11))[upperIndex]
-		d12 = (abs(ceuCounts$c12 - yriCounts$c12))[upperIndex]
-		d20 = (abs(ceuCounts$c20 - yriCounts$c20))[upperIndex]
-		d21 = (abs(ceuCounts$c21 - yriCounts$c21))[upperIndex]
-		d22 = (abs(ceuCounts$c22 - yriCounts$c22))[upperIndex]
-		#print(d00)
+		ceuc = ceuCounts
+		yric = yriCounts
+		
+		
+		#abs difference
+		d00 = (abs(ceuCounts$c00 - yriCounts$c00))
+		d01 = (abs(ceuCounts$c01 - yriCounts$c01))
+		d02 = (abs(ceuCounts$c02 - yriCounts$c02))
+		d10 = (abs(ceuCounts$c10 - yriCounts$c10))
+		d11 = (abs(ceuCounts$c11 - yriCounts$c11))
+		d12 = (abs(ceuCounts$c12 - yriCounts$c12))
+		d20 = (abs(ceuCounts$c20 - yriCounts$c20))
+		d21 = (abs(ceuCounts$c21 - yriCounts$c21))
+		d22 = (abs(ceuCounts$c22 - yriCounts$c22))
+#		cat("d00\n")
+#		print(d00)
+#		cat("ceu$c00\n")
+#		print(ceuc$c00)
+#		cat("yric$c00")
+#		print(yric$c00)
 		
 		#percentage diff
-		p00 = d00/(ceuCounts$c00[upperIndex])
-		p01 = d01/(ceuCounts$c01[upperIndex])
-		p02 = d02/(ceuCounts$c02[upperIndex])
-		p10 = d10/(ceuCounts$c10[upperIndex])
-		p11 = d11/(ceuCounts$c11[upperIndex])
-		p12 = d12/(ceuCounts$c12[upperIndex])
-		p20 = d20/(ceuCounts$c20[upperIndex])
-		p21 = d21/(ceuCounts$c21[upperIndex])
-		p22 = d22/(ceuCounts$c22[upperIndex])
+		p00 = d00/(ceuCounts$c00)
+		p01 = d01/(ceuCounts$c01)
+		p02 = d02/(ceuCounts$c02)
+		p10 = d10/(ceuCounts$c10)
+		p11 = d11/(ceuCounts$c11)
+		p12 = d12/(ceuCounts$c12)
+		p20 = d20/(ceuCounts$c20)
+		p21 = d21/(ceuCounts$c21)
+		p22 = d22/(ceuCounts$c22)
+		#cat("p00\n")
+		#print(p00)
 		
-		print(p00)
+		cat(">= ", length(p00[p00>1])/length(p00), "\n")
 
 		
 		diff = list("d00" = d00, "d01" = d01, "d02" = d02,
@@ -165,40 +195,43 @@ testCountsDiff <- function()
 				"d20" = d20, "d21" = d21, "d22" = d22)
 		
 		#print diff
-		meandiff = matrix(c(mean(d00), mean(d01), mean(d02), 
-						mean(d10), mean(d11), mean(d12),
-						mean(d20), mean(d21), mean(d22)), 3, 3, byrow = TRUE)
+		meandiff = matrix(c(mean(d00, na.rm = T), mean(d01, na.rm = T), mean(d02, na.rm = T), 
+						mean(d10, na.rm = T), mean(d11, na.rm = T), mean(d12, na.rm = T),
+						mean(d20, na.rm = T), mean(d21, na.rm = T), mean(d22, na.rm = T)), 3, 3, byrow = TRUE)
 		
-		maxdiff = matrix(c(max(d00), max(d01), max(d02), 
-				max(d10), max(d11), max(d12),
-				max(d20), max(d21), max(d22)), 3, 3, byrow = TRUE)
+		maxdiff = matrix(c(max(d00, na.rm = T), max(d01, na.rm = T), max(d02, na.rm = T), 
+				max(d10, na.rm = T), max(d11, na.rm = T), max(d12, na.rm = T),
+				max(d20, na.rm = T), max(d21, na.rm = T), max(d22, na.rm = T)), 3, 3, byrow = TRUE)
 
-		mindiff = matrix(c(min(d00), min(d01), min(d02), 
-				min(d10), min(d11), min(d12),
-				min(d20), min(d21), min(d22)), 3, 3, byrow = TRUE)
+		mindiff = matrix(c(min(d00, na.rm = T), min(d01, na.rm = T), min(d02, na.rm = T), 
+				min(d10, na.rm = T), min(d11, na.rm = T), min(d12, na.rm = T),
+				min(d20, na.rm = T), min(d21, na.rm = T), min(d22, na.rm = T)), 3, 3, byrow = TRUE)
 
-		meanCounts = matrix(c(mean(ceuCounts$c00), mean(ceuCounts$c01), mean(ceuCounts$c02),
-						mean(ceuCounts$c10), mean(ceuCounts$c11), mean(ceuCounts$c12),
-						mean(ceuCounts$c20), mean(ceuCounts$c21), mean(ceuCounts$c22)), 3, 3, byrow = T)
+		meanCounts = matrix(c(mean(ceuCounts$c00, na.rm = T), mean(ceuCounts$c01, na.rm = T), mean(ceuCounts$c02, , na.rm = T),
+						mean(ceuCounts$c10, na.rm = T), mean(ceuCounts$c11, na.rm = T), mean(ceuCounts$c12, na.rm = T),
+						mean(ceuCounts$c20, na.rm = T), mean(ceuCounts$c21, na.rm = T), mean(ceuCounts$c22, na.rm = T)), 3, 3, byrow = T)
 		
 		
-		maxCounts =  matrix(c(max(ceuCounts$c00), max(ceuCounts$c01), max(ceuCounts$c02),
-						max(ceuCounts$c10), max(ceuCounts$c11), max(ceuCounts$c12),
-						max(ceuCounts$c20), max(ceuCounts$c21), max(ceuCounts$c22)), 3, 3, byrow = T)
+		maxCounts =  matrix(c(max(ceuCounts$c00, na.rm = T), max(ceuCounts$c01, na.rm = T), max(ceuCounts$c02, na.rm = T),
+						max(ceuCounts$c10, na.rm = T), max(ceuCounts$c11, na.rm = T), max(ceuCounts$c12, na.rm = T),
+						max(ceuCounts$c20, na.rm = T), max(ceuCounts$c21, na.rm = T), max(ceuCounts$c22, na.rm = T)), 3, 3, byrow = T)
 		
-		pmean = matrix(c(mean(p00), mean(p01), mean(p02), 
-						mean(p10), mean(p11), mean(p12),
-						mean(p20), mean(p21), mean(p22)), 3, 3)		
+		pmean = matrix(c(mean(p00, na.rm = T), mean(p01, na.rm = T), mean(p02, na.rm = T), 
+						mean(p10, na.rm = T), mean(p11, na.rm = T), mean(p12, na.rm = T),
+						mean(p20, na.rm = T), mean(p21, na.rm = T), mean(p22, na.rm = T)), 3, 3)		
 		
 		
 		#pmean = meandiff/meanCounts
 		#pmax = maxdiff/maxCounts
 		
-
+		cat("varage diff\n")
 		print(meandiff)
+		cat("max diff\n")
 		print(maxdiff)
 		
+		cat("counts average\n")
 		print(meanCounts)
+		cat("counts max\n")
 		print(maxCounts)
 		
 		print(pmean)
