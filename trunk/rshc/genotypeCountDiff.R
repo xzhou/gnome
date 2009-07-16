@@ -1,4 +1,5 @@
-# TODO: Add comment
+# Using reference group genotype count to reduce the searching space of 
+# genotype counts
 # 
 # Author: xzhou
 ###############################################################################
@@ -124,10 +125,10 @@ testCountsDiff <- function()
 	cat("complete\n")
 	
 	nCeuInd = nrow(ceuGenotype)
-	nCeuSnp = ncol(ceuGenotype/4)
+	nCeuSnp = ncol(ceuGenotype)/2
 	
 	nYriInd = nrow(yriGenotype)
-	nYriSnp = ncol(yriGenotype/4)
+	nYriSnp = ncol(yriGenotype)/2
 	
 	cat("nCeuInd = ", nCeuInd, "nCeuSnp = ", nCeuSnp, "nYriInd = ", nYriInd, "nYriSnp = ", nYriSnp, "\n")
 	
@@ -137,9 +138,10 @@ testCountsDiff <- function()
 	nInd = 100
 	nSnp = 50
 	
+	cat("select ", nInd, " individuals, ", nSnp, " snps\n")
 		#select 
-		ceuSample = ceuGenotype[1:nInd, 1:(4*nSnp)]
-		yriSample = yriGenotype[1:nInd, 1:(4*nSnp)]
+		ceuSample = ceuGenotype[1:nInd, 1:(2*nSnp)]
+		yriSample = yriGenotype[1:nInd, 1:(2*nSnp)]
 		
 		cat("calculate ceuSample\n")
 		#ceuCounts = calculateCounts(ceuSample)
@@ -157,6 +159,9 @@ testCountsDiff <- function()
 		yric = yriCounts
 		
 		
+		#DEBUG
+		cat("ceu c00 dim = ", dim(ceuCounts$c00), "\n")
+		
 		#abs difference
 		d00 = (abs(ceuCounts$c00 - yriCounts$c00))
 		d01 = (abs(ceuCounts$c01 - yriCounts$c01))
@@ -167,14 +172,14 @@ testCountsDiff <- function()
 		d20 = (abs(ceuCounts$c20 - yriCounts$c20))
 		d21 = (abs(ceuCounts$c21 - yriCounts$c21))
 		d22 = (abs(ceuCounts$c22 - yriCounts$c22))
-#		cat("d00\n")
-#		print(d00)
-#		cat("ceu$c00\n")
-#		print(ceuc$c00)
-#		cat("yric$c00")
-#		print(yric$c00)
+		write.table(ceuCounts$c00, file = "ceuc00")
 		
-		#percentage diff
+		
+		#DEBUG
+		cat("dim(d00)", dim(d00), "\n")
+		
+		
+		#difference percentage
 		p00 = d00/(ceuCounts$c00)
 		p01 = d01/(ceuCounts$c01)
 		p02 = d02/(ceuCounts$c02)
@@ -184,10 +189,11 @@ testCountsDiff <- function()
 		p20 = d20/(ceuCounts$c20)
 		p21 = d21/(ceuCounts$c21)
 		p22 = d22/(ceuCounts$c22)
-		#cat("p00\n")
-		#print(p00)
 		
-		cat(">= ", length(p00[p00>1])/length(p00), "\n")
+		#DEBUG
+		cat("dim(p00)", dim(p00), "\n")
+		
+		cat("d00 >= c00 ", length(p00[p00>1])/length(p00), "\n")
 
 		
 		diff = list("d00" = d00, "d01" = d01, "d02" = d02,
@@ -223,17 +229,20 @@ testCountsDiff <- function()
 		
 		#pmean = meandiff/meanCounts
 		#pmax = maxdiff/maxCounts
-		
-		cat("varage diff\n")
-		print(meandiff)
-		cat("max diff\n")
-		print(maxdiff)
-		
+		cat("-------------------------------------------------\n")
 		cat("counts average\n")
 		print(meanCounts)
 		cat("counts max\n")
 		print(maxCounts)
 		
+		cat("-------------------------------------------------\n")
+		cat("diff\n")
+		
+		cat("avarage diff\n")
+		print(meandiff)
+		cat("max diff\n")
+		print(maxdiff)
+
 		print(pmean)
 		#print(pmax)
 
