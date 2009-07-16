@@ -114,7 +114,7 @@ calculateCounts <- function(genotype)
 	ret
 }
 
-testCountsDiff <- function()
+testCountsDiff <- function(loadSave = TRUE)
 {
 	cat("reading genotype...")
 	ceuGenotype = 
@@ -123,6 +123,22 @@ testCountsDiff <- function()
 	yriGenotype = 
 			readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.12encode")
 	cat("complete\n")
+	
+	
+	ceur <- calculateRealR(ceuGenotype)
+	yrir <- calculateRealR(yriGenotype)
+	
+	write.table(ceur, file = "ceur.txt")
+	write.table(yrir, file = "yrir.txt")
+	
+	yris = yrir*yrir
+	ceus = ceur*ceur
+	
+	yrisL = yris[yris>0.01]
+	ceusL = ceus[ceus>0.01]
+	
+	hist(diff)
+	dev.print(device=pdf, "rdiff001.pdf")
 	
 	nCeuInd = nrow(ceuGenotype)
 	nCeuSnp = ncol(ceuGenotype)/2
@@ -143,15 +159,20 @@ testCountsDiff <- function()
 		ceuSample = ceuGenotype[1:nInd, 1:(2*nSnp)]
 		yriSample = yriGenotype[1:nInd, 1:(2*nSnp)]
 		
-		cat("calculate ceuSample\n")
-		#ceuCounts = calculateCounts(ceuSample)
-		#save(ceuCounts, file = "ceuCounts")
-		load("ceuCounts")
-		
-		cat("calculate yriSample\n")
-		#yriCounts = calculateCounts(yriSample)
-		#save(yriCounts, file = "yriCounts")
-		load("yriCounts")
+		if(!loadSave)
+		{
+			cat("calculate ceuSample\n")
+			ceuCounts = calculateCounts(ceuSample)
+			save(ceuCounts, file = "ceuCounts")		
+			cat("calculate yriSample\n")
+			yriCounts = calculateCounts(yriSample)
+			save(yriCounts, file = "yriCounts")
+		}
+		else
+		{
+			load("ceuCounts")
+			load("yriCounts")
+		}
 		
 		upperIndex = upper.tri(ceuCounts$c00)
 		
@@ -161,6 +182,10 @@ testCountsDiff <- function()
 		
 		#DEBUG
 		cat("ceu c00 dim = ", dim(ceuCounts$c00), "\n")
+		
+		signd00 = ceuCounts$c00 - yriCounts$c00
+		hist(signd00)
+		dev.print(device=pdf, "signed_d00.pdf")
 		
 		#abs difference
 		d00 = (abs(ceuCounts$c00 - yriCounts$c00))
@@ -172,13 +197,24 @@ testCountsDiff <- function()
 		d20 = (abs(ceuCounts$c20 - yriCounts$c20))
 		d21 = (abs(ceuCounts$c21 - yriCounts$c21))
 		d22 = (abs(ceuCounts$c22 - yriCounts$c22))
-		write.table(ceuCounts$c00, file = "ceuc00")
 		
+		#DEBUG
+		write.table(ceuCounts$c00, file = "ceuc00")
+		write.table(yriCounts$c00, file = "yric00")
+		
+		hist(ceuCounts$c00)
+		dev.print(device=pdf, "ceuc00.pdf")
+		hist(d00)
+		dev.print(device=pdf, "absd00.pdf")
+		hist(yriCounts$c00)
+		dev.print(device=pdf, "yric00.pdf")
+		
+		dev.off()
 		
 		#DEBUG
 		cat("dim(d00)", dim(d00), "\n")
 		
-		
+
 		#difference percentage
 		p00 = d00/(ceuCounts$c00)
 		p01 = d01/(ceuCounts$c01)
@@ -245,9 +281,15 @@ testCountsDiff <- function()
 
 		print(pmean)
 		#print(pmax)
+}
 
-
+unitTest <- function()
+{
+	x = readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/testdata/x.12encode")
+	xc = calculateCounts(x)
+	print(xc)
 }
 
 testCountsDiff()
+#unitTest()
 
