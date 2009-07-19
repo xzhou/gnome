@@ -171,6 +171,8 @@ calculateRealR <- function(genotype, verbose = F)
 		print(r)
 	}
 	
+	diag(r) <- NA
+	
 	r
 }
 
