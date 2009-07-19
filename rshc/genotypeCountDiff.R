@@ -114,66 +114,212 @@ calculateCounts <- function(genotype)
 	ret
 }
 
-testCountsDiff <- function(loadSave = TRUE)
+
+#'
+#' calculate the halplotype counts of a genotype, note that the genotype is coded such that the haplotype information is preserved
+#' @param genotype The 12 encoded genotype that preserve the 1/0 position
+
+calculateHaplotypeCounts <- function(genotype)
 {
-	cat("reading genotype...")
-	ceuGenotype = 
-			readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.12encode")
+	genotype <- majorize(genotype)
+	m <- nrow(genotype)
+	n <- ncol(genotype)
 	
-	yriGenotype = 
-			readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.12encode")
-	cat("complete\n")
+	if(n%%2 != 0)
+	{
+		warning("genotype should be even")
+		stop()
+	}
 	
+	nIndividual <- m
+	nSnp <- round(n/2)
 	
-	ceur <- calculateRealR(ceuGenotype)
-	yrir <- calculateRealR(yriGenotype)
+	c00 <- matrix(0.0, nSnp, nSnp)
+	diag(c00) <- NA
+	c00 <- c01 <- c10 <- c11 <- c00
+	
+	for(i in 1:(nSnp - 1))
+	{
+		for(j in (i+1):nSnp)
+		{
+			hi <- 2*i
+			li <- hi - 1
+			
+			hj <- 2*j
+			lj <- hj - 1
+			
+			A1 <- genotype[,li] #seq 1
+			A2 <- genotype[,hi] #seq 2
+			
+			B1 <- genotype[,lj] #seq 1
+			B2 <- genotype[,hj] #seq 2
+			
+			for(k in 1:nIndividual)
+			{
+				a1 <- A1[k]
+				a2 <- A2[k]
+				b1 <- B1[k]
+				b2 <- B2[k]
+				
+				if(a1 == 1 && b1 == 1)
+					c00[i,j] = c00[i,j] + 1
+				if(a1 == 1 && b1 == 2)
+					c01[i,j] = c01[i,j] + 1
+				if(a1 == 2 && b1 == 1)
+					c10[i,j] = c10[i,j] + 1
+				if(a1 == 2 && b1 == 2)
+					c11[i,j] = c11[i,j] + 1
+				
+				
+				if(a2 == 1 && b2 == 1)
+					c00[i,j] = c00[i,j] + 1
+				if(a2 == 1 && b2 == 2)
+					c01[i,j] = c01[i,j] + 1
+				if(a2 == 2 && b2 == 1)
+					c10[i,j] = c10[i,j] + 1
+				if(a2 == 2 && b2 == 2)
+					c11[i,j] = c11[i,j] + 1
+			}	
+		}
+	}
+	
+	for(i in 1:nSnp-1)
+	{
+		for(j in (i+1):nSnp)
+		{
+			c00[j,i] = c00[i,j]
+			c10[j,i] = c10[i,j]
+			c01[j,i] = c01[i,j]
+			c11[j,i] = c11[i,j]
+		}
+	}
+	
+	ret = list("c00" = c00, "c01" = c01, "c10" = c10, "c11" = c11)
+	
+	#haplotype counts
+	class(ret) <- "HC"
+
+	ret
+}
+
+testCountsDiff <- function(loadSave = FALSE)
+{
+	if(!loadSave)
+	{
+		cat("reading genotype...")
+		ceuGenotype = 
+				readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.12encode")
+		yriGenotype = 
+				readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.12encode")
+		cat("complete\n")
+		
+		nCeuInd = nrow(ceuGenotype)
+		nCeuSnp = ncol(ceuGenotype)/2
+		
+		nYriInd = nrow(yriGenotype)
+		nYriSnp = ncol(yriGenotype)/2
+		
+		cat("nCeuInd = ", nCeuInd, "nCeuSnp = ", nCeuSnp, "nYriInd = ", nYriInd, "nYriSnp = ", nYriSnp, "\n")
+		
+		nInd = min(nCeuInd, nYriInd)
+		nSnp = min(nCeuInd, nYriSnp)
+		
+		ceuSample = ceuGenotype
+		yriSample = yriGenotype
+		
+		ceur <- calculateRealR(ceuGenotype)
+		yrir <- calculateRealR(yriGenotype)
+		
+		
+		ceuCounts = calculateCounts(ceuSample)
+		yriCounts = calculateCounts(yriSample)
+		
+		ceuHCounts <- calculateHaplotypeCounts(ceuSample)
+		yriHCounts <- calculateHaplotypeCounts(yriSample)
+		
+		
+		save(ceuGenotype, file = "ceuGenotype")
+		save(yriGenotype, file = "yriGenotype")
+		save(ceur, file = "ceur")
+		save(yrir, file = "yrir")
+		save(ceuCounts, file = "ceuCounts")	
+		save(yriCounts, file = "yriCounts")
+		save(ceuHCounts, file = "ceuHCounts")
+		save(yriHCounts, file = "yriHCounts")
+	}
+	else
+	{
+		load(file = "ceuGenotype")
+		load(file = "yriGenotype")
+		load(file = "ceur")
+		load(file = "yrir")
+		load(file = "ceuCounts")
+		load(file = "yriCounts")
+		
+		load(file = "ceuHCounts")
+		load(file = "yriHCounts")
+	}
+
 	
 	write.table(ceur, file = "ceur.txt")
 	write.table(yrir, file = "yrir.txt")
 	
-	yris = yrir*yrir
-	ceus = ceur*ceur
+	yris = yrir^2
+	ceus = ceur^2
 	
-	yrisL = yris[yris>0.01]
-	ceusL = ceus[ceus>0.01]
+	yrisL = yris[yris>0.1]
+	ceusL = ceus[ceus>0.1]
 	
-	hist(diff)
-	dev.print(device=pdf, "rdiff001.pdf")
+	cat(">0.01 ceu length = ", length(yrisL)/length(ceus), "yri length = ", length(ceusL)/length(yris))
 	
-	nCeuInd = nrow(ceuGenotype)
-	nCeuSnp = ncol(ceuGenotype)/2
+	rsDiff = yris - ceus
 	
-	nYriInd = nrow(yriGenotype)
-	nYriSnp = ncol(yriGenotype)/2
+	cat("\n")
+	print(dim(rsDiff))
+	cat("\n")
 	
-	cat("nCeuInd = ", nCeuInd, "nCeuSnp = ", nCeuSnp, "nYriInd = ", nYriInd, "nYriSnp = ", nYriSnp, "\n")
+	hist(ceur)
+	dev.print(device=pdf, "ceur.pdf")
 	
-	nInd = min(nCeuInd, nYriInd)
-	nSnp = min(nCeuInd, nYriSnp)
+	hist(yrir)
+	dev.print(device = pdf, "yrir.pdf")
+	
+	
+	hist(rsDiff)
+	dev.print(device = pdf, "rsquareDiff.pdf")
+	
+	plot(ceuHCounts$c00, ceus)
+	dev.print(device = pdf, "Hc00vsRS.pdf")
+	
+	plot(ceuCounts$c00, ceur)
+	dev.print(device = pdf, "ceu_c00vsR.pdf")
+	
+	plot(ceuHCounts$c11, ceus)
+	dev.print(device = pdf, "Hc11vsRS.pdf")
+	
+	plot(abs(ceuHCounts$c00*ceuHCounts$c11), ceur)
+	dev.print(device = pdf, "abshc0011vsR.pdf")
+	
+	rsdiff = ceus - yris
+	cdiff = ceuCounts$c00 - yriCounts$c00
+	plot(cdiff, rsdiff)
+	dev.print(device=pdf, file = "rdiff_cdiff.pdf")
+	
+	rdiff = ceur - yrir
+	c00_x_c11diff = ceuCounts$c00*ceuCounts$c11 - yriCounts$c00*yriCounts$c11
+	plot(c00_x_c11diff, rsdiff)
+	dev.print(device=pdf, file = "rsdiff_c0011diff.pdf")
+	
+	L = (ceuHCounts$c00+ceuHCounts$c01)*(ceuHCounts$c11+ceuHCounts$c10)*
+			(ceuHCounts$c00+ceuHCounts$c10)*(ceuHCounts$c11+ceuHCounts$c01)
+	
+	plot((ceuHCounts$c00*ceuHCounts$c11-ceuHCounts$c01*ceuHCounts$c10)/sqrt(L), ceus)
+	dev.print(device = pdf, "rVSrs.pdf")
+	
+	c001122 = ceuCounts$c00 + ceuCounts$c01/2 + ceuCounts$c22
+	plot(c001122, ceur)
+	dev.print(device = pdf, "c001122vsR.pdf")
 
-	nInd = 100
-	nSnp = 50
-	
-	cat("select ", nInd, " individuals, ", nSnp, " snps\n")
-		#select 
-		ceuSample = ceuGenotype[1:nInd, 1:(2*nSnp)]
-		yriSample = yriGenotype[1:nInd, 1:(2*nSnp)]
-		
-		if(!loadSave)
-		{
-			cat("calculate ceuSample\n")
-			ceuCounts = calculateCounts(ceuSample)
-			save(ceuCounts, file = "ceuCounts")		
-			cat("calculate yriSample\n")
-			yriCounts = calculateCounts(yriSample)
-			save(yriCounts, file = "yriCounts")
-		}
-		else
-		{
-			load("ceuCounts")
-			load("yriCounts")
-		}
-		
 		upperIndex = upper.tri(ceuCounts$c00)
 		
 		ceuc = ceuCounts
@@ -188,15 +334,15 @@ testCountsDiff <- function(loadSave = TRUE)
 		dev.print(device=pdf, "signed_d00.pdf")
 		
 		#abs difference
-		d00 = (abs(ceuCounts$c00 - yriCounts$c00))
-		d01 = (abs(ceuCounts$c01 - yriCounts$c01))
-		d02 = (abs(ceuCounts$c02 - yriCounts$c02))
-		d10 = (abs(ceuCounts$c10 - yriCounts$c10))
-		d11 = (abs(ceuCounts$c11 - yriCounts$c11))
-		d12 = (abs(ceuCounts$c12 - yriCounts$c12))
-		d20 = (abs(ceuCounts$c20 - yriCounts$c20))
-		d21 = (abs(ceuCounts$c21 - yriCounts$c21))
-		d22 = (abs(ceuCounts$c22 - yriCounts$c22))
+		d00 = ceuCounts$c00 - yriCounts$c00
+		d01 = ceuCounts$c01 - yriCounts$c01
+		d02 = ceuCounts$c02 - yriCounts$c02
+		d10 = ceuCounts$c10 - yriCounts$c10
+		d11 = ceuCounts$c11 - yriCounts$c11
+		d12 = ceuCounts$c12 - yriCounts$c12
+		d20 = ceuCounts$c20 - yriCounts$c20
+		d21 = ceuCounts$c21 - yriCounts$c21
+		d22 = ceuCounts$c22 - yriCounts$c22
 		
 		#DEBUG
 		write.table(ceuCounts$c00, file = "ceuc00")
@@ -204,8 +350,45 @@ testCountsDiff <- function(loadSave = TRUE)
 		
 		hist(ceuCounts$c00)
 		dev.print(device=pdf, "ceuc00.pdf")
+		hist(ceuCounts$c01)
+		dev.print(device=pdf, "ceuc01.pdf")
+		hist(ceuCounts$c02)
+		dev.print(device=pdf, "ceuc02.pdf")	
+		hist(ceuCounts$c10)
+		dev.print(device=pdf, "ceuc10.pdf")		
+		hist(ceuCounts$c11)
+		dev.print(device=pdf, "ceuc11.pdf")		
+		hist(ceuCounts$c12)
+		dev.print(device=pdf, "ceuc12.pdf")		
+		hist(ceuCounts$c20)
+		dev.print(device=pdf, "ceuc20.pdf")	
+		hist(ceuCounts$c21)
+		dev.print(device=pdf, "ceuc21.pdf")
+		hist(ceuCounts$c22)
+		dev.print(device=pdf, "ceuc22.pdf")
+		
+		hist(yriCounts$c00)
+		dev.print(device=pdf, "yric00.pdf")
+		
 		hist(d00)
-		dev.print(device=pdf, "absd00.pdf")
+		dev.print(device=pdf, "d00.pdf")
+		hist(d01)
+		dev.print(device=pdf, "d01.pdf")
+		hist(d02)
+		dev.print(device=pdf, "d02.pdf")
+		hist(d10)
+		dev.print(device=pdf, "d10.pdf")
+		hist(d11)
+		dev.print(device=pdf, "d11.pdf")
+		hist(d12)
+		dev.print(device=pdf, "d12.pdf")
+		hist(d20)
+		dev.print(device=pdf, "d20.pdf")
+		hist(d21)
+		dev.print(device=pdf, "d21.pdf")
+		hist(d22)
+		dev.print(device=pdf, "d22.pdf")
+
 		hist(yriCounts$c00)
 		dev.print(device=pdf, "yric00.pdf")
 		
@@ -213,9 +396,37 @@ testCountsDiff <- function(loadSave = TRUE)
 		
 		#DEBUG
 		cat("dim(d00)", dim(d00), "\n")
+		index <- abs(d00) > 30
+		large_c00_rs_diff = rsDiff[index]
+		hist(large_c00_rs_diff)
+		dev.print(device = pdf, "large_c00_rs_diff.pdf")
 		
-
-		#difference percentage
+		large_c00_ceu_rs = ceus[index]
+		hist(large_c00_ceu_rs)
+		dev.print(device=pdf, "large_c00_ceu_rs.pdf")
+		
+		large_c00_yri_rs = yris[index]
+		hist(large_c00_yri_rs)
+		dev.print(device = pdf, "large_c00_yri_rs.pdf")
+		
+		large_c00_ceu_c00 = (ceuCounts$c00)[index]
+		hist(large_c00_ceu_c00)
+		dev.print(device = pdf, "large_c00_ceu_c00.pdf")
+		
+		large_c00_ceu_c22 = (ceuCounts$c22)[index]
+		dev.print(device = pdf, "large_c00_ceu_c22.pdf")
+		
+		large_c00_yri_c00 = (yriCounts$c00)[index]
+		hist(large_c00_yri_c00)
+		dev.print(device = pdf, "large_c00_yri_c00.pdf")
+		
+		plot(large_c00_yri_c00, large_c00_yri_rs)
+		dev.print(device = pdf, "large_c00_yri_c00_rs.pdf")
+		
+		plot(large_c00_ceu_c00, ceus[index])
+		dev.print(device = pdf, "large_c00_ceu_c00_rs.pdf")
+		
+		#difference percentge
 		p00 = d00/(ceuCounts$c00)
 		p01 = d01/(ceuCounts$c01)
 		p02 = d02/(ceuCounts$c02)
@@ -286,10 +497,18 @@ testCountsDiff <- function(loadSave = TRUE)
 unitTest <- function()
 {
 	x = readGenotypeFromFastaFile("/home/xzhou/research_linux/gnome/workspace/data/testdata/x.12encode")
+	
+	print(x)
+	
 	xc = calculateCounts(x)
-	print(xc)
+	hc <- calculateHaplotypeCounts(x)
+	r = calculateRealR(x)
+	#print(xc)
+	#print(r)
+	cat("\n---------------\n")
+	print(hc)
 }
 
-testCountsDiff()
+testCountsDiff(T)
 #unitTest()
 
