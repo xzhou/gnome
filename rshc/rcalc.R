@@ -125,7 +125,7 @@ rcalc <- function(g1, g2, ...)
 	}
 	
 	# SAS code uses:
-	#
+	# 
 	#s <- seq(pmin+0.0001,pmax-0.0001,by=0.0001)
 	#lldmx <- loglik(s)
 	#maxi <- which.max(lldmx)
