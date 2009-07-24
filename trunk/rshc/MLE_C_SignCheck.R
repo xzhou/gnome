@@ -95,7 +95,8 @@ readMLECounts <- function(verbose = F)
 }
 
 
-#using counts to calculates the R value
+#' using counts to calculates the R value
+#' tested correct
 calculateRValue <- function(pA, pB, c11m, c12m, c13m, c21m, c22m, c23m, c31m, c32m, c33m)
 {
 	pa <- 1 - pA
@@ -160,8 +161,6 @@ calculateRValue <- function(pA, pB, c11m, c12m, c13m, c21m, c22m, c23m, c31m, c3
 }
 
 
-
-
 main <- function()
 {
 	mleC <- readMLECounts()
@@ -175,6 +174,9 @@ main <- function()
 	c32m <- mleC$c32m
 	c33m <- mleC$c33m
 	pA <- mleC$pA
+	
+	print(c11m)
+	stop()
 	
 	m = nrow(c11m)
 	n = ncol(c11m)
@@ -199,6 +201,8 @@ main <- function()
 	
 	print(mleR)
 	
+	stop()
+	
 	dumpR <- readDumpRValue()
 	recoverRate <- singRecoverate(mleR, dumpR)
 	
@@ -212,6 +216,16 @@ test <- function()
 	ret <- calculateRValue(0.53825, 0.798, 223, 272, 71, 627, 394,0,413,0,0)
 	correctValue = -0.4657458
 	cat(ret$r, "=?", correctValue, "\n")
+	
+	ret <- calculateRValue(0.53825, 0.86175, 451,108,7,741,259,21,294,108,11)
+	correctValue = 0.07892796
+	cat(ret$r, "=?", correctValue, "\n")
+	
+	ret <- calculateRValue(0.53825, 0.56875, 177, 284,105,317,514,190,144,201,68)
+	correctValue = -0.0268606
+	cat(ret$r, "=?", correctValue, "\n")
+	
+	
 #	if(ret$r == correctValue)
 #	{
 #		cat("test complete: \n")
@@ -219,7 +233,8 @@ test <- function()
 #	}
 }
 
-test()
+debug(main)
+main()
 
 
 
