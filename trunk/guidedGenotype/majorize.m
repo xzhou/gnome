@@ -1,3 +1,4 @@
+%STATUS: pass
 function [ haplotype ] = majorize( haplotype )
 %MAJORIZE change the encoding so that 0 is the major and 1 is the minor
 %   the unmajorized 01 encoded phased data

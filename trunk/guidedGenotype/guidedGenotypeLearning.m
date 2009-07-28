@@ -1,10 +1,11 @@
-function [learnedGenotype] = guidedGenotypeLearning()
+function [learnedGenotype] = guidedGenotypeLearning(popSize, nSnps)
 % guidedGenotypeLearning learns the genotype of a population
-% 
+% @popSize: the population size
+
 
 	%%read r square and single allele frequency value
 	[r, rs, pA, pAB, c11, c12, c13, c21, c22, c23, c31, c32, c33] = readRDumpFile();	
-	populationSize = 2000;
+	
 	
 	
 	
