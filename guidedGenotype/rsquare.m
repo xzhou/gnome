@@ -1,3 +1,4 @@
+%STATUS: not tested
 function [r, rs] =rsquare(x11,x12,x21,x22,precision)
 
 if nargin == 4, precision = 1000; end
@@ -16,6 +17,6 @@ if div==0
 	r = 0;
 else
     rs = (x11*x22-x12*x21)^2/div;
-	r = (x11*x22 - x12*x21)^2/div;
+	r = (x11*x22 - x12*x21)/sqrt(div);
     %r = round(r * precision)/precision; 
 end
