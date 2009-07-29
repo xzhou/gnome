@@ -47,13 +47,29 @@ hapEvaluate <- function(targetRS, targetF, learnedRS, learnedF, K = 0.7)
 }
 
 
+#' for each pair of pairwise count, calculate the grad
+#' @param c00
+#' @param c0x ... single allele frequency
+#' @param learnedRSquare
+#' @param targetRSquare
+#' @return the gradient agianst c_ij
+calcGrad <- function(c00, c0x, c1x, cx0, cx1, N, learnedRSquare, targetRSquare)
+{
+	K = c0x * c1x * cx0 * cx1
+	Z = (learnedRSquare - targetRSquare)
+	D = c00*N - c0x*cx0
+	delta = 2*Z*D*N/K
+	delta
+}
+
+
 #' caluclate the gradient at c_ij, for simplicity, we assume c00 are independent
 #' It is not the case when the LD are lardge 
 #' @param popSize the population size
 #' @param c00 symetric matrix of c00 for each pair
 #' @param c0x a row matrix of sngle allele frequency
 #' @param learnedRS the current learned r square
-#' @param targetRS the targetRS
+#' @param targetRS the targetRS	
 gradOfCij <- function(popSize, c00m, c0xm, learnedRS, targetRS)
 {
 	N <- 2*popSize
@@ -67,16 +83,6 @@ gradOfCij <- function(popSize, c00m, c0xm, learnedRS, targetRS)
 	}
 	
 	grad = matrix(0.0, m, n)
-	
-	calcGrad <- function(c00, c0x, c1x, cx0, cx1, N, learnedRSquare, targetRSquare)
-	{
-			K = c0x * c1x * cx0 * cx1
-			Z = (learnedRSquare - targetRSquare)
-			D = c00*N - c0x*cx0
-			delta = 2*Z*D*N/K
-			delta
-	}
-	
 	
 	for(i in 1:(m-1))
 	{
@@ -106,7 +112,7 @@ gradOfCij <- function(popSize, c00m, c0xm, learnedRS, targetRS)
 #' @param pA the single allele frequency of all snps
 #' @return the init popupation with pA
 #' STATUS not tested
-initPop <- function(popSize, nSnps, pA)
+initializePopulation <- function(popSize, nSnps, pA)
 {
 	if(length(pA) != nSnps)
 	{
@@ -136,17 +142,28 @@ initPop <- function(popSize, nSnps, pA)
 	}
 }
 
+
+
+
 #' learn haplotype
 #' 
 #' @param targetHaplotype for simulation, we assume we know the phased genotype
-#' 			it remembers the genotype
+#' 			it remembers the genotype, we use the gradient decrease algorithm
 #' @param popSize	The population size of the target haplotype
 #' @param nSnps		the number of snps
-guidedHapLearning <- function(targetHaplotype, popSize = 20, nSnps = 77)
+#' @param nSnps		randomly start 
+guidedHapLearning <- function(targetHaplotype, popSize = 20, nSnps = 77, maxTry = 10000)
 {
 	#calculate the r rs and single allele frequency
 	targetR <- calcualteRealR(targetHaplotype)
 	targetF <- calculateSingleAlleleFrequence(targetHaplotype)
+	
+	
+	
+	#initialize the population given single allele frequency
+	initPop <- initializePopulation(popSize, nSnps, targetF)
+	
+	
 	
 	
 	
