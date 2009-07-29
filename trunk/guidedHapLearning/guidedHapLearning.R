@@ -32,11 +32,8 @@ readHapData <- function(hapFileName =  "../data/sim_4000seq/80SNP_CEU_sim_4000se
 #' @param 
 #' @param 
 #' @param K the weight of rs error and frequency error
-hapEvaluate <- function(targetR, targetF, learnedR, learnedF, K = 0.7)
-{
-	targetRS <- targetR * targetR
-	learnedRS <- learnedR * learnedR
-	
+hapEvaluate <- function(targetRS, targetF, learnedRS, learnedF, K = 0.7)
+{	
 	rsDiff <- targetRS - learnedRS
 	rError <- sum(rsDiff*rsDiff, na.rm = T)/2.0
 	
@@ -49,10 +46,94 @@ hapEvaluate <- function(targetR, targetF, learnedR, learnedF, K = 0.7)
 
 }
 
-#' caculate the grad of delta(E)/delta(C) 
-grad <- function()
+
+#' caluclate the gradient at c_ij, for simplicity, we assume c00 are independent
+#' It is not the case when the LD are lardge 
+#' @param popSize the population size
+#' @param c00 symetric matrix of c00 for each pair
+#' @param c0x a row matrix of sngle allele frequency
+#' @param learnedRS the current learned r square
+#' @param targetRS the targetRS
+gradOfCij <- function(popSize, c00m, c0xm, learnedRS, targetRS)
 {
+	N <- 2*popSize
+	m <- nrow(c00m)
+	n <- ncol(c00m)
 	
+	if( m != n)
+	{
+		warning("not square matrix\n")
+		stop()
+	}
+	
+	grad = matrix(0.0, m, n)
+	
+	calcGrad <- function(c00, c0x, c1x, cx0, cx1, N, learnedRSquare, targetRSquare)
+	{
+			K = c0x * c1x * cx0 * cx1
+			Z = (learnedRSquare - targetRSquare)
+			D = c00*N - c0x*cx0
+			delta = 2*Z*D*N/K
+			delta
+	}
+	
+	
+	for(i in 1:(m-1))
+	{
+		for(j in (i+1):m)
+		{
+			c00 = c00m[i,j]
+			
+			#calculate single allele frequency
+			c0x <- c0xm[i]
+			c1x <- N - c0x
+			cx0 <- c0xm[j]
+			cx1 <- N - cx0
+			lrs_ij <- learnedRS[i,j]
+			trs_ij <- targetRS[i,j]
+			
+			delta <- calcGrad(c00, c0x, c1x, cx0, cx1, N, lrs_ij, trs_ij)
+			
+			grad[i,j] <- grad[j,i] = delta
+		}
+	}
+	
+	grad
+	
+}
+
+#' initialize the population given single allele frequency
+#' @param pA the single allele frequency of all snps
+#' @return the init popupation with pA
+#' STATUS not tested
+initPop <- function(popSize, nSnps, pA)
+{
+	if(length(pA) != nSnps)
+	{
+		warning("nSnps != length(pA)\n")
+		stop()
+	}
+	
+	pop = matrix(0, popSize, 2*nSnps)
+	
+	for(j in 1:nSnps)
+	{
+		n0 <- round(pA[j]*popSize*2)		#number of 0s
+		
+		k = 1
+		for(i in 1:popSize)
+		{
+			if(k <= n0 )
+			{
+				pop[i,2*j-1] = 0
+			}
+			else
+			{
+				pop[i, 2*j] = 1
+			}
+			k = k + 1
+		}
+	}
 }
 
 #' learn haplotype
@@ -66,7 +147,9 @@ guidedHapLearning <- function(targetHaplotype, popSize = 20, nSnps = 77)
 	#calculate the r rs and single allele frequency
 	targetR <- calcualteRealR(targetHaplotype)
 	targetF <- calculateSingleAlleleFrequence(targetHaplotype)
-
+	
+	
+	
 }
 
 
