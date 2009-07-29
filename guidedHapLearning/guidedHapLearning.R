@@ -12,7 +12,7 @@ source("SHC.R")
 readHapData <- function(hapFileName =  "../data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", popSize, nSnps)
 {
 	
-	if(hapFileName = "")
+	if(hapFileName == "")
 	{
 		hapFileName = "../data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode"
 	}
@@ -63,7 +63,7 @@ hapEvaluate <- function(targetRS, targetF, learnedRS, learnedF, K = 0.7)
 }
 
 
-#' for each pair of pairwise count, calculate the grad
+#' for each pair of pairwise count, calculate the gradient
 #' @param c00
 #' @param c0x ... single allele frequency
 #' @param learnedRSquare
@@ -180,17 +180,24 @@ guidedHapLearning <- function(targetHaplotype, maxTry = 10000)
 	nSnps <- ncol(targetHaplotype)/2
 	
 	#calculate the r rs and single allele frequency
-	targetR <- calcualteRealR(targetHaplotype)
+	targetR <- calculateRealR(targetHaplotype)
 	targetF <- calculateSingleAlleleFrequence(targetHaplotype)
 	
 	#initialize the population given single allele frequency
 	initPop <- initializePopulation(popSize, nSnps, targetF)
+	
+	
 }
 
 gradGuidedLearningEntry <- function()
 {
 	targetHaplotype <- readHapData("", 5, 10)
+	majorize(targetHaplotype)
+	debug(guidedHapLearning)
+	guidedHapLearning(targetHaplotype)
 }
+
+gradGuidedLearningEntry()
 
 
 
