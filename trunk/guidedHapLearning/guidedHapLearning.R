@@ -185,8 +185,6 @@ guidedHapLearning <- function(targetHaplotype, maxTry = 10000)
 	
 	#initialize the population given single allele frequency
 	initPop <- initializePopulation(popSize, nSnps, targetF)
-	
-	
 }
 
 gradGuidedLearningEntry <- function()
@@ -195,6 +193,9 @@ gradGuidedLearningEntry <- function()
 	majorize(targetHaplotype)
 	debug(guidedHapLearning)
 	guidedHapLearning(targetHaplotype)
+	
+	# can not continue
+	
 }
 
 gradGuidedLearningEntry()
