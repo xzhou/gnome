@@ -4,8 +4,7 @@ Created on Jul 14, 2009
 @author: xzhou
 '''
 import re
-from encodeFasta import encodeFasta
-
+from encodeFasta import encode0112
 
 #preprocess of iregullar file for standard fasta file
 def fastaToGenotype(fastaFileName, temp):
@@ -51,19 +50,24 @@ def fastaToGenotype(fastaFileName, temp):
         tempFile.write(seq[i]+"\n")
     tempFile.close()
     #convert genotype sequence
-    print i 
+    #print i 
     #convert to a genotype file
     
 if __name__ == '__main__':
-    ceuFileName = "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/chr10_FGFR2_200kb_phased_CEU.fasta"
-    yriFileName = "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/chr10_FGFR2_200kb_phased_yri.fasta"
     
-    ceu = fastaToGenotype(ceuFileName, "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.mid")
-    encodeFasta("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.mid", 
-                "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.12encode")
+    if(False):
+        ceuFileName = "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/chr10_FGFR2_200kb_phased_CEU.fasta"
+        yriFileName = "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/chr10_FGFR2_200kb_phased_yri.fasta"
+        
+        ceu = fastaToGenotype(ceuFileName, "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.mid")
+        encode0112("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.mid", 
+                    "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.12encode")
+        
+        yri = fastaToGenotype(yriFileName, "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.mid")
+        encode0112("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.mid", 
+                    "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.12encode")
     
-    yri = fastaToGenotype(yriFileName, "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.mid")
-    encodeFasta("/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.mid", 
-                "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.12encode")
+    x = fastaToGenotype("/home/xzhou/research_linux/gnome/workspace/data/testdata/x.fasta", "/home/xzhou/research_linux/gnome/workspace/data/testdata/x.mid")
+    encode0112("/home/xzhou/research_linux/gnome/workspace/data/testdata/x.mid", "/home/xzhou/research_linux/gnome/workspace/data/testdata/x.12encode")
     
     

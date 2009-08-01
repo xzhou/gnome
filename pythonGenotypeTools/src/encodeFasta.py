@@ -6,7 +6,7 @@ Created on Jun 19, 2009
 import psyco
 psyco.full()
 
-def encodeFasta(fileName, outputFileName, nSnps = -1, nIndividuals = -1):
+def encode0112(fileName, outputFileName, hapFileName = "", nSnps = -1, nIndividuals = -1):
     file = open(fileName, 'r')
     
     lines = file.readlines()
@@ -44,7 +44,6 @@ def encodeFasta(fileName, outputFileName, nSnps = -1, nIndividuals = -1):
             aSnps.append(a1)
             aSnps.append(a2)
         rawGenotype.append(aSnps)
-    
     #print rawGenotype[0]
     
     #majorize
@@ -86,12 +85,21 @@ def encodeFasta(fileName, outputFileName, nSnps = -1, nIndividuals = -1):
         
         for j in range(0, len(snp)):
             if snp[j] == majorAllele:
-                snp[j] = "1"
+                snp[j] = 1
             elif snp[j] == minorAllele:
-                snp[j] = "2"
+                snp[j] = 2
         genotype.append(snp)
-        
     
+    if hapFileName != "":
+        hapFile = open(hapFileName, 'w')
+        
+        for i in range(0, 2*nIndividuals):
+            for j in range(0, len(genotype)):
+                a = genotype[j][i]
+                hapFile.write(str(a-1) + " ")
+                
+            hapFile.write("\n");
+
     outputFile = open(outputFileName, 'w')
     for j in range(0, 2*nIndividuals, 2):
         for i in range(0, len(genotype)):
@@ -99,12 +107,12 @@ def encodeFasta(fileName, outputFileName, nSnps = -1, nIndividuals = -1):
             a2 = genotype[i][j+1]
             outputFile.write(str(a1) + " " + str(a2) + " ")
         outputFile.write("\n")
-    
     outputFile.close()
 
 
 if __name__ == '__main__':
     fastaFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.fasta"
     outputFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode"
-    encodeFasta(fastaFileName, outputFileName)
+    hapFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.01hap"
+    encode0112(fastaFileName, outputFileName, hapFileName)
     
