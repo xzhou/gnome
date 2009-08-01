@@ -19,11 +19,14 @@ withmissingSNP = 1; % decided the missing SNPs
 %% 
 % r values from snp.plotter
 %% To change: input files
-% cd 'E:\1.2.2.Research_Proteomics\GWAS information security\data\Real Dataset 2\Statistical test'
-Ref_snpplotterFile = 'shuffled80SNPHapmapcase1_82.freq.txt';
-Sample_snpplotterFile = 'case_control_clean.freq.txt';
+cd '/home/xzhou/research_linux/gnome/workspace/data/sim_dist_exp'
+
+Sample_snpplotterFile = '80SNP_CEU_sim_4000seq_control1000.freq.txt';
 Sample_haplotypeFile = 'casectrl.phase';
+
+Ref_snpplotterFile = 'shuffled80SNPHapmapcase1_82.freq.txt';
 Ref_haplotypeFile = 'hapmap_chr7_80SNP_CEU_haplotype1_82.fasta';
+
 Test_haplotypeFile = 'hapmap_chr7_80SNP_CEU_haplotype_83_164.fasta';
 Out_haplotypeFile = 'hapmap_chr7_80SNP_YRI_haplotype.fasta';
 
