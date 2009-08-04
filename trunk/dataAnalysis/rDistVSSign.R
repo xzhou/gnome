@@ -72,13 +72,58 @@ rdist <- function(file = "../data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", p
 	
 	targetGenotype = targetGenotype[1:popSize, 1:(2*nSnps)]
 	
-	
 	pdf("dist.pdf")
 	result <- rDistVSSign(targetGenotype)
 	dev.off()
 }
 
-distPlot <- function(result, loadFromFile = T)
+dist2Sign <- function(result = NULL, loadFromFile = F)
+{
+	
+	#DEBUG
+	loadFromFile = T
+	
+	if(result == NULL || loadFromFile == T)
+	{
+		load("rdist.RData")
+	}
+	
+	nSnps <-  max(result[,2])
+	
+	signMatrix = matrix(0, nSnps, nSnps)
+	
+	nRec <- nrow(result)
+	
+	for(k in 1:nRec)
+	{
+		aResult <- result[k, ]
+		i <- aResult[1]
+		j <- aResult[2]
+		
+		realR <- aResult[3]
+		
+		allAvgR <- aResult[-1:-3]
+		
+		nPositive <- length(allAvgR[allAvgR>0])
+		nNegative <- length(allAvgR[allAvgR<0])
+		
+		if(nPositive > nNegative)
+		{
+			signMatrix[i,j] <- signMatrix[j,i] <-  1
+		}
+		else if(nPositive < nNegative)
+		{
+			signMatrix[i,j] <- signMatrix[j,i] <-  -1
+		}
+		else
+		{
+			signMatrix[i,j] <-  0
+		}
+	}
+	signMatrix
+}
+
+distPlot <- function(result = NULL, loadFromFile = T)
 {
 	
 	if(loadFromFile == TRUE || result == NULL)
@@ -89,7 +134,6 @@ distPlot <- function(result, loadFromFile = T)
 	m <- nrow(result)
 	n <- ncol(result)
 	pdf("adjust_r_dist_2000_10_100__0.05.pdf")
-	
 	for(i in 1:m)
 	{
 		aResult = result[i,]
@@ -101,11 +145,12 @@ distPlot <- function(result, loadFromFile = T)
 			abline(v = 0.05, col="red", lty = 3, lwd = 1)
 			abline(v = -0.05, col="red", lty = 3, lwd = 1)
 		}
-		
 	}
 	dev.off()
 }
 
 #rdist()
 
+sign <- dist2Sign()
+print(sign)
 
