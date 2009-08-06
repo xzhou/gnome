@@ -81,7 +81,7 @@ dist2Sign <- function(result = NULL, loadFromFile = F)
 {
 	
 	#DEBUG
-	loadFromFile = T
+	#loadFromFile = T
 	
 	if(result == NULL || loadFromFile == T)
 	{
