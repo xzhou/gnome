@@ -14,6 +14,9 @@ function out = DrTest(fastafile, threshold, precision, N)
 % close all;
 % cd 'E:\1.2.2.Research_Proteomics\GWAS information security\data\Hapmap chr10';
 %cd 'E:\1.2.2.Research_Proteomics\GWAS information security\data\Real Dataset 2\Statistical test';
+
+cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
+
 nP = 200;
 nM = 200;
 if nargin >=4
@@ -24,7 +27,7 @@ Trials = 1000;
 Len = 100;
 flag_usereal = 1;
 degFreedomFlag = 0; % estimate the degree of freedom of the haplotypes
-fastafile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
+fastafile = '80SNP_CEU_sim_4000seq.fasta';
 % fastafile = 'chr10_FGFR2_200kb_phased_yri.fasta';
 frompairwise = 0; % compute the statistics from pairwise freq
 % fastafile = 'chr10_FGFR2_200kb_phased_jpt+chb.fasta';
@@ -274,26 +277,26 @@ ylabel('Density of T_p');
 title('')
 
 out = [threshold; countsmall; power_Dr; power_Dp; power_DrDp];
-% textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' Tc: ' fastafile];'Null: M does not contain the individual'};
-% plot2hist(Tc_M0,Tc_MA,textTitle)
-% 
-% textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' Tc\_log: ' fastafile];'Null: M does not contain the individual'};
-% plot2hist(Tc_log_M0,Tc_log_MA,textTitle)
+textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' Tc: ' fastafile];'Null: M does not contain the individual'};
+plot2hist(Tc_M0,Tc_MA,textTitle)
 
-% textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' D\_adjust\_r, FGFR2 locus, 174 SNPs, control size 100, model group size 50'];'Null: M does not contain the individual'};
-% plot2hist(D_radjust_M0,D_radjust_MA,textTitle)
-% 
-% % textTitle = {['case' num2str(nM) 'control' num2str(nP) 'Statistic for SNP frequency, 2000 SNP, control size 100, model group size 50';'Null: M does not contain the individual']};
-% textTitle = {['case:' num2str(nM) 'control:' num2str(nP) ' D\_p ' fastafile];'Null: M does not contain the individual'};
-% plot2hist(D_p_M0,D_p_MA,textTitle);
-% textTitle = {'D\_rsign, FGFR2 locus, 174 SNPs, control size 100, model group size 50';'Null: M does not contain the individual'};
-% plot2hist(D_rsign_M0,D_rsign_MA,textTitle)
-% textTitle = {'D\_psign, FGFR2 locus, 174 SNPs, control 100, model group 50';'Null: M does not contain the individual'};
-% plot2hist(D_psign_M0,D_psign_MA,textTitle)
-% textTitle = {'D\_rcorrection, FGFR2 locus, 174 SNPs, control size 100, model group size 50';'Null: M does not contain the individual'};
-% plot2hist(D_rcorrection_M0,D_rcorrection_MA,textTitle)
-% textTitle = {'D\_pcorrection, FGFR2 locus, 174 SNPs, control 100, model group 50';'Null: M does not contain the individual'};
-% plot2hist(D_pcorrection_M0,D_pcorrection_MA,textTitle)
+textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' Tc\_log: ' fastafile];'Null: M does not contain the individual'};
+plot2hist(Tc_log_M0,Tc_log_MA,textTitle)
+
+textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' D\_adjust\_r, FGFR2 locus, 174 SNPs, control size 100, model group size 50'];'Null: M does not contain the individual'};
+plot2hist(D_radjust_M0,D_radjust_MA,textTitle)
+
+% textTitle = {['case' num2str(nM) 'control' num2str(nP) 'Statistic for SNP frequency, 2000 SNP, control size 100, model group size 50';'Null: M does not contain the individual']};
+textTitle = {['case:' num2str(nM) 'control:' num2str(nP) ' D\_p ' fastafile];'Null: M does not contain the individual'};
+plot2hist(D_p_M0,D_p_MA,textTitle);
+textTitle = {'D\_rsign, FGFR2 locus, 174 SNPs, control size 100, model group size 50';'Null: M does not contain the individual'};
+plot2hist(D_rsign_M0,D_rsign_MA,textTitle)
+textTitle = {'D\_psign, FGFR2 locus, 174 SNPs, control 100, model group 50';'Null: M does not contain the individual'};
+plot2hist(D_psign_M0,D_psign_MA,textTitle)
+textTitle = {'D\_rcorrection, FGFR2 locus, 174 SNPs, control size 100, model group size 50';'Null: M does not contain the individual'};
+plot2hist(D_rcorrection_M0,D_rcorrection_MA,textTitle)
+textTitle = {'D\_pcorrection, FGFR2 locus, 174 SNPs, control 100, model group 50';'Null: M does not contain the individual'};
+plot2hist(D_pcorrection_M0,D_pcorrection_MA,textTitle)
 
 
 
