@@ -38,7 +38,7 @@ Out_haplotypeFile = '80SNP_CEU_sim_4000seq_control1000.fasta';
 
 %%
 [R2 R1]= readSNPplotter(Ref_snpplotterFile);
-recoveredSign = readSignMatrix()
+%recoveredSign = readSignMatrix()
 %[R2 R1] = replaceSign(R2, R1)
 
 [S2 S1]= readSNPplotter(Sample_snpplotterFile);
@@ -172,6 +172,8 @@ end
 % all_r_S(indx)=0;
 % all_r_R(indx)=0;
 
+
+% problems here!!!
 for i = 1:nS
     StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
     % StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R);

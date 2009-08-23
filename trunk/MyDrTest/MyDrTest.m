@@ -63,7 +63,7 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     % labeling of SNPs
     allele1 = int4T(end,:);
     int2S = (int4S == repmat(allele1,nS,1)) + 0; 
-    int2R = (int4R == repmat(allele1,nS,1)) + 0;
+    int2R = (int4R == repmat(allele1,nR,1)) + 0;
     int2T = (int4T == repmat(allele1,nT,1)) + 0;
     
     %% calculate the r and p
@@ -89,7 +89,7 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     %calculate the statistics for each individual
     for i = 1:nSample
         StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
-        StatR.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
+        StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R);
     end
     
     for i = 1:nTest
@@ -100,6 +100,9 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
     StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
     StatT.Tr = StatT.Tr/sqrt(Len*(Len-1)/2);
+    
+    %calculate p
+    
     
     %% read snp.plotter data and replace the sign
 
@@ -119,6 +122,12 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     plot(indexS, Trall(indexS), '.r');
     plot(indexR, Trall(indexR), '.g');
     plot(indexT, Trall(indexT), '.k');
+    a = axis;
+    xlabel('index of individuals');
+    ylabel('T_r Values');
+    legend({['sample'] ['Ref'] ['Test']});
+    saveas(gcf, ['Tr_', groupname '_vs_' outgroupname '_' '.fig']);
+    saveas(gcf, ['Tr_', groupname '_vs_' outgroupname '_' '.png']);
 end
 
 

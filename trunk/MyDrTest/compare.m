@@ -1,4 +1,4 @@
-function out = DrTest(fastafile, threshold, precision, N)
+function out = PowerCompare(fastafile, threshold, precision, N)
 
 cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
 

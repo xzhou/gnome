@@ -25,6 +25,6 @@ function [ Rm ] = replaceSignByT( R, Threshold )
 			end
 		end
 	end
-	k
+	k;
 end
 
