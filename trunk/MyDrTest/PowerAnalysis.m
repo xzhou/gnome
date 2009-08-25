@@ -1,5 +1,5 @@
 function [StatS, StatR, StatT, Truth] = PowerAnalysis(rev, replaceSign)
-	loadFromFile = 1;
+	loadFromFile = 0;
 	if loadFromFile == 0
 		precision = 4;
 		Trials = 100;
