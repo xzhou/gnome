@@ -1,5 +1,5 @@
 function [haplotype, freq] = getHaplotype(seq, block)
-% get haplotype block
+% get haplotype block 
     l = block(1);
     u = block(2);
     blockSeq = seq(:, l:u);
