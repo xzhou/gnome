@@ -9,8 +9,12 @@ debug = 1;
 targetSeq = readSeq4(sampleFileName);
 refSeq = readSeq4(refFileName);
 
-targetR = calcR(targetSeq);
-refR = calcR(refSeq);
+alleleMapping = getMajorAllele(refSeq);
+
+targetR = calcR(targetSeq, alleleMapping);
+refR = calcR(refSeq, alleleMapping);
+
+%use the major allele mapping
 
 % b1 = [34 41];   %block one
 % b2 = [42 45];   %block two haplotypeFreq = 
@@ -24,4 +28,4 @@ refR = calcR(refSeq);
 %     x = sortrows(x);
 %     y = sortrows(y);
 
-hbRecomb(targetR, refSeq);
+hbRecomb(targetR, refSeq, alleleMapping);
