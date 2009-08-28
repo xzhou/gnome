@@ -15,11 +15,11 @@ nYRI = length(seqYRI(1).Sequence);
 int4CEU = zeros(mCEU, nCEU);
 int4YRI = zeros(mYRI, nYRI);
 
-for i = 1:mCEU
+parfor i = 1:mCEU
     int4CEU(i,:) = nt2int(seqCEU(i).Sequence) - 1;
 end
 
-for i = 1:mYRI
+parfor i = 1:mYRI
     int4YRI(i,:) = nt2int(seqYRI(i).Sequence) - 1;
 end
 
@@ -53,5 +53,6 @@ saveas(h, 'ceuyri_1_80.pdf');
 
 h = plotWithSignSimple(all_r_CEU(75:end, 75:end), all_r_YRI(75:end, 75:end), 0.1);
 saveas(h, 'ceuyri_75_174.pdf');
+
 
 

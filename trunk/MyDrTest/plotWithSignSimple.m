@@ -1,7 +1,14 @@
 function [h] = plotWithSignSimple(r1, r2, T)
 % r1 is sample, r2 is case
 % T is the mask threshold, 
- 
+    
+    if nargin == 1
+        r2 = r1;
+        T = 0.0;
+    elseif nargin == 2
+        T = 0.0;
+    end
+    
     [numrow, numcol] = size(r1);
     
     %mix r value

@@ -65,6 +65,10 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     int2S = (int4S == repmat(allele1,nS,1)) + 0; 
     int2R = (int4R == repmat(allele1,nR,1)) + 0;
     int2T = (int4T == repmat(allele1,nT,1)) + 0;
+    allele1 = int4T(end,:);
+    int2S = (int4S == repmat(allele1,nS,1)) + 0; 
+    int2R = (int4R == repmat(allele1,nR,1)) + 0;
+    int2T = (int4T == repmat(allele1,nT,1)) + 0;
     
     %% calculate the r and p
     all_r_S = corrcoef(int2S);
