@@ -1,4 +1,4 @@
-function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
+function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign, maskMatrix, signMatrix)
 % MYDRTEST is used to test the sign recovered by the distribution sign 
 %   Method and compare the power of Tr test against 
 
@@ -17,6 +17,9 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
 
     if nargin == 0
         rev = 1;
+        replaceSign = 0;
+        maskMatrix = NaN;
+        signMatrix = NaN;
     end
 
 %% read haplotype sequence and get the sequence
@@ -70,6 +73,12 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     all_r_S = corrcoef(int2S);
     all_r_S(isnan(all_r_S)) = 0;    %
     
+    %replace the sign of the sample
+    if replaceSign == 1
+        %all_r_S = abs(all_r_S).*signMatrix;
+    end
+    
+
     all_r_R = corrcoef(int2R);
     all_r_R(isnan(all_r_S)) = 0;
     
@@ -87,22 +96,31 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign)
     StatT.p = StatT.Tr;
     
     %calculate the statistics for each individual
-    for i = 1:nSample
-        StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
-        StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R);
-    end
-    
-    for i = 1:nTest
-        StatT.Tr(i) = getTr(int2T(i,:), all_r_S, all_r_R);
+    if replaceSign == 1
+        for i = 1:nSample
+            StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R, maskMatrix, signMatrix);
+            StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R, maskMatrix, signMatrix);
+        end
+
+        for i = 1:nTest
+            StatT.Tr(i) = getTr(int2T(i,:), all_r_S, all_r_R, maskMatrix, signMatrix);
+        end
+    else
+        for i = 1:nSample
+            StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
+            StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R);
+        end
+
+        for i = 1:nTest
+            StatT.Tr(i) = getTr(int2T(i,:), all_r_S, all_r_R);
+        end
     end
     
     %????
     StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
     StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
     StatT.Tr = StatT.Tr/sqrt(Len*(Len-1)/2);
-    
     %calculate p
-    
     
     %% read snp.plotter data and replace the sign
 
@@ -169,8 +187,15 @@ function [std_Dr, mean_Dr] = getstdTr(int4, iMCmodel, refhaplotype, nS, nR, Tria
     return
 end
 
-function Tr = getTr(Y, r_S, r_R)
-    A2 = (2*Y'-1)*(2*Y-1);
-    Tr = sum(sum((r_S - r_R).* A2))/2;
-    return
+function Tr = getTr(Y, r_S, r_R, maskMatrix, signMatrix)
+    if nargin == 3
+        A2 = (2*Y'-1)*(2*Y-1);
+        Tr = sum(sum((r_S - r_R).* A2))/2;
+    else
+        r_S = abs(r_S).*signMatrix; %replace the sign
+        r_S = r_S.*maskMatrix;  %
+        r_R = r_R.*maskMatrix;
+        A2 = (2*Y'-1)*(2*Y-1);
+        Tr = sum(sum((r_S - r_R).* A2))/2;
+    end
 end
