@@ -6,7 +6,7 @@ function [haplotype, freq] = getHaplotype(seq, block)
     
     haplotype = unique(blockSeq, 'rows');
     
-    [m n] = size(haplotype)
+    [m n] = size(haplotype);
     freq = zeros(m, 1);
 
     for i = 1:m
