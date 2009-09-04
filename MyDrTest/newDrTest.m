@@ -23,7 +23,7 @@ withmissingSNP = 0; % decided the missing SNPs
 
 cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
 
-Sample_snpplotterFile = 'SIM_100x77_snp.freq.txt'
+Sample_snpplotterFile = 'SIM_100x77_smp.freq.txt'
 Sample_haplotypeFile = 'SIM_100x77_smp.fasta';
 
 Ref_snpplotterFile = 'SIM_100x77_ctl.fasta.freq.txt';
@@ -41,7 +41,7 @@ Out_haplotypeFile = '80SNP_CEU_sim_4000seq_control1000.fasta';
 [S2 S1]= readSNPplotter(Sample_snpplotterFile);
 
 %signMatrix = readSignMatrix('signMatrix')
-%[newR] = replaceSign(S2)
+[newR] = replaceSign(S2)
 
 %reaplace the sign
 S2 = newR;

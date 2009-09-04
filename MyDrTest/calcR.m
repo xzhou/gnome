@@ -6,7 +6,4 @@ function [r p] = calcR(pedFileName)
     
     seqS = caseData(6:end,:);
     seqR = controlData(6:end,:);
-    
-    
-    
 end

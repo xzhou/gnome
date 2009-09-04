@@ -20,5 +20,4 @@ function [x] = MatrixToVec(signMatrix, maskIndex)
     end
     
     %scatter(x(:,1), x(:,2), 'marker', 'x');
-    
 end

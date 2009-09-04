@@ -9,6 +9,9 @@ function [h] = plotWithSignSimple(r1, r2, T)
         T = 0.0;
     end
     
+    r1 = double(r1);
+    r2 = double(r2);
+    
     [numrow, numcol] = size(r1);
     
     %mix r value

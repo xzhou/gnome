@@ -28,11 +28,14 @@ function out = PowerCompare(fastafile, threshold, precision, N)
                         % else, do not remove r values by sign
     partialReverseSign = 0; % partially reverse the sign of the "removebySign" part; or totaly remove the "removebySign" part
     pseudocount = 0;
+    
     if nargin < 2 || length(threshold)==0
         threshold = 0.1; %0.5, 0.2, 0.1, 0.01, 0.001
     end
+    
     removeSmallr = 1;
     flag_twoPopulation = 0; % two models will be simulated for the references and the sample
+    
     if nargin < 3 || length(precision)==0
         precision = 10; %1, 2, 3, 4, 5
     end
@@ -53,9 +56,10 @@ function out = PowerCompare(fastafile, threshold, precision, N)
     % define allele as allele 1 for each of the SNP location, thus that SNP
     % with non 0/1 label can be converted to 0/1 label
 
-    % what is allele1????
+    % allele mapping
     allele1 = iMCgenerate(iMCmodel,1);
-
+    
+    %???? why?
     if degFreedomFlag ==1
         d = zeros(200,1);
         for i = 1:200
@@ -77,7 +81,9 @@ function out = PowerCompare(fastafile, threshold, precision, N)
     D_r_MA = zeros(Trials,1);
     D_p_M0 = zeros(Trials,1);
     D_p_MA = zeros(Trials,1);
-
+    
+    
+    %????
     countsmall = 0;
     if flag_twoPopulation ==1
         iMCmodel1 = iMCmodelBuild(iMCgenerate(iMCmodel,50),0);

@@ -36,7 +36,7 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign, maskMatrix, s
     seqT = fastaread(test);
     
     nSample = length(seqS);             % number of individuals from fasta file
-    nS = nSample
+    nS = nSample;
     Len = length(seqS(1).Sequence);      % number of snps in the fasta faile
     
     nR = length(seqR);               %the number of 
@@ -59,19 +59,21 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign, maskMatrix, s
         int4T(i,:) = nt2int(seqT(i).Sequence) - 1;
     end
     
+
     %convert SNP nucleotide to 0/1
     % define allele as allele 1 for each of the SNP location, thus that SNP
     % with non 0/1 label can be converted to 0/1 label
     % int4* is the 4 integer labeling of SNPs ,and int2* is the 2 integer
     % labeling of SNPs
     allele1 = int4T(end,:);
+    allele1 = getMajorAllele(int4R);
     int2S = (int4S == repmat(allele1,nS,1)) + 0; 
     int2R = (int4R == repmat(allele1,nR,1)) + 0;
     int2T = (int4T == repmat(allele1,nT,1)) + 0;
     
     %% calculate the r and p
     all_r_S = corrcoef(int2S);
-    all_r_S(isnan(all_r_S)) = 0;    %
+    all_r_S(isnan(all_r_S)) = 0;%
     
     %replace the sign of the sample
     if replaceSign == 1
@@ -139,13 +141,14 @@ function [StatS, StatR, StatT, Truth] = MyDrTest(rev, replaceSign, maskMatrix, s
     nspace = 8;
     plot(indexS, Trall(indexS), '.r');
     plot(indexR, Trall(indexR), '.g');
-    plot(indexT, Trall(indexT), '.k');
+    %plot(indexT, Trall(indexT), '.k');
     a = axis;
     xlabel('index of individuals');
     ylabel('T_r Values');
-    legend({['sample'] ['Ref'] ['Test']});
+    legend({['sample'] ['Ref']});
     saveas(gcf, ['Tr_', groupname '_vs_' outgroupname '_' '.fig']);
     saveas(gcf, ['Tr_', groupname '_vs_' outgroupname '_' '.png']);
+    
 end
 
 
@@ -192,8 +195,8 @@ function Tr = getTr(Y, r_S, r_R, maskMatrix, signMatrix)
         A2 = (2*Y'-1)*(2*Y-1);
         Tr = sum(sum((r_S - r_R).* A2))/2;
     else
-        r_S = abs(r_S).*signMatrix; %replace the sign
-        r_S = r_S.*maskMatrix;  %
+        %r_S = abs(r_S).*signMatrix; %replace the sign
+        r_S = r_S.*maskMatrix;
         r_R = r_R.*maskMatrix;
         A2 = (2*Y'-1)*(2*Y-1);
         Tr = sum(sum((r_S - r_R).* A2))/2;
