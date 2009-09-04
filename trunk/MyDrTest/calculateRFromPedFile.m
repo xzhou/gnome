@@ -31,6 +31,4 @@ function [r p] = calculateRFromPedFile(pedFileName, ncol)
         for i = 1:nrow
             int4R(i,:) = nt2int(allSeq{i,1}) - 1;
         end
-        
-
 end
