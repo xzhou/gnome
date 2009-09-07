@@ -58,6 +58,6 @@ function [finalSeq, finalR, finalSignRate] = hbOneBlockRecombination(targetR, re
     finalQual = currentQuality;
     finalR = currentR;
     finalSignRate = signRate;
-    fprintf(1, 'initQ = %f \tfinalQ = %f \tsignRate = %f\n', initQuality, finalQual, finalSignRate);
+    fprintf(1, 'initQ = %f \tfinalQ = %f initSR = %f \tfinalSR = %f\n', initQuality, finalQual, initSignRate, finalSignRate);
     SvsQ = [finalSignRate finalQual];
 end
