@@ -2,7 +2,8 @@
 %markov chain model and generate multiple haplotype sequence for
 %experiments
 
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP'
+cd '..';
+cd 'HAPMAP';
 
 %ceuSequence = readSeq4('chr10_FGFR2_200kb_phased_CEU.fasta');
 ceuSeqStruct = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
@@ -65,6 +66,6 @@ blocks = [1 10; 12 23; 26 44];
 %%learn first block
 [targetR refSeq blockAlleleMapping] = getTarget(ceuR, yriSeq4, alleleMapping, blocks(1:2,:));
 parfor i = 1:20
-    [finalSeq, finalR, finalSignRate] = hbOneBlockRecombination(targetR, refSeq, blockAlleleMapping, blocks(1:2,:));
+    [finalSeq finalR finalSignRate] = hbOneBlockRecombination(targetR, refSeq, blockAlleleMapping, blocks(1:2,:));
 end
 
