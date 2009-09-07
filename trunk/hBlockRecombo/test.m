@@ -12,67 +12,61 @@ refSeq = readSeq4(refFileName);
 alleleMapping = getMajorAllele(refSeq);
 
 targetR = calcR(targetSeq, alleleMapping);
+originalR = targetR;
+
 refR = calcR(refSeq, alleleMapping);
 
-%use the major allele mapping
+case01 = targetR;
+ref01 = refR;
+ncaseLE01 = sum(sum(abs(case01)>0.1))/2;
+nrefLE01 = sum(sum(abs(ref01)>0.1))/2;
 
-% b1 = [34 41];   %block one
-% b2 = [42 45];   %block two haplotypeFreq = 
+signDiff = sign(case01.*ref01);
+totaldiffRate = sum(sum(signDiff == -1))/2;
 
-%     [hbtarget, ftarget] = getHaplotype(targetSeq, b1);
-%     [hbref, fref] = getHaplotype(refSeq, b1);
-%     
-%     x = [hbtarget ftarget];
-%     y = [hbref fref];
-% 
-%     x = sortrows(x);
-%     y = sortrows(y);
-    %b1 = [34 41];   %block one
-    %b2 = [42 45];   %block two haplotypeFreq
+diffIndex = signDiff == -1;
 
-    %b1 = [34 41];
-    %b2 = [49 57];
-    
-    %b1 = [12 17];
-    %b2 = [18 22];
-    
-    %b1 = [42 45];
-    %b2 = [46 49];
+%filter
+case01Index = case01>=0.1;
+ref01Index = ref01>=0.1;
+
+x = case01Index&diffIndex + 0;
+
+filterSignDiff = sum(sum(x));
+
+
 result = zeros(100, 2);
 allSvsQ = zeros(100, 2);
 
 blocks = [12 18 34 42 46 49;
           17 22 41 45 49 57];
 
-% for i = 1:100
-%     [finalSeq, finalR, finalSignRate, SvsQ] = hbRecomb(targetR, refSeq, alleleMapping);
-%     result(i, :) = [i finalSignRate];
-%     allSvsQ(i,:) = SvsQ;
-% end
-
 finalSignRate = 0;
-while finalSignRate < 0.8
+while finalSignRate < 0.5
     [finalSeq, finalR, finalSignRate, SvsQ] = hbRecomb(targetR, refSeq, alleleMapping, blocks(:, [1 2]));
 end
-maskMatrix1 = getBlockMask(targetR, blocks(:, [1 2]));
-targetR(maskMatrix1) = targetR(maskMatrix1).*reshape(sign(finalR), [], 1);
+[maskMatrix1 crossMatrix1] = getBlockMask(targetR, blocks(:, [1 2]));
+targetR(maskMatrix1) = abs(targetR(maskMatrix1)).*reshape(sign(finalR), [], 1);
 
 finalSignRate = 0;
 while finalSignRate < 0.8
     [finalSeq, finalR, finalSignRate, SvsQ] = hbRecomb(targetR, refSeq, alleleMapping, blocks(:, [3 4]));
 end
-maskMatrix2 = getBlockMask(targetR, blocks(:, [3 4]));
-targetR(maskMatrix2) = targetR(maskMatrix2).*reshape(sign(finalR), [], 1);
+[maskMatrix2 crossMatrix2] = getBlockMask(targetR, blocks(:, [3 4]));
+targetR(maskMatrix2) = abs(targetR(maskMatrix2)).*reshape(sign(finalR), [], 1);
 
 finalSignRate = 0;
-while finalSignRate < 0.8
+while finalSignRate < 0.5
     [finalSeq, finalR, finalSignRate, SvsQ] = hbRecomb(targetR, refSeq, alleleMapping, blocks(:, [4 5]));
 end
-maskMatrix3 = getBlockMask(targetR, blocks(:, [4 5]));
-targetR(maskMatrix3) = targetR(maskMatrix3).*reshape(sign(finalR), [], 1);
+[maskMatrix3 crossMatrix3] = getBlockMask(targetR, blocks(:, [4 5]));
+targetR(maskMatrix3) = abs(targetR(maskMatrix3)).*reshape(sign(finalR), [], 1);
 
 maskMatrix = maskMatrix1 | maskMatrix2;
 maskMatrix = maskMatrix | maskMatrix3;
+
+crossMatrix = crossMatrix1 | crossMatrix2;
+crossMatrix = crossMatrix | crossMatrix3;
 
 % [finalSeq, finalR, finalSignRate, SvsQ] = hbRecomb(targetR, refSeq, alleleMapping, blocks(:, [3 6]));
 % maskMatrix = getBlockMask(targetR, blocks(:, [3 6]));
@@ -80,7 +74,28 @@ maskMatrix = maskMatrix | maskMatrix3;
 
 signMatrix = sign(targetR);
 
-MyDrTest(1, 1, maskMatrix, signMatrix);
+signDiff = sign(originalR).*sign(refR);
+signDiff = signDiff.*maskMatrix;
+signDiff(signDiff == 1) = 0;
+signDiff = abs(signDiff);
+
+%MyDrTest(1, 1, crossMatrix, signMatrix);
+powerTest(targetSeq, refSeq);       %the base test
+saveas(gcf, 'all_r_test.pdf');
+
+
+%power test over 0.1
+% maskMatrix = abs(originalR)>0.1;
+% powerTest(targetSeq, refSeq, alleleMapping, targetR, maskMatrix, signDiff);
+% 
+% powerTest(targetSeq, refSeq, alleleMapping, targetR, maskMatrix, signMatrix);
+% saveas(gcf, 'innerBlockWithCrossBlock.pdf');
+% 
+% powerTest(targetSeq, refSeq, alleleMapping, targetR, crossMatrix, signMatrix);
+% saveas(gcf, 'crossBlcok.pdf');
+
+% powerTest(targetSeq, refSeq, alleleMapping, targetR, signDiff, signMatrix);
+% saveas(gcf, 'onlySignDiff.pdf');
 
 %hist(result(:,2), 0:0.1:1);
 %save('resultrs.map', 'result');
