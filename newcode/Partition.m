@@ -1,3 +1,9 @@
+%Almost the same function with hbPartition with tiny change
+%Just for test on number dataset
+
+% S function calculate the partition for snps from 1:v
+% r is the LD value with sign
+% smap is the cache for dynamic programming
 function [blocks] = partition(r, v)
 global smap;
 delta = 0.6;
@@ -5,8 +11,6 @@ smap = zeros(v,2);
 S(r, v, delta);
 blocks = smap;
 end
-
-
 
 function [value] = intraBlockSum(r, i, j, delta)
 subMatrix = r(i:j, i:j) - delta;
@@ -19,6 +23,7 @@ rightSum = intraBlockSum(r, j, k, delta);
 total = intraBlockSum(r, i, k, delta);
 value = total - leftSum -rightSum;
 end
+
 
 
 function [value, pos] = S(r, i, delta)
@@ -35,7 +40,7 @@ elseif smap(i, 1) ~=0
 else
     allj = zeros(i-1, 1);
     for j=1:i-1
-        [jv jp] = S(r, i-1, delta);
+        [jv jp] = S(r, i-1, delta);   %Change from j-1 to i-1 here
         intraj = intraBlockSum(r, j, i, delta);
         interj = interBlockSum(r, 1, j, i, delta);
         allj(j) = jv - interj + intraj;

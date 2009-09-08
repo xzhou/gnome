@@ -12,9 +12,6 @@ sec = 20;
 seqS = fastaread(sample);
 seqR = fastaread(reference);
 
-
-
-
 nS = length(seqS);
 Len = length(seqS(1).Sequence);
 nR = length(seqR);
@@ -27,15 +24,14 @@ for i = 1:length(seqS)
     int4R(i,:) = nt2int(seqR(i).Sequence) - 1;
 end
 
-fre = zeros(77, 4);
+%For caculating the single allele frequency
+fre = zeros(Len, 4);
 
 for i = 1:Len
     [fre(i,1)  fre(i,2) fre(i,3) fre(i,4)] = getSingleAlleleFreq(int4S, i);
 end
 
-[nt1 fre1 nt2 fre2] = getSingleAlleleFreq(int4S, 64);
-
-
+%[nt1 fre1 nt2 fre2] = getSingleAlleleFreq(int4S, 64);
 
 
 allele1 = int4S(end,:); %why use the last line as allele 0/1 definition
@@ -58,7 +54,7 @@ tempTrS = zeros(Len, Len, sec);
 tempTrR = zeros(Len, Len, sec);
 
 for j = 1:sec
-    %mask = or((j/sec-1/sec<=abs(all_r_S)).*(abs(all_r_S)<=j/sec), (j/sec-1/sec<=abs(all_r_R)).*(abs(all_r_R)<=j/sec)); 
+    %mask = or((j/sec-1/sec<=abs(all_r_S)).*(abs(all_r_S)<=j/sec), (j/sec-1/sec<=abs(all_r_R)).*(abs(all_r_R)<=j/sec));
     %both in reference and sample
     mask = (j/sec-1/sec<=abs(all_r_S)).*(abs(all_r_S)<=j/sec);
     %r only satisfy the requirement in Sample
@@ -66,7 +62,8 @@ for j = 1:sec
     %r only satisfy the requirement in Reference
     maskS = all_r_S.*mask;
     maskR = all_r_R.*mask;
-    
+
+    %tempTrR is for calculating the power distribution according to R value
     for i = 1:nS
         StatS.Tr(i) = getTr(int2S(i,:), maskS, maskR);
         tempTrS(:,:,j) = tempTrS(:,:,j) + getTempTr(int2S(i,:), maskS, maskR);
@@ -75,14 +72,14 @@ for j = 1:sec
     end
     StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);  %??
     StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
-    averageS(j) = sum(StatS.Tr)/length(StatS.Tr);  
+    averageS(j) = sum(StatS.Tr)/length(StatS.Tr);
     averageR(j) = sum(StatR.Tr)/length(StatR.Tr);
 end
 
-% 
- for i =1:sec
-plotPowerDist(tempTrS(:,:,i));
- end
+%Plotting without normalization
+for i =1:sec
+    plotPowerDist(tempTrS(:,:,i));
+end
 
 %py = 0:1/sec:1-1/sec;
 
@@ -93,65 +90,65 @@ plotPowerDist(tempTrS(:,:,i));
 %     StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
 %     StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R);
 % end
-% 
+%
 % StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
 % StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
-% 
+%
 % plot(StatR.Tr, '.k');
 
 
 end
- 
 
-function Tr = getTr(Y, r_S, r_R, maskMatrix, signMatrix) 
-     if nargin == 3 
-         A2 = (2*Y'-1)*(2*Y-1); 
-         Tr = sum(sum((r_S - r_R).* A2))/2; 
-     else 
-         r_S = abs(r_S).*signMatrix; %replace the sign 
-         r_S = r_S.*maskMatrix;
-         r_R = r_R.*maskMatrix; 
-         A2 = (2*Y'-1)*(2*Y-1); 
-         Tr = sum(sum((r_S - r_R).* A2))/2; 
-     end 
-end 
- 
-function tempTr = getTempTr(Y, r_S, r_R)  
+
+function Tr = getTr(Y, r_S, r_R, maskMatrix, signMatrix)
+if nargin == 3
+    A2 = (2*Y'-1)*(2*Y-1);
+    Tr = sum(sum((r_S - r_R).* A2))/2;
+else
+    r_S = abs(r_S).*signMatrix; %replace the sign
+    r_S = r_S.*maskMatrix;
+    r_R = r_R.*maskMatrix;
+    A2 = (2*Y'-1)*(2*Y-1);
+    Tr = sum(sum((r_S - r_R).* A2))/2;
+end
+end
+
+function tempTr = getTempTr(Y, r_S, r_R)
 A2 = (2*Y'-1)*(2*Y-1);
 tempTr = (r_S - r_R).*A2;
 %matrix for mapping the power of r by sections
 end
 
 function [h] = plotPowerDist(m, signMatrix)
-    [nrow ncol] = size(m);
-    h = figure();
-    hold on;
-    for i = 1:nrow
-        for k = 1:ncol
-            x_init = [k-1, k];
-            y_init = [i-1, i];
-            z_init = double([m(i,k) m(i,k); m(i,k) m(i,k)]);
-            box = surface(x_init, y_init, z_init);
-        end
+[nrow ncol] = size(m);
+h = figure();
+hold on;
+for i = 1:nrow
+    for k = 1:ncol
+        x_init = [k-1, k];
+        y_init = [i-1, i];
+        z_init = double([m(i,k) m(i,k); m(i,k) m(i,k)]);
+        box = surface(x_init, y_init, z_init);
     end
-    
-    maxm = max(max(abs(m)));
-    
-    load('depColor', 'depColor');
-    set(gcf, 'ColorMap', depColor);
-    axis equal;
-    caxis([-maxm maxm]);
-    colorbar;
-    
-    if nargin == 2
-        signVector = MatrixToVec(signMatrix);
-        nrow = length(signVector);
-        z = ones(nrow, 1) * maxm + 0.1;
+end
 
-        scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
-    end
-    
-    h = gcf;
+maxm = max(max(abs(m)));
+
+load('depColor', 'depColor');
+set(gcf, 'ColorMap', depColor);
+axis equal;
+caxis([-maxm maxm]);
+colorbar;
+
+if nargin == 2
+    signVector = MatrixToVec(signMatrix);
+    nrow = length(signVector);
+    z = ones(nrow, 1) * maxm + 0.1;
+
+    scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
+end
+
+h = gcf;
 end
 
 function [temp1 count1 temp2 count2] = getSingleAlleleFreq(int4S, col)
@@ -163,30 +160,30 @@ end
 temp2 = int4S(i, col);
 
 
-    
+
 count1 = (sum(int4S(:,col)==temp1))/length(int4S);
 count2 = (sum(int4S(:,col)~=temp1))/length(int4S);
 
 switch temp1
-    case 0 
+    case 0
         temp1 = 'A'
-    case 1 
+    case 1
         temp1 = 'C'
-    case 2 
+    case 2
         temp1 = 'G'
-    case 3 
+    case 3
         temp1 = 'T'
 end
 
 
 switch temp2
-    case 0 
+    case 0
         temp2 = 'A'
-    case 1 
+    case 1
         temp2 = 'C'
-    case 2 
+    case 2
         temp2 = 'G'
-    case 3 
+    case 3
         temp2 = 'T'
 end
 
