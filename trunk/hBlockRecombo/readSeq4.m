@@ -7,5 +7,4 @@ function [seq4] = readSeq4(fileName)
     for i = 1:m
         seq4(i,:) = nt2int(seq(i).Sequence) - 1;
     end
-
 end
