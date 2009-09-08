@@ -1,45 +1,49 @@
-function [] = powerCurve(caseSeq, refSeq, threshold, resolution, N)
+function [] = powerCurve(allSeq, threshold, N)
 % function powerCurve will test the power of Tr with Homer's attack.
 % @caseSeq is the case hyplotype sequence
 % @refSeq is reference hyplotype sequence
 % @threshold filter r value that larger than threshold
 % @resolution is the r value resolution
 % @N is the N value
-    if nargin > 2
-        threshold = 0.0;
-        resolution = 10;
-    end
+    
+    nP = N;
+    nM = N;
     
     Trials = 1000;  %the number of trilas 
-    frompairwise = 0; % compute the statistics from pairwise freq
-    estimateSign = 1; % estimate the sign of r in the target sample from the reference
+    estimateSign = 0; % estimate the sign of r in the target sample from the reference
     removebySign = 0; % 1, remove the r values with the same sign in sample and reference.
                         % -1, remove the r values with different sign in sample
                         % and references
                         % else, do not remove r values by sign
     partialReverseSign = 0; % partially reverse the sign of the "removebySign" part; or totaly remove the "removebySign" part
     pseudocount = 0;    %remove MC bias
+    precision = 10;
     
-    %the size of the experiments
-    nCaseIndividual = length(caseSeq);
-    nSnps = length(caseSeq(1).Sequence);
-    nRefIndividual = length(refSeq);
+    if threshold > 0
+        removeSmallr = 1;
+    else
+        removeSmallr = 0;
+    end
     
+    m = length(allSeq);
+    n = length(allSeq(1).Sequence);
+    
+    seq4 = zeros(m, n);
+    for i = 1:m
+        seq4(i,:) = nt2int(allSeq(i).Sequence) - 1;
+    end
     %allele mapping
-    alleleMapping = getMajorAllele(refSeq);
-    
-    %encode sequence
-    case01Seq = encodeSequence(caseSeq, alleleMapping);
-    ref01Seq = encodeSequence(refSeq, alleleMapping);
-    
-    %calculate r value
-    caseR = calcRfrom01seq(case01Seq);
-    refR = calcRfrom01seq(ref01Seq);
+    alleleMapping = getMajorAllele(seq4);
     
     %generate MC model from sequence
-    iMCmodel = iMCmodelBuild(caseSeq);
-    Len = size(iMCmodel.transition, 3) + 1;
+    try
+        load('iMCmodel_SIM_1000x77.mat');
+    catch ME
+        iMCmodel = iMCmodelBuild(allSeq, pseudocount);
+        save('iMCmodel_SIM_1000x77.mat', 'iMCmodel');
+    end
     
+    Len = size(iMCmodel.transition, 3) + 1;
     
     %sample one individual from model
     A = iMCgenerate(iMCmodel, 1);
@@ -53,9 +57,16 @@ function [] = powerCurve(caseSeq, refSeq, threshold, resolution, N)
     D_p_M0 = zeros(Trials,1);
     D_p_MA = zeros(Trials,1);
     
+    %start multiple worker
+    isOpen = matlabpool('size') > 0;
+    if ~isOpen
+        matlabpool 2;
+    end
+    
+    countsmall = 0.0;
+    
     %% repeat for 10000 times and calculate the distribution of r_M0 r_MA
-    for i = 1:Trials
-        
+    parfor i = 1:Trials
         %generate population from model
         sample_P = iMCgenerate(iMCmodel,nP);
         sample_M = iMCgenerate(iMCmodel,nM);
@@ -91,14 +102,13 @@ function [] = powerCurve(caseSeq, refSeq, threshold, resolution, N)
         % just search for the flag "estimateSign" you will see the relavent
         % block of code --- the signs here were repalced by the signs of r computed from the reference sample.
         if estimateSign == 1
-            sign_agree_M0P = sum(sum(sign(all_r_M0)==sign(all_r_P)))/prod(size(all_r_M0));
-            sign_agree_MAP = sum(sum(sign(all_r_MA)==sign(all_r_P)))/prod(size(all_r_M0));
-            sign_agree_MAM0 = sum(sum(sign(all_r_MA)==sign(all_r_M0)))/prod(size(all_r_M0));
+            sign_agree_M0P = sum(sum(sign(all_r_M0)==sign(all_r_P)))/numel(all_r_M0);
+            sign_agree_MAP = sum(sum(sign(all_r_MA)==sign(all_r_P)))/numel(all_r_M0);
+            sign_agree_MAM0 = sum(sum(sign(all_r_MA)==sign(all_r_M0)))/numel(all_r_M0);
             %replace sign here
             signMatrix = sign(all_r_P);
         end
         
-        %????
         indx0 = [];
         indxA = []; 
         if removebySign == 1
@@ -154,17 +164,15 @@ function [] = powerCurve(caseSeq, refSeq, threshold, resolution, N)
     % textTitle = {'Statistic for r, 2000 SNP, control size 100, model group size 50';'Null: M does not contain the individual'};
     
     %plot Tr
-    textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' Dr, FGFR2 locus, 174 SNPs, control size 100, model group size 50'];'Null: M does not contain the individual'};
+    
+    textTitle = {['SIM 200x77 Power of Tr Threshold = ', num2str(threshold)]};
     power_Dr=plot2hist(D_r_M0,D_r_MA,textTitle);
-    xlabel('T_r');
+    xlabel({['SIM 200x77 Power of Tr ' num2str(power_Dr)]});
     ylabel('Density of T_r');
-    title('')
     
-    
-    textTitle = {['case:' num2str(nM) 'control:' num2str(nP) ' D\_p ' fastafile];'Null: M does not contain the individual'};
+    textTitle = {'SIM 200x77 Power of Tp Threshold = ', num2str(threshold)};
     power_Dp = plot2hist(D_p_M0,D_p_MA,textTitle);
-    xlabel('T_p');
+    xlabel({['SIM 200x77 Power of Tp ' num2str(power_Dp)]});
     ylabel('Density of T_p');
-    title('')
 
 end
