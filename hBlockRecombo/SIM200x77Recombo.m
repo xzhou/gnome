@@ -80,8 +80,8 @@ signDiff(signDiff == 1) = 0;
 signDiff = abs(signDiff);
 
 %MyDrTest(1, 1, crossMatrix, signMatrix);
-powerTest(targetSeq, refSeq);       %the base test
-saveas(gcf, 'all_r_test.pdf');
+% powerTest(targetSeq, refSeq);       %the base test
+% saveas(gcf, 'all_r_test.pdf');
 
 
 %power test over 0.1
@@ -91,11 +91,11 @@ saveas(gcf, 'all_r_test.pdf');
 % powerTest(targetSeq, refSeq, alleleMapping, targetR, maskMatrix, signMatrix);
 % saveas(gcf, 'innerBlockWithCrossBlock.pdf');
 % 
-% powerTest(targetSeq, refSeq, alleleMapping, targetR, crossMatrix, signMatrix);
-% saveas(gcf, 'crossBlcok.pdf');
+powerTest(targetSeq, refSeq, alleleMapping, targetR, crossMatrix, signMatrix);
+saveas(gcf, 'crossBlcok.pdf');
 
-% powerTest(targetSeq, refSeq, alleleMapping, targetR, signDiff, signMatrix);
-% saveas(gcf, 'onlySignDiff.pdf');
+powerTest(targetSeq, refSeq, alleleMapping, targetR, signDiff, signMatrix);
+saveas(gcf, 'onlySignDiff.pdf');
 
 %hist(result(:,2), 0:0.1:1);
 %save('resultrs.map', 'result');

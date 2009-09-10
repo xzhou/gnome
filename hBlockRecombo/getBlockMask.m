@@ -15,5 +15,4 @@ function [maskMatrix crossMask] = getBlockMask(all_r, blocks)
     %cross matrix
     crossMask(a:b, c:d) = 1;
     crossMask(c:d, a:b) = 1;
-    
 end
