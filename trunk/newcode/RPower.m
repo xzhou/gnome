@@ -77,9 +77,14 @@ for j = 1:sec
 end
 
 %Plotting without normalization
+tempTrSAll = zeros(Len, Len, 1);
+
 for i =1:sec
-    plotPowerDist(tempTrS(:,:,i));
+    tempTrSAll = tempTrS(:,:,i)+tempTrSAll;
+    
 end
+
+plotPowerDist(tempTrSAll);
 
 %py = 0:1/sec:1-1/sec;
 
