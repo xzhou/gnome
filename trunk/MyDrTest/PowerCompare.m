@@ -90,7 +90,7 @@ function out = PowerCompare(fastafile, threshold, precision, N)
         iMCmodel2 = iMCmodelBuild(iMCgenerate(iMCmodel,50),0);
     end
     i=1;
-
+    
     %% repeat for 10000 times and calculate the distribution of r_M0 r_MA
     for i = 1: Trials
         if flag_twoPopulation ==1
@@ -157,6 +157,7 @@ function out = PowerCompare(fastafile, threshold, precision, N)
 
         indx0 = [];
         indxA = []; 
+        
         if removebySign == 1
             indx0 = sign(all_r_M0)==sign(all_r_P);
             indxA = sign(all_r_MA)==sign(all_r_P);
@@ -164,6 +165,7 @@ function out = PowerCompare(fastafile, threshold, precision, N)
             indx0 = sign(all_r_M0)==sign(all_r_P);
             indxA = sign(all_r_MA)==sign(all_r_P);
         end
+        
         if partialReverseSign == 1
             all_r_M0(indx0) = -all_r_M0(indx0);
             all_r_MA(indxA) = -all_r_MA(indxA); 
@@ -172,7 +174,6 @@ function out = PowerCompare(fastafile, threshold, precision, N)
             all_r_MA(indxA) = all_r_P(indxA);
         end
 
-        
         if removeSmallr == 1
             countsmall = countsmall + sum(sum(abs(all_r_M0)<threshold));
             all_r_M0(abs(all_r_M0)<threshold) = 0;
@@ -187,7 +188,6 @@ function out = PowerCompare(fastafile, threshold, precision, N)
         % Test statistic for estimated frequency
         D_p_M0(i) = (all_p_M0 - all_p_P)* A1;
         D_p_MA(i) = (all_p_MA - all_p_P)* A1;
-
     end
 
     if frompairwise == 1
@@ -201,7 +201,6 @@ function out = PowerCompare(fastafile, threshold, precision, N)
         TD_MA = TD_MA/sqrt(Len*(Len-1)/2);
         TD_M0 = TD_M0/sqrt(Len*(Len-1)/2);
     end
-
 
     %%normalize the Tr test
     D_r_M0 = D_r_M0/sqrt(Len*(Len-1)/2);

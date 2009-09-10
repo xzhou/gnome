@@ -23,9 +23,7 @@ function [h] = plotPowerDist(m, signMatrix)
         signVector = MatrixToVec(signMatrix);
         nrow = length(signVector);
         z = ones(nrow, 1) * maxm + 0.1;
-
         scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
     end
-    
     h = gcf;
 end
