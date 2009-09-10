@@ -103,10 +103,10 @@ function [StatS, StatR, StatT, graph] = powerTest(caseSeq, refSeq, alleleMapping
 %     plotPowerDist(detailRef);
 %     saveas(gcf, 'refPowerDistNoSign.pdf');
     
-    plotPowerDist(detailCase - detailRef);
-    saveas(gcf, 'powerDistNoSign 0.1.pdf');
-    plotPowerDist(detailCase - detailRef, signDiff);
-    saveas(gcf, 'powerDistWithSign 0.1.pdf');
+%     plotPowerDist(detailCase - detailRef);
+%     saveas(gcf, 'powerDistNoSign 0.1.pdf');
+%     plotPowerDist(detailCase - detailRef, signDiff);
+%     saveas(gcf, 'powerDistWithSign 0.1.pdf');
     
     %????
     StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
@@ -179,7 +179,7 @@ function [Tr detail] = getTr(Y, r_S, r_R, maskMatrix, signMatrix)
         Tr = sum(sum((r_S - r_R).* A2))/2;
         detail = (r_S - r_R).*A2;
     else
-        %r_S = abs(r_S).*signMatrix; %replace the sign
+        r_S = abs(r_S).*signMatrix; %replace the sign
         r_S = r_S.*maskMatrix;
         r_R = r_R.*maskMatrix;
         A2 = (2*Y'-1)*(2*Y-1);

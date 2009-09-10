@@ -1,10 +1,11 @@
-function [] = powerCurve(allSeq, threshold, N)
+function [] = powerCurve(allSeq, threshold, N, maskMatrix)
 % function powerCurve will test the power of Tr with Homer's attack.
 % @caseSeq is the case hyplotype sequence
 % @refSeq is reference hyplotype sequence
 % @threshold filter r value that larger than threshold
 % @resolution is the r value resolution
-% @N is the N value
+% @N is the number of individuals
+% @
     
     nP = N;
     nM = N;
@@ -23,6 +24,12 @@ function [] = powerCurve(allSeq, threshold, N)
         removeSmallr = 1;
     else
         removeSmallr = 0;
+    end
+
+    if nargin == 4
+        hasMask = 1;
+    else
+        hasMask = 0;
     end
     
     m = length(allSeq);
@@ -134,6 +141,11 @@ function [] = powerCurve(allSeq, threshold, N)
             all_r_M0(abs(all_r_M0)<threshold) = 0;
             all_r_MA(abs(all_r_MA)<threshold) = 0;
             all_r_P(abs(all_r_P)<threshold) = 0;
+        end
+        
+        if hasMask
+            all_r_M0(~maskMatrix) = 0;
+            all_r_MA(~maskMatrix) = 0;
         end
 
         %calculate the pairwise test
