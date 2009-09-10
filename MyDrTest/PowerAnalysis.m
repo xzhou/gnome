@@ -107,53 +107,59 @@ function [StatS, StatR, StatT, Truth] = PowerAnalysis(rev, replaceSign)
 		save();
 	else
 		load();
-	end
-		TvsPower = zeros(0, 6);
-		k = 0;
-		step = 0.01;
-		for T = 0:step:1
-			k = k + 1;
-			%calculate the r value for sample and reference
-			for i = 1:nSample
-				[StatS.Tr(i), StatS.signRate(i)] = getTr(int2S(i,:), all_r_S, all_r_R, T, step);
-				[StatR.Tr(i), StatR.signRate(i)] = getTr(int2R(i,:), all_r_S, all_r_R, T, step);
-				
-				if estimateStd ==1 
-					StatS.std(i) = getstdTr(int4S(i,:), iMCmodel_R, allele1, nS, nR, Trials, precision);
-					StatR.std(i) = getstdTr(int4R(i,:), iMCmodel_R, allele1, nS, nR, Trials, precision);
-				end
-				%???
-				sim = sum(repmat(int4S(i,:),nS,1)==int4S,2);
-				Truthmax(i) = 1;
-				Truthmean(i) = mean(sim)/Len;
-				sim = sum(repmat(int4R(i,:),nS,1)==int4S,2);
-				Truthmax(i + nS) = max(sim)/Len;
-				Truthmean(i + nS) = mean(sim)/Len;
-			end
+    end
+    
+    isOpen = matlabpool('size') > 0;
+    if ~isOpen
+        matlabpool 2;
+    end
 
-			for i = 1:nT
-				[StatT.Tr(i), StatT.signRate(i)] = getTr(int2T(i,:), all_r_S, all_r_R, T, step);
-				if estimateStd ==1 
-					StatT.std(i) = getstdTr(int4T(i,:), iMCmodel_R, allele1, nS, nR, Trials, precision);
-				end
-				sim = sum(repmat(int4T(i,:),nS,1)==int4S,2);
-				Truthmax(i + nS + nR) = max(sim)/Len;
-				Truthmean(i + nS + nR) = mean(sim)/Len;
-			end
+    TvsPower = zeros(0, 6);
+    k = 0;
+    step = 0.01;
+    for T = 0:step:1
+        k = k + 1;
+        %calculate the r value for sample and reference
+        for i = 1:nSample
+            [StatS.Tr(i), StatS.signRate(i)] = getTr(int2S(i,:), all_r_S, all_r_R, T, step);
+            [StatR.Tr(i), StatR.signRate(i)] = getTr(int2R(i,:), all_r_S, all_r_R, T, step);
 
-			StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
-			StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
-			StatT.Tr = StatT.Tr/sqrt(Len*(Len-1)/2);
+            if estimateStd ==1 
+                StatS.std(i) = getstdTr(int4S(i,:), iMCmodel_R, allele1, nS, nR, Trials, precision);
+                StatR.std(i) = getstdTr(int4R(i,:), iMCmodel_R, allele1, nS, nR, Trials, precision);
+            end
+            %???
+            sim = sum(repmat(int4S(i,:),nS,1)==int4S,2);
+            Truthmax(i) = 1;
+            Truthmean(i) = mean(sim)/Len;
+            sim = sum(repmat(int4R(i,:),nS,1)==int4S,2);
+            Truthmax(i + nS) = max(sim)/Len;
+            Truthmean(i + nS) = mean(sim)/Len;
+        end
 
-			TvsPower(k, 1) = T;
-			%test the average Tr difference, larger means strong power
-			%(depending on the variance)
-			TvsPower(k, 2) = mean(StatS.Tr) - mean(StatR.Tr);
-			TvsPower(k, 3) = mean(StatS.Tr);
-			TvsPower(k, 4) = mean(StatR.Tr);
-			TvsPower(k, 5) = mean(StatR.signRate);
-			TvsPower(k, 6) = mean(StatS.signRate);
-		end
+        for i = 1:nT
+            [StatT.Tr(i), StatT.signRate(i)] = getTr(int2T(i,:), all_r_S, all_r_R, T, step);
+            if estimateStd ==1 
+                StatT.std(i) = getstdTr(int4T(i,:), iMCmodel_R, allele1, nS, nR, Trials, precision);
+            end
+            sim = sum(repmat(int4T(i,:),nS,1)==int4S,2);
+            Truthmax(i + nS + nR) = max(sim)/Len;
+            Truthmean(i + nS + nR) = mean(sim)/Len;
+        end
+
+        StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
+        StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
+        StatT.Tr = StatT.Tr/sqrt(Len*(Len-1)/2);
+
+        TvsPower(k, 1) = T;
+        %test the average Tr difference, larger means strong power
+        %(depending on the variance)
+        TvsPower(k, 2) = mean(StatS.Tr) - mean(StatR.Tr);
+        TvsPower(k, 3) = mean(StatS.Tr);
+        TvsPower(k, 4) = mean(StatR.Tr);
+        TvsPower(k, 5) = mean(StatR.signRate);
+        TvsPower(k, 6) = mean(StatS.signRate);
+    end
 
     save();
     figure;

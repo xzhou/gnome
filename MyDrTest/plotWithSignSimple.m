@@ -1,12 +1,17 @@
-function [h] = plotWithSignSimple(r1, r2, T)
+function [h] = plotWithSignSimple(r1, r2, T, plotSign)
 % r1 is sample, r2 is case
 % T is the mask threshold, 
+% r1 is the upleft, r2 is lowerright triangle
     
     if nargin == 1
         r2 = r1;
         T = 0.0;
+        plotSign = 1;
     elseif nargin == 2
         T = 0.0;
+        plotSign = 1;
+    elseif nargin == 3
+        plotSign = 1;
     end
     
     r1 = double(r1);
@@ -44,13 +49,14 @@ function [h] = plotWithSignSimple(r1, r2, T)
     set(gcf, 'ColorMap', depColor);
     axis equal;
     %plot sign
-    
-    signMatrix = sign(r1).*sign(r2);
-    
-    signVector = MatrixToVec(signMatrix, maskIndex');
-    nrow = length(signVector);
-    z = ones(nrow, 1);
-    scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
+    if plotSign
+        signMatrix = sign(r1).*sign(r2);
+        signVector = MatrixToVec(signMatrix, maskIndex');
+        nrow = length(signVector);
+        z = ones(nrow, 1);
+        scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
+
+    end
     colorbar;
     caxis([-1 1]);
     h = gcf;
