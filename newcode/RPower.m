@@ -24,6 +24,12 @@ for i = 1:length(seqS)
     int4R(i,:) = nt2int(seqR(i).Sequence) - 1;
 end
 
+nt4S = zeros(nS, Len);
+nt4R = nt4S;
+
+nt4S = int2nt(int4S +1);
+nt4R = int2nt(int4R + 1);
+
 %For caculating the single allele frequency
 freS = zeros(Len, 4);
 freR= zeros(Len, 4);
