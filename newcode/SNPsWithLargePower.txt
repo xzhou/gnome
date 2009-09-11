@@ -1,5 +1,8 @@
-SNPs with high single allele frequence(>90%)
+SNPs with high single allele frequence(>90%) in the Case Group
      3    17    22    23    31    32    33    42    43    44    45    46   49
+SNPs with high single allele frequence(>90%) in the Reference Group
+     3    12    17    23    32    33    46    49    69
+
 
 SNP pairs with large power contribution
 

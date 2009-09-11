@@ -1,9 +1,10 @@
 %simpleLearning
-cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
+cd 'F:\IUBResearch\Projects\Bioinfor\data\dist100x77'
 
 refFileName = 'SIM_100x77_ctl.fasta';
 sampleFileName = 'SIM_100x77_smp.fasta';
 
+%??
 debug = 1;
 
 targetSeq = readSeq4(sampleFileName);
@@ -18,6 +19,7 @@ refR = calcR(refSeq, alleleMapping);
 
 case01 = targetR;
 ref01 = refR;
+%Get those pairs which have r larger than 0.1
 ncaseLE01 = sum(sum(abs(case01)>0.1))/2;
 nrefLE01 = sum(sum(abs(ref01)>0.1))/2;
 
@@ -38,8 +40,14 @@ filterSignDiff = sum(sum(x));
 result = zeros(100, 2);
 allSvsQ = zeros(100, 2);
 
+%May be replaced by automatic partition function in the future
+%Manually select three blocks in this instance
 blocks = [12 18 34 42 46 49;
-          17 22 41 45 49 57];
+                 17 22 41 45 49 57];
+             
+%Whole partition of the 77SNP dataset
+blocks = [1 2 3 4 5 6 7 9   12 18 22 23 24 30 31 32 34 42 46 50 51 53 54 58 61 65 68 69 71 72  73 74; 
+                 1 2 3 4 5 6 8 11 17 21 22 23 29 30 31 33 41 45 49 50 52 53 57 60 64 67 68 70 71 72  73 77]';
 
 finalSignRate = 0;
 while finalSignRate < 0.5

@@ -2,7 +2,9 @@
 %markov chain model and generate multiple haplotype sequence for
 %experiments
 
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP'
+%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP'
+cd 'F:\IUBResearch\Projects\Bioinfor\data\dist100x77'
+
 
 %for each pair of blocks, we repeat the experiments for repeatTimes to get
 %a better result.

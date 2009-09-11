@@ -25,11 +25,23 @@ for i = 1:length(seqS)
 end
 
 %For caculating the single allele frequency
-fre = zeros(Len, 4);
+freS = zeros(Len, 4);
+freR= zeros(Len, 4);
 
 for i = 1:Len
-    [fre(i,1)  fre(i,2) fre(i,3) fre(i,4)] = getSingleAlleleFreq(int4S, i);
+    [freS(i,1)  freS(i,2) freS(i,3) freS(i,4)] = getSingleAlleleFreq(int4S, i);
+    [freR(i,1)  freR(i,2) freR(i,3) freR(i,4)] = getSingleAlleleFreq(int4R, i);
 end
+
+%For checking the allele frequence difference of the reference and case
+%group
+checkFre = zeros(Len, 1);
+
+for i = 1:Len
+    checkFre(i) = max(freS(i, 2), freS(i,4)) - max(freR(i,2), freR(i,4));
+end
+absfre = abs(checkFre);
+
 
 %[nt1 fre1 nt2 fre2] = getSingleAlleleFreq(int4S, 64);
 
@@ -44,6 +56,41 @@ all_r_S(isnan(all_r_S)) = 0;
 all_r_R = corrcoef(int2R);
 all_r_R(isnan(all_r_S)) = 0;
 
+%Get the number of SNPs pairs which are big on one side but small on other
+%side and have different signs.
+
+%diffRate is used for defining the difference between case and  reference
+diffRate = 0.1;
+
+% %Without filter
+% diffMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
+% %diffMatrix = ((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate)));
+% diffSignMatrix = or(((all_r_R<0).*(all_r_S>0)), ((all_r_S<0).*(all_r_R>0)));
+
+%With filter(0.1)
+% maskMatrix = abs(all_r_R)>0.1;
+% filterR = maskMatrix.*all_r_R;
+% filterS = maskMatrix.*all_r_S;
+% diffMatrix = or(((abs(filterR)<diffRate).*(abs((filterS)>diffRate))), ((abs(filterS)<diffRate).*(abs(filterR)>diffRate)));
+% diffSignMatrix = or(((filterR<0).*(filterS>0)), ((filterS<0).*(filterR>0)))
+
+wholeMatrix = triu(all_r_R) + tril(all_r_S);
+wholeMatrix = wholeMatrix - (wholeMatrix==2);
+maskMatrix = abs(wholeMatrix)>0.1;
+%diffMatrix = abs(all_r_R - all_r_S) > 0.25;
+diffSignMatrix = or(((all_r_R<0).*(all_r_S>0)), ((all_r_S<0).*(all_r_R>0)));
+%How to define the SNPs  pairs which are strong on one side but weak on the
+%other side
+diffMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
+diffMatrix = diffMatrix.*maskMatrix;
+
+finalMatrix = wholeMatrix.*maskMatrix.*diffSignMatrix;
+diffSignMatrix = diffSignMatrix.*maskMatrix;
+
+signChangeRate =sum(sum(diffSignMatrix.*diffMatrix.*maskMatrix))/sum(sum(diffMatrix));
+
+
+%For get temperory Tr by r distribution
 StatS.Tr = zeros(nS,1);
 StatR.Tr = zeros(nS,1);
 
@@ -158,7 +205,7 @@ end
 
 function [temp1 count1 temp2 count2] = getSingleAlleleFreq(int4S, col)
 temp1 = int4S(1, col);
-i = 1
+i = 1;
 while(int4S(i,col) == temp1)
     i = i+1;
 end
