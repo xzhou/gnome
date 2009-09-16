@@ -24,5 +24,3 @@ all_r_S(isnan(all_r_S)) = 0;
 plotWithSignSimple(all_r_S);
 
 end
-
-
