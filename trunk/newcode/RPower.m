@@ -56,8 +56,8 @@ allele1 = int4S(end,:); %why use the last line as allele 0/1 definition
 int2S = (int4S == repmat(allele1,nS,1)) + 0;
 int2R = (int4R == repmat(allele1,nR,1)) + 0;
 
-col1 = 17;
-col2 = 23;
+col1 = 46;
+col2 = 22;
 
 rS = 0;
 rR = 0;
@@ -229,6 +229,7 @@ function  [rR rS] = getRValue(col1, col2, int4R, int4S)
 
 C00R = 0;
 C00S  = 0;
+
 tempR = zeros(200, 2);
 tempR(:,1) = int4R(:, col1);
 tempR(:,2) = int4R(:, col2);
@@ -256,6 +257,13 @@ end
 
 rS = (C00S*200 - max(freS(col1, 2), freS(col1, 4))*max(freS(col2, 2), freS(col2, 4))*40000)/sqrt(freS(col1, 2)*freS(col1,4)*freS(col2, 2)*freS(col2,4)*40000*40000);
 rR =  (C00R*200 - max(freR(col1, 2), freR(col1, 4))*max(freR(col2, 2), freR(col2, 4))*40000)/sqrt(freR(col1, 2)*freR(col1,4)*freR(col2, 2)*freR(col2,4)*40000*40000);
+
+f = sym('((x*200 - max(freS(col1, 2), freS(col1, 4))*max(freS(col2, 2), freS(col2, 4))*40000)^2)/(freS(col1, 2)*freS(col1,4)*freS(col2, 2)*freS(col2,4)*40000*40000) = (rS^2)');
+solve(f);
+
+equ = [40000  -((max(freS(col1, 2), freS(col1, 4))*max(freS(col2, 2), freS(col2, 4))*40000)*2*200)  (((max(freS(col1, 2), freS(col1, 4))*max(freS(col2, 2), freS(col2, 4))*40000)^2)-((rS^2)*(freS(col1, 2)*freS(col1,4)*freS(col2, 2)*freS(col2,4)*40000*40000)))]
+roots(equ);
+
 end
 
     
