@@ -56,6 +56,14 @@ allele1 = int4S(end,:); %why use the last line as allele 0/1 definition
 int2S = (int4S == repmat(allele1,nS,1)) + 0;
 int2R = (int4R == repmat(allele1,nR,1)) + 0;
 
+col1 = 17;
+col2 = 23;
+
+rS = 0;
+rR = 0;
+[rR rS] = getRValue(col1, col2, int4R, int4S);
+
+
 all_r_S = corrcoef(int2S);
 all_r_S(isnan(all_r_S)) = 0;
 
@@ -87,13 +95,17 @@ maskMatrix = abs(wholeMatrix)>0.1;
 diffSignMatrix = or(((all_r_R<0).*(all_r_S>0)), ((all_r_S<0).*(all_r_R>0)));
 %How to define the SNPs  pairs which are strong on one side but weak on the
 %other side
-diffMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
-diffMatrix = diffMatrix.*maskMatrix;
+diffSWMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
+diffSMatrix = or(((abs(all_r_R)>diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)>diffRate).*(abs(all_r_R)>diffRate)));
+diffSWMatrix = diffSWMatrix.*maskMatrix;
+diffSMatrix = diffSMatrix.*maskMatrix;
 
 finalMatrix = wholeMatrix.*maskMatrix.*diffSignMatrix;
 diffSignMatrix = diffSignMatrix.*maskMatrix;
 
-signChangeRate =sum(sum(diffSignMatrix.*diffMatrix.*maskMatrix))/sum(sum(diffMatrix));
+signSWChangeRate =sum(sum(diffSignMatrix.*diffSWMatrix.*maskMatrix))/sum(sum(diffSWMatrix));
+signSChanageRate = sum(sum(diffSignMatrix.*diffSMatrix.*maskMatrix))/sum(sum(diffSMatrix));
+
 
 
 %For get temperory Tr by r distribution
@@ -209,6 +221,46 @@ end
 h = gcf;
 end
 
+function  [rR rS] = getRValue(col1, col2, int4R, int4S)
+[majorR1 minorR1] = getMajor(int4R, col1);
+[majorR2  minorR2] = getMajor(int4R, col2);
+[majorS1 minorS1] = getMajor(int4S, col1);
+[majorS2  minorS2] = getMajor(int4S, col2);
+
+C00R = 0;
+C00S  = 0;
+tempR = zeros(200, 2);
+tempR(:,1) = int4R(:, col1);
+tempR(:,2) = int4R(:, col2);
+tempS = zeros(200, 2);
+tempS(:,1) = int4S(:,col1);
+tempS(:,2) = int4S(:, col2);
+for i = 1:200
+    if tempR(i, 1)  == majorR1 && tempR(i, 2) == majorR2
+        C00R = C00R+1;
+    end
+end
+for i = 1:200
+    if tempS(i, 1) == majorS1 && tempS(i, 2) == majorS2
+        C00S = C00S+1;
+    end
+end
+
+freS = zeros(77, 4);
+freR= zeros(77, 4);
+
+for i = 1:77
+    [freS(i,1)  freS(i,2) freS(i,3) freS(i,4)] = getSingleAlleleFreq(int4S, i);
+    [freR(i,1)  freR(i,2) freR(i,3) freR(i,4)] = getSingleAlleleFreq(int4R, i);
+end
+
+rS = (C00S*200 - max(freS(col1, 2), freS(col1, 4))*max(freS(col2, 2), freS(col2, 4))*40000)/sqrt(freS(col1, 2)*freS(col1,4)*freS(col2, 2)*freS(col2,4)*40000*40000);
+rR =  (C00R*200 - max(freR(col1, 2), freR(col1, 4))*max(freR(col2, 2), freR(col2, 4))*40000)/sqrt(freR(col1, 2)*freR(col1,4)*freR(col2, 2)*freR(col2,4)*40000*40000);
+end
+
+    
+
+
 function [temp1 count1 temp2 count2] = getSingleAlleleFreq(int4S, col)
 temp1 = int4S(1, col);
 i = 1;
@@ -254,5 +306,25 @@ end
 %     minor = count1;
 % end
 end
+
+function [major minor] = getMajor(int4S, col)
+temp1 = int4S(1, col);
+i = 1;
+while(int4S(i,col) == temp1)
+    i = i+1;
+end
+temp2 = int4S(i, col);
+
+count1 = (sum(int4S(:,col)==temp1))/length(int4S);
+count2 = (sum(int4S(:,col)~=temp1))/length(int4S);
+if count1>count2
+    major = temp1;
+    minor = temp2;
+else 
+    major = temp2;
+    minor = temp1;
+end
+end
+
 
 

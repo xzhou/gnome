@@ -1,0 +1,5 @@
+1. Get the reference group's pionts' single allele ferquencies.
+
+    not isolated because other points are filtered(on the power dis), Email Prof. Wang, Tang
+
+3. Machine Learning Algorithm
