@@ -8,9 +8,9 @@ function [signAgreeRate] = blockSignRate(targetR, newR, blocks, newBlock)
     signDiff(logical(eye(size(signDiff)))) = 0;
     
     
-    nDiff = sum(sum(signDiff==-1))/2;
+    nAgree = sum(sum(signDiff==1))/2;
     totalSign = sum(sum(abs(signDiff)))/2;
     
-    signAgreeRate = nDiff/totalSign;
+    signAgreeRate = nAgree/totalSign;
     
 end
