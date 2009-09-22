@@ -26,6 +26,8 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
     r = r2;
     r(index) = r1(index);
     
+    zLim = max(max(abs(r)));
+    
     %filter
     maskIndex = logical(abs(r)<T);
     r(maskIndex) = 0;
@@ -34,6 +36,8 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
     zdir = [0 0 1];
     center = [numrow/2 numrow/2 0];
     rotate(h,zdir,45,center);
+    xlim([0 numcol]);
+    ylim([0 numcol]);
     hold on;
     %plotLD map
     for i = 1:numrow
@@ -55,9 +59,8 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
         nrow = length(signVector);
         z = ones(nrow, 1);
         scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
-
     end
     colorbar;
-    caxis([-1 1]);
+    caxis([-zLim zLim]);
     h = gcf;
 end
