@@ -1,6 +1,6 @@
 function test = RPower()
 
-cd 'F:\IUBResearch\Projects\Bioinfor\data\dist100x77'
+cd 'D:\IUBResearch\Projects\Bioinfor\data\dist100x77'
 
 sample = 'SIM_100x77_smp.fasta';
 reference = 'SIM_100x77_ctl.fasta';
