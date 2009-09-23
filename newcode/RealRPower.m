@@ -1,16 +1,17 @@
-function test = RPower()
+function test = RealRPower()
 
-cd 'D:\IUBResearch\Projects\Bioinfor\data\dist100x77'
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA'
 
-sample = 'SIM_100x77_smp.fasta';
-reference = 'SIM_100x77_ctl.fasta';
+all = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
 
 %define the section length of r, for example sec = 20, 1/20 as the section
 %length
 sec = 20;
 
-seqS = fastaread(sample);
-seqR = fastaread(reference);
+seqAll = fastaread(all);
+
+seqS = seqAll(1:117, 1);
+seqR = seqAll(118:234, 1);
 
 nS = length(seqS);
 Len = length(seqS(1).Sequence);
@@ -31,6 +32,7 @@ nt4S = int2nt(int4S +1);
 nt4R = int2nt(int4R + 1);
 
 %For caculating the single allele frequency
+
 freS = zeros(Len, 4);
 freR= zeros(Len, 4);
 
@@ -39,14 +41,19 @@ for i = 1:Len
     [freR(i,1)  freR(i,2) freR(i,3) freR(i,4)] = getSingleAlleleFreq(int4R, i);
 end
 
+majorFreS = zeros(Len, 1);
+for i=1:Len
+majorFreS(i,1) =  max(freS(i, 2), freS(i,4));
+end
+
 %For checking the allele frequence difference of the reference and case
 %group
-checkFre = zeros(Len, 1);
-
-for i = 1:Len
-    checkFre(i) = max(freS(i, 2), freS(i,4)) - max(freR(i,2), freR(i,4));
-end
-absfre = abs(checkFre);
+% checkFre = zeros(Len, 1);
+% 
+% for i = 1:Len
+%     checkFre(i) = max(freS(i, 2), freS(i,4)) - max(freR(i,2), freR(i,4));
+% end
+% absfre = abs(checkFre);
 
 
 %[nt1 fre1 nt2 fre2] = getSingleAlleleFreq(int4S, 64);
@@ -56,12 +63,12 @@ allele1 = int4S(end,:); %why use the last line as allele 0/1 definition
 int2S = (int4S == repmat(allele1,nS,1)) + 0;
 int2R = (int4R == repmat(allele1,nR,1)) + 0;
 
-col1 = 46;
-col2 = 22;
-
-rS = 0;
-rR = 0;
-[rR rS] = getRValue(col1, col2, int4R, int4S);
+% col1 = 46;
+% col2 = 22;
+% 
+% rS = 0;
+% rR = 0;
+% [rR rS] = getRValue(col1, col2, int4R, int4S);
 
 
 all_r_S = corrcoef(int2S);
@@ -74,7 +81,7 @@ all_r_R(isnan(all_r_S)) = 0;
 %side and have different signs.
 
 %diffRate is used for defining the difference between case and  reference
-diffRate = 0.1;
+% diffRate = 0.1;
 
 % %Without filter
 % diffMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
@@ -87,24 +94,24 @@ diffRate = 0.1;
 % filterS = maskMatrix.*all_r_S;
 % diffMatrix = or(((abs(filterR)<diffRate).*(abs((filterS)>diffRate))), ((abs(filterS)<diffRate).*(abs(filterR)>diffRate)));
 % diffSignMatrix = or(((filterR<0).*(filterS>0)), ((filterS<0).*(filterR>0)))
-
-wholeMatrix = triu(all_r_R) + tril(all_r_S);
-wholeMatrix = wholeMatrix - (wholeMatrix==2);
-maskMatrix = abs(wholeMatrix)>0.1;
-%diffMatrix = abs(all_r_R - all_r_S) > 0.25;
-diffSignMatrix = or(((all_r_R<0).*(all_r_S>0)), ((all_r_S<0).*(all_r_R>0)));
-%How to define the SNPs  pairs which are strong on one side but weak on the
-%other side
-diffSWMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
-diffSMatrix = or(((abs(all_r_R)>diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)>diffRate).*(abs(all_r_R)>diffRate)));
-diffSWMatrix = diffSWMatrix.*maskMatrix;
-diffSMatrix = diffSMatrix.*maskMatrix;
-
-finalMatrix = wholeMatrix.*maskMatrix.*diffSignMatrix;
-diffSignMatrix = diffSignMatrix.*maskMatrix;
-
-signSWChangeRate =sum(sum(diffSignMatrix.*diffSWMatrix.*maskMatrix))/sum(sum(diffSWMatrix));
-signSChanageRate = sum(sum(diffSignMatrix.*diffSMatrix.*maskMatrix))/sum(sum(diffSMatrix));
+% 
+% wholeMatrix = triu(all_r_R) + tril(all_r_S);
+% wholeMatrix = wholeMatrix - (wholeMatrix==2);
+% maskMatrix = abs(wholeMatrix)>0.1;
+% %diffMatrix = abs(all_r_R - all_r_S) > 0.25;
+% diffSignMatrix = or(((all_r_R<0).*(all_r_S>0)), ((all_r_S<0).*(all_r_R>0)));
+% %How to define the SNPs  pairs which are strong on one side but weak on the
+% %other side
+% diffSWMatrix = or(((abs(all_r_R)<diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)<diffRate).*(abs(all_r_R)>diffRate)));
+% diffSMatrix = or(((abs(all_r_R)>diffRate).*(abs((all_r_S)>diffRate))), ((abs(all_r_S)>diffRate).*(abs(all_r_R)>diffRate)));
+% diffSWMatrix = diffSWMatrix.*maskMatrix;
+% diffSMatrix = diffSMatrix.*maskMatrix;
+% 
+% finalMatrix = wholeMatrix.*maskMatrix.*diffSignMatrix;
+% diffSignMatrix = diffSignMatrix.*maskMatrix;
+% 
+% signSWChangeRate =sum(sum(diffSignMatrix.*diffSWMatrix.*maskMatrix))/sum(sum(diffSWMatrix));
+% signSChanageRate = sum(sum(diffSignMatrix.*diffSMatrix.*maskMatrix))/sum(sum(diffSMatrix));
 
 
 
@@ -133,7 +140,7 @@ for j = 1:sec
         StatS.Tr(i) = getTr(int2S(i,:), maskS, maskR);
         tempTrS(:,:,j) = tempTrS(:,:,j) + getTempTr(int2S(i,:), maskS, maskR);
         StatR.Tr(i) = getTr(int2R(i,:), maskS, maskR);
-        tempTrR(:,:,j) = tempTrS(:,:,j) + getTempTr(int2R(i,:), maskS, maskR);
+        tempTrR(:,:,j) = tempTrR(:,:,j) + getTempTr(int2R(i,:), maskS, maskR);
     end
     StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);  %??
     StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
@@ -149,7 +156,9 @@ for i =1:sec
     
 end
 
-plotPowerDist(tempTrSAll);
+
+plotPowerDist(tempTrS(:,:,4));
+
 
 %py = 0:1/sec:1-1/sec;
 
@@ -188,38 +197,40 @@ A2 = (2*Y'-1)*(2*Y-1);
 tempTr = (r_S - r_R).*A2;
 %matrix for mapping the power of r by sections
 end
+% 
+% function [h] = plotPowerDist(m, signMatrix)
+% [nrow ncol] = size(m);
+% h = figure();
+% hold on;
+% for i = 1:nrow
+%     for k = 1:ncol
+%         x_init = [k-1, k];
+%         y_init = [i-1, i];
+%         z_init = double([m(i,k) m(i,k); m(i,k) m(i,k)]);
+%         box = surface(x_init, y_init, z_init);
+%     end
+% end
+% 
+% maxm = max(max(abs(m)));
+% 
+% load('depColor', 'depColor');
+% set(gcf, 'ColorMap', depColor);
+% axis equal;
+% caxis([-maxm maxm]);
+% colorbar;
+% 
+% if nargin == 2
+%     signVector = MatrixToVec(signMatrix);
+%     nrow = length(signVector);
+%     z = ones(nrow, 1) * maxm + 0.1;
+% 
+%     scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
+% end
+% 
+% h = gcf;
+% end
 
-function [h] = plotPowerDist(m, signMatrix)
-[nrow ncol] = size(m);
-h = figure();
-hold on;
-for i = 1:nrow
-    for k = 1:ncol
-        x_init = [k-1, k];
-        y_init = [i-1, i];
-        z_init = double([m(i,k) m(i,k); m(i,k) m(i,k)]);
-        box = surface(x_init, y_init, z_init);
-    end
-end
-
-maxm = max(max(abs(m)));
-
-load('depColor', 'depColor');
-set(gcf, 'ColorMap', depColor);
-axis equal;
-caxis([-maxm maxm]);
-colorbar;
-
-if nargin == 2
-    signVector = MatrixToVec(signMatrix);
-    nrow = length(signVector);
-    z = ones(nrow, 1) * maxm + 0.1;
-
-    scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
-end
-
-h = gcf;
-end
+%Function for getting calculating real r
 
 function  [rR rS] = getRValue(col1, col2, int4R, int4S)
 [majorR1 minorR1] = getMajor(int4R, col1);

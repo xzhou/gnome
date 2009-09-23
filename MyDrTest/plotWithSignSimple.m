@@ -6,7 +6,7 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
     if nargin == 1
         r2 = r1;
         T = 0.0;
-        plotSign = 1;
+        plotSign = 0;
     elseif nargin == 2
         T = 0.0;
         plotSign = 1;
@@ -61,6 +61,8 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
         scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
     end
     colorbar;
+
     caxis([-zLim zLim]);
+
     h = gcf;
 end
