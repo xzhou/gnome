@@ -76,7 +76,8 @@ abs_r2_matrix = xor(abs(all_r2_S)>0.1, abs(all_r2_R)>0.1);
 
 %If we define r2>0.1 as strong
 
-sign_matrix = xor(all_r_S<0, all_r_R>0) + xor(all_r_S>0,all_r_R<0);
+sign_matrix = ((sign(all_r_S).*sign(all_r_R))==-1);
+singDiffRate = sum(sum(sign_matrix))/(77*77);
 plotWithSignSimple(all_r_R, all_r_S, zeros(77,77), 1);
 
 plotPowerDist(all_r2);
