@@ -1,12 +1,8 @@
 function [caseSeq4 refSeq4] = randomSelect(sequenceAll)
 %function random divide the sequenceAll into 2 groups and convert it into a
 %caseSeq and refSeq
-    
-cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA'
 
-all = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
-
-seqAll = fastaread(all);
+seqAll = sequenceAll;
 
 totalLength = length(seqAll);
 
