@@ -57,6 +57,14 @@ all_r_S(isnan(all_r_S)) = 0;
 all_r_R = corrcoef(int2R);
 all_r_R(isnan(all_r_R)) = 0;
 
+all_r = tril(all_r_R)+triu(all_r_S);
+all_r = all_r - (all_r ==2);
+
+all_r_abs = all_r .* (abs(all_r)>0.1);
+
+abs_r_matrix =  xor(abs(all_r_S)>0.1, abs(all_r_R)>0.1);
+
+
 all_r2_S = all_r_S.*all_r_S;
 all_r2_R = all_r_R.*all_r_R;
 
@@ -64,7 +72,15 @@ all_r2_R = all_r_R.*all_r_R;
 all_r2 = tril(all_r2_R)+triu(all_r2_S);
 all_r2 = all_r2 - (all_r2 ==2);
 
+abs_r2_matrix = xor(abs(all_r2_S)>0.1, abs(all_r2_R)>0.1);
+
+%If we define r2>0.1 as strong
+
+sign_matrix = xor(all_r_S<0, all_r_R>0) + xor(all_r_S>0,all_r_R<0);
+plotWithSignSimple(all_r_R, all_r_S, zeros(77,77), 1);
+
 plotPowerDist(all_r2);
+
 
 
 end
