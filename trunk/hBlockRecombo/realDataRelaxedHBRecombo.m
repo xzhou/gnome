@@ -31,7 +31,7 @@ blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
 [m n] = size(blocks);
 %add learning marker
 blocks = [blocks, zeros(m, 1)];
-blocks = blocks(blocks(:,3)>=3, :);
+%blocks = blocks(blocks(:,3)>=3, :);
 
 startParallel(2);
 [m n] = size(blocks);
