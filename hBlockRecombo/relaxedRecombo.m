@@ -11,6 +11,7 @@ cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
 refFileName = 'SIM_100x77_ctl.fasta';
 sampleFileName = 'SIM_100x77_smp.fasta';
 
+
 caseSeq4 = readSeq4(sampleFileName);
 refSeq4 = readSeq4(refFileName);
 
