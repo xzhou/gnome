@@ -2,19 +2,28 @@ function [caseSeq4 refSeq4] = randomSelect(sequenceAll)
 %function random divide the sequenceAll into 2 groups and convert it into a
 %caseSeq and refSeq
     
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA'
 
-seqAll = fastaread(sequenceAll);
+all = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
 
+seqAll = fastaread(all);
+
+totalLength = length(seqAll);
+
+if(mod(totalLength, 4)==2)
 seqAll(end) = [];
 seqAll(end) = [];
+end
 
-sel = [1:116];
-a = 116;
+totalLength = length(seqAll);
+
+sel = [1:totalLength/2];
+a = totalLength/2;
 b = randi(a,1,1);
-selS = zeros(1, 58);
-selR = zeros(1, 58);
+selS = zeros(1, totalLength/4);
+selR = zeros(1, totalLength/4);
 
-for i = 1:58
+for i = 1:totalLength/4
     c = randi(a,1,1);
     selS(1,i) = sel(1, c);
     sel(c) = [];
@@ -23,7 +32,7 @@ end
 
 selR = sel;
 
-for i = 1:58
+for i = 1:totalLength/4
     seqS(i*2-1) = seqAll(selS(i)*2-1);
     seqS(i*2) = seqAll(selS(i)*2);
     
