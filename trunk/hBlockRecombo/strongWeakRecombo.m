@@ -47,13 +47,13 @@ for i = 1:(m-1)
         block2 = blocks(j,:);            
         if(block1(1,3) >= block2(1,3))
             block1(1,4) = 1;
-            parfor t = 1:trials
+            for t = 1:trials
                 [finalSeq finalR finalSignRate finalQual] = newHBRecombo(targetR, caseSeq4, refSeq4, block1, block2, alleleMapping, 0.01);
                 blockRate(t,:) = [finalSignRate finalQual];
             end
         else
             block2(1,4) = 1;
-            parfor t = 1:trials
+            for t = 1:trials
                 [finalSeq finalR finalSignRate finalQual] = newHBRecombo(targetR, caseSeq4, refSeq4, block2, block1, alleleMapping, 0.01);
                 blockRate(t,:) = [finalSignRate finalQual];
             end

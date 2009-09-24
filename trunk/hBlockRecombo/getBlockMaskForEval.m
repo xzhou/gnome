@@ -20,8 +20,8 @@ function [blockMask] = getBlockMaskForEval(r,learnedBlocks, newBlock)
             end_j = learnedBlocks(j,2);     %2nd block end
             
             %inner block
-            blockMask(start_i:end_i, start_i:end_i) = 1;
-            blockMask(start_j:end_j, start_j:end_j) = 1;
+            %blockMask(start_i:end_i, start_i:end_i) = 1;
+            %blockMask(start_j:end_j, start_j:end_j) = 1;
             
             %cross block mask
             blockMask(start_i:end_i, start_j:end_j) = 1;
@@ -40,8 +40,11 @@ function [blockMask] = getBlockMaskForEval(r,learnedBlocks, newBlock)
             a = learnedBlocks(i, 1);
             b = learnedBlocks(i, 2);
             
-            blockMask(a:b, a:b) = 1;
-            blockMask(newBlockStart:newBlockEnd, newBlockStart:newBlockEnd) = 1;
+            %inner block
+            %blockMask(a:b, a:b) = 1;
+            %blockMask(newBlockStart:newBlockEnd, newBlockStart:newBlockEnd) = 1;
+            
+            %cross block
             blockMask(newBlockStart:newBlockEnd, a:b) = 1;
             blockMask(a:b, newBlockStart:newBlockEnd) = 1;
         end
