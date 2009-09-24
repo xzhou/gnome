@@ -160,6 +160,13 @@ end
 plotPowerDist(tempTrS(:,:,4));
 
 
+col1 = 49;
+col2 = 8;
+seq1 = int2nt(int4S(:,col1) +1)'
+seq2 = int2nt(int4S(:,col2) +1)'
+seq3 = int2nt(int4R(:,col1) +1)'
+seq4 = int2nt(int4R(:,col2) +1)'
+
 %py = 0:1/sec:1-1/sec;
 
 %plot(averageR);
