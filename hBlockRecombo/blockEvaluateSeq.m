@@ -1,4 +1,4 @@
-function [newQuality newR] = blockEvaluateSeq(targetRs, newSampleSeq, alleleMapping, blocks, newBlock, smallRFilter)
+function [newQuality newR blockMask] = blockEvaluateSeq(targetRs, newSampleSeq, alleleMapping, blocks, newBlock, smallRFilter)
     %this is a new evaluation function that only count the
     %learnedSnpsBlocks and newBlock r value
     if nargin <= 5

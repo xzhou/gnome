@@ -57,6 +57,16 @@ all_r_S(isnan(all_r_S)) = 0;
 all_r_R = corrcoef(int2R);
 all_r_R(isnan(all_r_R)) = 0;
 
+StatS.Tr = zeros(nS,1);
+StatR.Tr = zeros(nS,1);
+
+for i = 1:nS
+    StatS.Tr(i) = getTr(int2S(i,:), all_r_S, all_r_R);
+    StatR.Tr(i) = getTr(int2R(i,:), all_r_S, all_r_R);
+end
+StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);  %??
+StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
+
 all_r = tril(all_r_R)+triu(all_r_S);
 all_r = all_r - (all_r ==2);
 
@@ -86,3 +96,16 @@ plotPowerDist(all_r2);
 
 end
 
+
+function Tr = getTr(Y, r_S, r_R, maskMatrix, signMatrix)
+if nargin == 3
+    A2 = (2*Y'-1)*(2*Y-1);
+    Tr = sum(sum((r_S - r_R).* A2))/2;
+else
+    r_S = abs(r_S).*signMatrix; %replace the sign
+    r_S = r_S.*maskMatrix;
+    r_R = r_R.*maskMatrix;
+    A2 = (2*Y'-1)*(2*Y-1);
+    Tr = sum(sum((r_S - r_R).* A2))/2;
+end
+end
