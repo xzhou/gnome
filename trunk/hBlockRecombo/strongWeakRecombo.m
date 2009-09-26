@@ -45,9 +45,7 @@ end
 preStatS.Tr = preStatS.Tr/sqrt(Len*(Len-1)/2);  %??
 preStatR.Tr = preStatR.Tr/sqrt(Len*(Len-1)/2);
 
-finalTargetR = targetR;
-%finalTargetR = abs(targetR);
-%finalRefR = abs(refR);
+finalTargetR = preTargetR;
 
 %for blocks larger than 3
 blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
@@ -118,7 +116,7 @@ plotResult(index1, index2, preStatS.Tr, preStatR.Tr, postStatS.Tr, postStatR.Tr)
 preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/77;
 postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/77/77;
 
-fprintf (1, 'PreSignRate = %f\n ', preSignRate);
+fprintf (1, ' PreSignRate = %f\n ', preSignRate);
 fprintf (1, 'PostSignRate = %f\n ', postSignRate);
 
 fprintf (1, 'PreCaseTr>0         %d\n ', sum(preStatS.Tr>0));
