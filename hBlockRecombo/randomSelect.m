@@ -2,6 +2,7 @@ function [caseSeq4 refSeq4] = randomSelect(sequenceAll)
 %function random divide the sequenceAll into 2 groups and convert it into a
 %caseSeq and refSeq
 
+
 seqAll = sequenceAll;
 
 totalLength = length(seqAll);
@@ -10,6 +11,8 @@ if(mod(totalLength, 4)==2)
 seqAll(end) = [];
 seqAll(end) = [];
 end
+
+RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));
 
 totalLength = length(seqAll);
 
