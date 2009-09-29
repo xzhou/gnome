@@ -47,6 +47,8 @@ preStatR.Tr = preStatR.Tr/sqrt(Len*(Len-1)/2);
 
 finalTargetR = preTargetR;
 
+
+
 %for blocks larger than 3
 blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
 [m n] = size(blocks);
@@ -119,6 +121,8 @@ for i = 1:nS
     postStatS.Tr(i) = getTr(int2S(i,:), finalTargetR, refR);
     postStatR.Tr(i) = getTr(int2R(i,:), finalTargetR, refR);
 end
+
+
 postStatS.Tr = postStatS.Tr/sqrt(Len*(Len-1)/2);  %??
 postStatR.Tr = postStatR.Tr/sqrt(Len*(Len-1)/2);
 
