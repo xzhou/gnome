@@ -1,6 +1,6 @@
 %% do relaxed hyplotype block recombination for real data. 
 %We will try to relax the consistency model for free recombination between
-%any blocks to see if we can recover more sings;
+%any blocks to see if we can recover more signs;
 
 blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16; 
             18 21;22 22; 23 23; 24 24; 25 28; 29 29; 30 30; 31 31; 32 32; 33 33; 
@@ -38,12 +38,30 @@ preStatR.Tr = zeros(nS, 1);
 postStatS.Tr = zeros(nS, 1);
 postStatR.Tr = zeros(nS, 1);
 
+correctStatS.Tr = zeros(nS, 1);
+correctStatR.Tr = zeros(nS, 1);
+
+%For caculating the Tr with correct Sign
+for i = 1:nS
+    correctStatS.Tr(i) = getTr(int2S(i,:), targetR, refR);
+    correctStatR.Tr(i) = getTr(int2R(i,:), targetR, refR);
+end
+correctStatS.Tr = correctStatS.Tr/sqrt(Len*(Len-1)/2);
+correctStatR.Tr = correctStatR.Tr/sqrt(Len*(Len-1)/2);
+
+sortCorrectStatR = sort(correctStatR.Tr);
+correctAbove95S = sum(correctStatS.Tr>sortCorrectStatR(int8(nS*0.95)));
+
+%For caculating the Tr befor recombination
 for i = 1:nS
     preStatS.Tr(i) = getTr(int2S(i,:), preTargetR, refR);
     preStatR.Tr(i) = getTr(int2R(i,:), preTargetR, refR);
 end
-preStatS.Tr = preStatS.Tr/sqrt(Len*(Len-1)/2);  %??
+preStatS.Tr = preStatS.Tr/sqrt(Len*(Len-1)/2); 
 preStatR.Tr = preStatR.Tr/sqrt(Len*(Len-1)/2);
+
+sortPreStatR = sort(preStatR.Tr);
+preAbove95S = sum(preStatS.Tr>sortPreStatR(int8(nS*0.95)));
 
 finalTargetR = preTargetR;
 
@@ -64,6 +82,7 @@ trials = 10;
 
 f = fopen('result.txt', 'w');
 
+%Save all the sign matrix
 bufferMatrix = zeros(Len, Len, trials);
 
 currentSeq = caseSeq4;
@@ -103,6 +122,7 @@ for i = 1:(m-1)
         [maxVal, maxIdx] = max(blockRate(:,1));
         maxQ = min(blockRate(:,2));
         
+        %Apply signs to these cross blocks
         finalTargetR = finalTargetR.*(bufferMatrix(:,:,maxIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,maxIdx)~=0).*bufferMatrix(:,:,maxIdx);
         
         finalResult(i,j) = maxVal;
@@ -117,19 +137,28 @@ for i = 1:(m-1)
     end
 end
 
+%For caculating the Tr after recombination
 for i = 1:nS
     postStatS.Tr(i) = getTr(int2S(i,:), finalTargetR, refR);
     postStatR.Tr(i) = getTr(int2R(i,:), finalTargetR, refR);
 end
 
+postStatS.Tr = postStatS.Tr/sqrt(Len*(Len-1)/2);
 
-postStatS.Tr = postStatS.Tr/sqrt(Len*(Len-1)/2);  %??
 postStatR.Tr = postStatR.Tr/sqrt(Len*(Len-1)/2);
+
+sortPostStatR = sort(postStatR.Tr);
+postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
+
 
 index1 = [1: nS];
 index2 = [nS+1: nS*2];
 
 plotResult(index1, index2, preStatS.Tr, preStatR.Tr, postStatS.Tr, postStatR.Tr);
+figure;
+hold on;
+plot(index1, correctStatS.Tr, '.r');
+plot(index2, correctStatR.Tr, '.g');
 preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/77;
 postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/77/77;
 
@@ -140,6 +169,8 @@ fprintf (1, 'PreCaseTr>0         %d\n ', sum(preStatS.Tr>0));
 fprintf (1, 'PostCaseTr>0        %d\n ', sum(postStatS.Tr>0));
 fprintf (1, 'PreReferenceTr<0    %d\n ', sum(preStatR.Tr<0));
 fprintf (1, 'PostReferenceTr<0   %d\n ', sum(postStatR.Tr<0));
+fprintf (1, 'CorrectCaseTr>0     %d\n ', sum(correctStatS.Tr>0));
+fprintf (1, 'CorrectReference<0  %d\n ', sum(correctStatR.Tr<0));
 
 
 fclose(f);
