@@ -11,8 +11,9 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
         
 blocks = [1 15; 16 55; 60 77];
 
-cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
@@ -45,7 +46,8 @@ postStatR.Tr = zeros(nS, 1);
 correctStatS.Tr = zeros(nS, 1);
 correctStatR.Tr = zeros(nS, 1);
 
-plotScatter(caseSeq4, refSeq4, targetR, refR);
+h = plotScatter(caseSeq4, refSeq4, targetR, refR);
+
 
 %For caculating the Tr with correct Sign
 for i = 1:nS

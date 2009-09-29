@@ -1,5 +1,9 @@
-function [ ] = plotScatter(caseSeq4, refSeq4, caseR, refR)
+function [ h ] = plotScatter(caseSeq4, refSeq4, caseR, refR, figTitle)
 %in this function, we will plot the scatter graph based on 
+
+if nargin <= 4
+	figTitle = 'unknown title';
+end
 
 nS = length(caseSeq4);
 Len = length(caseSeq4(1,:));
@@ -22,10 +26,15 @@ end
 StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
 StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
 
-figure;
+h = figure;
 hold on;
 plot(index1, StatS.Tr, '.r');
 plot(index2, StatR.Tr, '.g');
+
+xlabel('individual index');
+ylabel('T_r value');
+title(figTitle);
+legend({'case' 'ref'});
 
 end
 
