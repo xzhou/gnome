@@ -46,5 +46,5 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targ
     finalQual = currentQuality;
     finalR = currentR;
     finalSignRate = signRate;
-    fprintf(1, 'initQ = %f \tfinalQ = %f initSR = %f \tfinalSR = %f\n', initQuality, finalQual, initSignRate, finalSignRate);
+    fprintf(1, 'initQ = %.20f \tfinalQ = %.20f initSR = %f \tfinalSR = %f\n', initQuality, finalQual, initSignRate, finalSignRate);
 end

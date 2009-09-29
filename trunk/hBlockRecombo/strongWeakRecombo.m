@@ -11,8 +11,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
         
 blocks = [1 15; 16 55; 60 77];
 
-cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
@@ -64,29 +64,42 @@ f = fopen('result.txt', 'w');
 
 bufferMatrix = zeros(Len, Len, trials);
 
+currentSeq = caseSeq4;
+
+
 for i = 1:(m-1)
     for j = i+1:m
         blockRate = zeros(trials, 2);            
         block1 = blocks(i,:);
-        block2 = blocks(j,:);            
+        block2 = blocks(j,:);
         if(block1(1,3) >= block2(1,3))
             block1(1,4) = 1;
+            currentSeq = shuffleNewBlock(currentSeq, block2);
             parfor t = 1:trials
-                [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, refSeq4, block1, block2, alleleMapping, 0.01);
+                [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block1, block2, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                 blockRate(t,:) = [finalSignRate finalQual];
+                if finalQual == 0 && finalSignRate ~= 1.0
+                    pause
+                end
             end
         else
             block2(1,4) = 1;
+            currentSeq = caseSeq4;
+            currentSeq = shuffleNewBlock(currentSeq, block1);
             parfor t = 1:trials
-                [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, refSeq4, block2, block1, alleleMapping, 0.01);
+                [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block2, block1, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                 blockRate(t,:) = [finalSignRate finalQual];
+                
+                if finalQual == 0 && finalSignRate ~= 1.0
+                    pause
+                end
             end
         end
 
         [maxVal, maxIdx] = max(blockRate(:,1));
-        maxQ = max(blockRate(:,2));
+        maxQ = min(blockRate(:,2));
         
         finalTargetR = finalTargetR.*(bufferMatrix(:,:,maxIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,maxIdx)~=0).*bufferMatrix(:,:,maxIdx);
         
