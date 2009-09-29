@@ -11,8 +11,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
         
 blocks = [1 15; 16 55; 60 77];
 
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
@@ -21,6 +21,10 @@ rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 [caseSeq4 refSeq4] = randomSelect(rawFastaData);
 nS = length(caseSeq4);
 Len = length(caseSeq4(1,:));
+
+%index for plotting
+index1 = [1: nS];
+index2 = [nS+1: nS*2];
 
 alleleMapping = getMajorAllele(refSeq4);
 
@@ -41,6 +45,8 @@ postStatR.Tr = zeros(nS, 1);
 correctStatS.Tr = zeros(nS, 1);
 correctStatR.Tr = zeros(nS, 1);
 
+plotScatter(caseSeq4, refSeq4, targetR, refR);
+
 %For caculating the Tr with correct Sign
 for i = 1:nS
     correctStatS.Tr(i) = getTr(int2S(i,:), targetR, refR);
@@ -48,6 +54,7 @@ for i = 1:nS
 end
 correctStatS.Tr = correctStatS.Tr/sqrt(Len*(Len-1)/2);
 correctStatR.Tr = correctStatR.Tr/sqrt(Len*(Len-1)/2);
+
 
 sortCorrectStatR = sort(correctStatR.Tr);
 correctAbove95S = sum(correctStatS.Tr>sortCorrectStatR(int8(nS*0.95)));
@@ -151,8 +158,7 @@ sortPostStatR = sort(postStatR.Tr);
 postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
 
 
-index1 = [1: nS];
-index2 = [nS+1: nS*2];
+
 
 plotResult(index1, index2, preStatS.Tr, preStatR.Tr, postStatS.Tr, postStatR.Tr);
 figure;
