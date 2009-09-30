@@ -1,4 +1,6 @@
-function [uniqueBLock, freq] = getBlockFreq(currentSeq, newBlock)
+function [blockFreq] = getBlockFreq(currentSeq, newBlock)
+%this function will count the number of different rows for a matrix and
+%append the frequence at the last column of the different rows
     [m n] = size(currentSeq);
     
     a = newBlock(1, 1);
@@ -6,8 +8,9 @@ function [uniqueBLock, freq] = getBlockFreq(currentSeq, newBlock)
     
     block = currentSeq(:,a:b);
     
-    [uniqueBLock I J]  = unique(block, 'rows');
+    [uniqueBlock I J]  = unique(block, 'rows');
 	
 	freq = accumarray(J, 1);
     
+	blockFreq = [uniqueBlock freq];
 end

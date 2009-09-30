@@ -2,6 +2,9 @@
 %We will try to relax the consistency model for free recombination between
 %any blocks to see if we can recover more signs;
 
+%start computing slaves
+startParallel(2);
+
 blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16; 
             18 21;22 22; 23 23; 24 24; 25 28; 29 29; 30 30; 31 31; 32 32; 33 33; 
             34 41; 41 41; 42 42; 43 43; 44 44; 45 45; 46 46; 47 47; 48 48; 49 49; 50 53; 
@@ -10,6 +13,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
             71 77];
         
 blocks = [1 15; 16 55; 60 77];
+
+[nBlock tmp] = size(blocks);
 
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
 cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
@@ -22,6 +27,13 @@ rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 [caseSeq4 refSeq4] = randomSelect(rawFastaData);
 nS = length(caseSeq4);
 Len = length(caseSeq4(1,:));
+
+caseBlockFreqInfo = cell(nBlock, 1);
+
+parfor i = 1:nBlock
+	caseBlockFreqInfo{i,1} = getBlockFreq(caseSeq4, blocks(i,:));
+end
+
 
 %index for plotting
 index1 = [1: nS];
@@ -83,7 +95,7 @@ blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
 blocks = [blocks, zeros(m, 1)];
 %blocks = blocks(blocks(:,3)>=3, :);
 
-startParallel(2);
+
 [m n] = size(blocks);
 finalResult = zeros(m, m);
 
