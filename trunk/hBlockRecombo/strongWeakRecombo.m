@@ -34,6 +34,14 @@ parfor i = 1:nBlock
 	caseBlockFreqInfo{i,1} = getBlockFreq(caseSeq4, blocks(i,:));
 end
 
+refBlockFreqInfo = cell(nBlock, 1);
+parfor i = 1:nBlock
+	refBlockFreqInfo{i,1} = getBlockFreq(refSeq4, blocks(i,:));
+end
+
+save('refBlockFreq.mat', 'refBlockFreqInfo');
+save('caseBlockFreq.mat', 'caseBlockFreqInfo');
+
 
 %index for plotting
 index1 = [1: nS];
@@ -106,7 +114,8 @@ f = fopen('result.txt', 'w');
 %Save all the sign matrix
 bufferMatrix = zeros(Len, Len, trials);
 
-currentSeq = caseSeq4;
+%currentSeq = caseSeq4;
+currentSeq = refSeq4;
 
 
 for i = 1:(m-1)
@@ -116,7 +125,7 @@ for i = 1:(m-1)
         block2 = blocks(j,:);
         if(block1(1,3) >= block2(1,3))
             block1(1,4) = 1;
-            currentSeq = shuffleNewBlock(currentSeq, block2);
+            %currentSeq = shuffleNewBlock(currentSeq, block2);
             parfor t = 1:trials
                 [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block1, block2, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
@@ -128,7 +137,7 @@ for i = 1:(m-1)
         else
             block2(1,4) = 1;
             currentSeq = caseSeq4;
-            currentSeq = shuffleNewBlock(currentSeq, block1);
+            %currentSeq = shuffleNewBlock(currentSeq, block1);
             parfor t = 1:trials
                 [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block2, block1, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
