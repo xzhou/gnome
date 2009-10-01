@@ -1,8 +1,8 @@
 function out = DrTest(fastafile, threshold, precision, N)
     loadFromFile = 0;
     if loadFromFile == 0
-        cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
-
+        %cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
+        cd 'D:\IUBResearch\Projects\Bioinfor\data\dist100x77';
         %*P means reference
         % MA means sample
         % M0 means sample without individual
