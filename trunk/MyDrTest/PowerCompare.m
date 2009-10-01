@@ -3,8 +3,8 @@ function out = PowerCompare(fastafile, threshold, precision, N)
     % MA means sample
     % M0 means reference
     
-    cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
-    
+    %cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
+    cd 'D:\IUBResearch\Projects\Bioinfor\data\dist100x77';
     nP = 200;
     nM = 200;
     if nargin >=4
