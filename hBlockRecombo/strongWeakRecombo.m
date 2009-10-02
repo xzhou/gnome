@@ -68,13 +68,14 @@ sortHomerStatR = sort(StatR.Tp);
 homerAbove95S = sum(StatS.Tp>sortHomerStatR(int8(nS*0.95)));
 figure;
 hold on;
-plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
 plot(index1, StatS.Tp, '.r');
 plot(index2, StatR.Tp, '.g');
+legend({'case' 'ref'});
+plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
 xlabel('individual index');
 ylabel('T_r value');
 title('Homer Test');
-legend({'case' 'ref'});
+
 
 targetR = calcR(caseSeq4, alleleMapping);
 refR = calcR(refSeq4, alleleMapping);

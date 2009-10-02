@@ -30,14 +30,16 @@ sortR = sort(StatR.Tr);
 
 h = figure;
 hold on;
-plot(ones(2*nS)*sortR(int8(nS*0.95)));
+
 plot(index1, StatS.Tr, '.r');
 plot(index2, StatR.Tr, '.g');
+legend({'case' 'ref'});
 
+plot(ones(2*nS)*sortR(int8(nS*0.95)));
 xlabel('individual index');
 ylabel('T_r value');
 title(figTitle);
-legend({'case' 'ref'});
+
 
 end
 
