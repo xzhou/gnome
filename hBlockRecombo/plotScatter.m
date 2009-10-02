@@ -26,8 +26,11 @@ end
 StatS.Tr = StatS.Tr/sqrt(Len*(Len-1)/2);
 StatR.Tr = StatR.Tr/sqrt(Len*(Len-1)/2);
 
+sortR = sort(StatR.Tr);
+
 h = figure;
 hold on;
+plot(ones(2*nS)*sortR(int8(nS*0.95)));
 plot(index1, StatS.Tr, '.r');
 plot(index2, StatR.Tr, '.g');
 

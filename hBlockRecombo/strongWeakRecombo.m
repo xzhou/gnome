@@ -14,10 +14,11 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
         
 blocks = [1 15; 16 55; 60 77];
 
-[nBlock tmp] = size(blocks);
 
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+
+[nBlock tmp] = size(blocks);
 
 delete('hbrecombo.log');
 diary hbrecombo.log;
@@ -52,6 +53,29 @@ alleleMapping = getMajorAllele(refSeq4);
 int2S = (caseSeq4 == repmat(alleleMapping,nS,1)) + 0;
 int2R = (refSeq4 == repmat(alleleMapping,nS,1)) + 0;
 
+%Test the power of Homer's test
+
+singleFreS = sum(int2S, 1)/nS
+singleFreR = sum(int2R, 1)/nS
+StatS.Tp = zeros(nS, 1);
+StatR.Tp = zeros(nS, 1);
+
+for i = 1: nS
+    StatS.Tp(i) = (singleFreS - singleFreR)*(2*int2S(i,:)' - 1);
+    StatR.Tp(i) = (singleFreS - singleFreR)*(2*int2R(i,:)' - 1);
+end
+sortHomerStatR = sort(StatR.Tp);
+homerAbove95S = sum(StatS.Tp>sortHomerStatR(int8(nS*0.95)));
+figure;
+hold on;
+plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
+plot(index1, StatS.Tp, '.r');
+plot(index2, StatR.Tp, '.g');
+xlabel('individual index');
+ylabel('T_r value');
+title('Homer Test');
+legend({'case' 'ref'});
+
 targetR = calcR(caseSeq4, alleleMapping);
 refR = calcR(refSeq4, alleleMapping);
 
@@ -65,8 +89,6 @@ postStatR.Tr = zeros(nS, 1);
 
 correctStatS.Tr = zeros(nS, 1);
 correctStatR.Tr = zeros(nS, 1);
-
-h = plotScatter(caseSeq4, refSeq4, targetR, refR);
 
 
 %For caculating the Tr with correct Sign
@@ -117,7 +139,6 @@ bufferMatrix = zeros(Len, Len, trials);
 %currentSeq = caseSeq4;
 currentSeq = refSeq4;
 
-
 for i = 1:(m-1)
     for j = i+1:m
         blockRate = zeros(trials, 2);            
@@ -136,7 +157,6 @@ for i = 1:(m-1)
             end
         else
             block2(1,4) = 1;
-            currentSeq = caseSeq4;
             %currentSeq = shuffleNewBlock(currentSeq, block1);
             parfor t = 1:trials
                 [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block2, block1, alleleMapping, 0.01);
@@ -180,14 +200,9 @@ postStatR.Tr = postStatR.Tr/sqrt(Len*(Len-1)/2);
 sortPostStatR = sort(postStatR.Tr);
 postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
 
-
-
-
-plotResult(index1, index2, preStatS.Tr, preStatR.Tr, postStatS.Tr, postStatR.Tr);
-figure;
-hold on;
-plot(index1, correctStatS.Tr, '.r');
-plot(index2, correctStatR.Tr, '.g');
+plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
+plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
+plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
 preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/77;
 postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/77/77;
 
