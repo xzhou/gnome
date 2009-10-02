@@ -15,8 +15,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
 blocks = [1 15; 16 55; 60 77];
 
 
-cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
 
@@ -29,6 +29,8 @@ rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 nS = length(caseSeq4);
 Len = length(caseSeq4(1,:));
 
+
+%% test the block structure
 caseBlockFreqInfo = cell(nBlock, 1);
 
 parfor i = 1:nBlock
@@ -40,9 +42,16 @@ parfor i = 1:nBlock
 	refBlockFreqInfo{i,1} = getBlockFreq(refSeq4, blocks(i,:));
 end
 
+matchedCase = blockCheck(caseBlockFreqInfo, refBlockFreqInfo, blocks);
+refMatchedCase = blockCheck(refBlockFreqInfo, caseBlockFreqInfo, blocks);
+
 save('refBlockFreq.mat', 'refBlockFreqInfo');
 save('caseBlockFreq.mat', 'caseBlockFreqInfo');
+save('caseMatch.mat', 'matchedCase');
+save('refMatchedCase.mat', 'refMatchedCase');
 
+
+%% plot initialization
 
 %index for plotting
 index1 = [1: nS];
@@ -55,8 +64,8 @@ int2R = (refSeq4 == repmat(alleleMapping,nS,1)) + 0;
 
 %Test the power of Homer's test
 
-singleFreS = sum(int2S, 1)/nS
-singleFreR = sum(int2R, 1)/nS
+singleFreS = sum(int2S, 1)/nS;
+singleFreR = sum(int2R, 1)/nS;
 StatS.Tp = zeros(nS, 1);
 StatR.Tp = zeros(nS, 1);
 
@@ -116,7 +125,6 @@ sortPreStatR = sort(preStatR.Tr);
 preAbove95S = sum(preStatS.Tr>sortPreStatR(int8(nS*0.95)));
 
 finalTargetR = preTargetR;
-
 
 
 %for blocks larger than 3
