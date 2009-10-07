@@ -14,8 +14,10 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
     caseRs = caseR.*caseR;
     
     currentSeq = blockReconstruct(refBlock, refFreq);
-    currentR = calcR(currentSeq, alleleMapping);
+    refR = calcR(currentSeq, alleleMapping);
+    currentR = refR;
     currentRs = currentR.*currentR;
+    %initialize
     currentFreq = refFreq;
     currentQuality = eval(caseRs, currentR.*currentR);
     
@@ -42,7 +44,8 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
             currentFreq = newFreq;
             currentQuality = newQuality;
             currentRs = newRs;
-            fprintf(1, 'itr = %d\t newQuality = %f\n', itr, newQuality);
+            currentR = newR;
+            fprintf(1, 'itr = %d\t newQuality = %.15f\n', itr, newQuality);
         else
             %do nothing
         end
@@ -52,6 +55,8 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
     finalFreq = currentFreq;
     finalQual = currentQuality;
     finalR = currentR;
+    
+    matchResult = [refFreq, refcaseFreq, finalFreq]
     
     save('innerBlockLearning.mat');
 end
