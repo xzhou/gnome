@@ -39,6 +39,7 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
             currentFreq = newFreq;
             currentQuality = newQuality;
             currentRs = newRs;
+            fprintf(1, 'newQuality = %f\n', newQuality);
         else
             %do nothing
         end
