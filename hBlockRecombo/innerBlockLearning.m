@@ -3,7 +3,7 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
         alleleMapping = getMajorAllele(refSeq4);
     end
     
-    expT = 1.0e-10;
+    expT = 1.0e-8;
     
     %% learning algorithm
     maxIt = 100000;
@@ -20,6 +20,9 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
     currentQuality = eval(caseRs, currentR.*currentR);
     
     fprintf(1, '%f\n', currentQuality);
+    
+    historySize = 1000
+    previousKQuality = zeros(historySize, 1);
     
     while itr < maxIt
         itr = itr + 1;
@@ -39,7 +42,7 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
             currentFreq = newFreq;
             currentQuality = newQuality;
             currentRs = newRs;
-            fprintf(1, 'newQuality = %f\n', newQuality);
+            fprintf(1, 'itr = %d\t newQuality = %f\n', itr, newQuality);
         else
             %do nothing
         end
