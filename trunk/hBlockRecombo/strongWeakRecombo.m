@@ -50,7 +50,6 @@ save('caseBlockFreq.mat', 'caseBlockFreqInfo');
 save('caseMatch.mat', 'matchedCase');
 save('refMatchedCase.mat', 'refMatchedCase');
 
-
 %% plot initialization
 
 %index for plotting
@@ -145,6 +144,11 @@ f = fopen('result.txt', 'w');
 %Save all the sign matrix
 bufferMatrix = zeros(Len, Len, trials);
 
+%% inner block learning
+
+
+
+%%
 %currentSeq = caseSeq4;
 currentSeq = refSeq4;
 
