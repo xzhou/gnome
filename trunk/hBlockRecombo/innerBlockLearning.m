@@ -1,25 +1,29 @@
-function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcaseFreq, alleleMapping)
+function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcaseFreq, alleleMapping)
     if nargin == 5
         alleleMapping = getMajorAllele(refSeq4);
     end
     
+    %defines the randomness of searching strategy
     expT = 1.0e-8;
     
     %% learning algorithm
-    maxIt = 100000;
+    maxIt = 1e4;
     itr = 0;
     
     targetSeq = blockReconstruct(caseBlock, caseFreq);
     caseR = calcR(targetSeq, alleleMapping);
     caseRs = caseR.*caseR;
-    
+    caseAlleleFreq = GnomeCalculator.getSingleAlleleFreq(targetSeq, alleleMapping);
+
     currentSeq = blockReconstruct(refBlock, refFreq);
     refR = calcR(currentSeq, alleleMapping);
     currentR = refR;
     currentRs = currentR.*currentR;
+    currentAlleleFreq = GnomeCalculator.getSingleAlleleFreq(currentSeq, alleleMapping);
+    
     %initialize
     currentFreq = refFreq;
-    currentQuality = eval(caseRs, currentR.*currentR);
+    currentQuality = eval(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq);
     
     fprintf(1, '%f\n', currentQuality);
     
@@ -31,7 +35,9 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
         [newSeq4 newFreq] = getNextSeq(refBlock, currentFreq);
         newR = calcR(newSeq4, alleleMapping);
         newRs = newR.*newR;
-        newQuality = eval(caseRs, newRs);
+        %newP is the single allele frequency of the new allele frequency
+        newP = GnomeCalculator.getSingleAlleleFreq(newSeq4, alleleMapping);
+        newQuality = eval(caseRs, newRs, caseAlleleFreq, newP);
         Qdiff = newQuality - currentQuality;
         %using statistic hill climbing algorithm to change
         if Qdiff < 0
@@ -45,6 +51,7 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
             currentQuality = newQuality;
             currentRs = newRs;
             currentR = newR;
+            currentP = newP;
             fprintf(1, 'itr = %d\t newQuality = %.15f\n', itr, newQuality);
         else
             %do nothing
@@ -52,13 +59,12 @@ function [] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcase
     end
     
     %end of learning
-    finalFreq = currentFreq;
-    finalQual = currentQuality;
-    finalR = currentR;
-    
-    matchResult = [refFreq, refcaseFreq, finalFreq]
-    
-    save('innerBlockLearning.mat');
+    result.finalFreq = currentFreq;
+    result.finalQual = currentQuality;
+    result.finalR = currentR;
+    result.refFreq = refFreq;
+    result.refcaseFreq = refcaseFreq;
+    [result.finalFreq result.refcaseFreq]
 end
 
 function [newSeq, newBlockFreq] = getNextSeq(hyplotypes, currentBlockFreq)
@@ -66,8 +72,21 @@ function [newSeq, newBlockFreq] = getNextSeq(hyplotypes, currentBlockFreq)
     newSeq = blockReconstruct(hyplotypes, newBlockFreq);
 end
 
-function [newQuality] = eval(targetRs, currentRs)
-    newQuality = calcRDiff(targetRs, currentRs);
+%evaluate normalized r square difference and p difference 
+function [newQuality] = eval(targetRs, currentRs, targetFreq, currentFreq)
+    pDiff = abs(targetFreq - currentFreq);
+    normalDiff = sum(pDiff)/length(targetFreq);   %normalize
+    
+    rDiff = calcRDiff(targetRs, currentRs);
+    [m, n] = size(targetRs);
+    if m ~= n
+        e = MException('blockReconstruct:x', 'in consistent dimenstion');
+        throw(e);
+    end
+    nElements = m*(m-1)/2;
+    normalRDiff = rDiff/nElements;
+    
+    newQuality = 0.8*normalRDiff + 0.2*normalDiff;
 end
 
 function [newQuality] = calcRDiff(targetRs, newRs, smallRFilter)
@@ -75,7 +94,6 @@ function [newQuality] = calcRDiff(targetRs, newRs, smallRFilter)
     if nargin == 2
         smallRFilter = 0.0;
     end
-
     %make sure remove the diagnal elements
     targetRs(logical(eye(size(targetRs)))) = 0;
     newRs(logical(eye(size(newRs)))) = 0;
