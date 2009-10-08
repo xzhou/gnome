@@ -2,6 +2,7 @@ function [sequence] = encodeSequence(seq, alleleMapping)
 %encode sequence will encode the standard ATCG sequence from haplotype 
 %to 0/1
     nIndividual = length(seq);
+
     nSnps = length(seq(1).Sequence);
     
     int4S = zeros(nIndividual, nSnps);

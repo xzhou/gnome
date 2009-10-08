@@ -22,6 +22,8 @@ end
 matchedCase = blockCheck(caseBlockFreqInfo, refBlockFreqInfo, blocks);
 refMatchedCase = blockCheck(refBlockFreqInfo, caseBlockFreqInfo, blocks);
 
+result = cell(3,1);
+
 for i=1:nBlock
     block = blocks(i,:);
     a = block(1, 1);
@@ -35,6 +37,9 @@ for i=1:nBlock
     refSeq = refSeq4(:,a:b);
     caseSeq = caseSeq4(:,a:b);
     alleleMapping = getMajorAllele(refSeq);
-    innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
+    [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
+    result{i} = aResult;
 end
+
+save('result.mat', 'result');
 
