@@ -1,10 +1,14 @@
-function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcaseFreq, alleleMapping)
+function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcaseFreq, alleleMapping, alpha)
     if nargin == 5
         alleleMapping = getMajorAllele(refSeq4);
+        alpha = 0.6;
+    elseif nargin == 6
+        alpha = 0.6;
     end
     
+    
     %defines the randomness of searching strategy
-    expT = 1.0e-8;
+    expT = 1.0e-5;
     
     %% learning algorithm
     maxIt = 1e4;
@@ -23,11 +27,11 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     
     %initialize
     currentFreq = refFreq;
-    currentQuality = eval(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq);
+    currentQuality = eval(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq, alpha);
     
-    fprintf(1, '%f\n', currentQuality);
+    %fprintf(1, '%f\n', currentQuality);
     
-    historySize = 1000
+    historySize = 1000;
     previousKQuality = zeros(historySize, 1);
     
     while itr < maxIt
@@ -37,7 +41,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
         newRs = newR.*newR;
         %newP is the single allele frequency of the new allele frequency
         newP = GnomeCalculator.getSingleAlleleFreq(newSeq4, alleleMapping);
-        newQuality = eval(caseRs, newRs, caseAlleleFreq, newP);
+        newQuality = eval(caseRs, newRs, caseAlleleFreq, newP, alpha);
         Qdiff = newQuality - currentQuality;
         %using statistic hill climbing algorithm to change
         if Qdiff < 0
@@ -52,7 +56,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
             currentRs = newRs;
             currentR = newR;
             currentP = newP;
-            fprintf(1, 'itr = %d\t newQuality = %.15f\n', itr, newQuality);
+            %fprintf(1, 'itr = %d\t newQuality = %.15f\n', itr, newQuality);
         else
             %do nothing
         end
@@ -64,7 +68,14 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     result.finalR = currentR;
     result.refFreq = refFreq;
     result.refcaseFreq = refcaseFreq;
-    [result.finalFreq result.refcaseFreq]
+    
+    %calculate the frequency distance
+    a = sum(abs(result.refcaseFreq - result.finalFreq));
+    
+    b = sum(abs(result.refcaseFreq - result.refFreq));
+    
+    %if fDistance < 1, the learning process is good
+    result.fDistance = a*1.0/b;
 end
 
 function [newSeq, newBlockFreq] = getNextSeq(hyplotypes, currentBlockFreq)
@@ -73,7 +84,12 @@ function [newSeq, newBlockFreq] = getNextSeq(hyplotypes, currentBlockFreq)
 end
 
 %evaluate normalized r square difference and p difference 
-function [newQuality] = eval(targetRs, currentRs, targetFreq, currentFreq)
+function [newQuality] = eval(targetRs, currentRs, targetFreq, currentFreq, alpha)
+    %we think R square has more weight than single allele frequence
+    if nargin == 4
+        alpha = 0.6;
+    end
+
     pDiff = abs(targetFreq - currentFreq);
     normalDiff = sum(pDiff)/length(targetFreq);   %normalize
     
@@ -86,7 +102,8 @@ function [newQuality] = eval(targetRs, currentRs, targetFreq, currentFreq)
     nElements = m*(m-1)/2;
     normalRDiff = rDiff/nElements;
     
-    newQuality = 0.8*normalRDiff + 0.2*normalDiff;
+    newQuality = alpha*normalRDiff + (1-alpha)*normalDiff;
+    newQuality = 100*newQuality;
 end
 
 function [newQuality] = calcRDiff(targetRs, newRs, smallRFilter)
