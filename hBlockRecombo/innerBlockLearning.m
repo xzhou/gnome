@@ -11,7 +11,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     expT = 1.0e-5;
     
     %% learning algorithm
-    maxIt = 1e4;
+    maxIt = 1e1;
     itr = 0;
     
     targetSeq = blockReconstruct(caseBlock, caseFreq);
