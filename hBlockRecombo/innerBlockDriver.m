@@ -22,23 +22,30 @@ end
 matchedCase = blockCheck(caseBlockFreqInfo, refBlockFreqInfo, blocks);
 refMatchedCase = blockCheck(refBlockFreqInfo, caseBlockFreqInfo, blocks);
 
+startParallel(2);
+
 result = cell(3,1);
 
-for i=1:nBlock
-    block = blocks(i,:);
-    a = block(1, 1);
-    b = block(1, 2);
-    refBlock = refMatchedCase{i,1}(1:end-2,1:end-2);
-    refFreq = refMatchedCase{i,1}(1:end-2, end-1);
-    refCaseFreq = refMatchedCase{i,1}(1:end-2, end);
-    caseBlock = matchedCase{i,1}(1:end-2, 1:end-2);
-    caseFreq = matchedCase{i,1}(1:end-2, end-1);
-    caseRefFreq = matchedCase{i,1}(1:end-1, end);
-    refSeq = refSeq4(:,a:b);
-    caseSeq = caseSeq4(:,a:b);
-    alleleMapping = getMajorAllele(refSeq);
-    [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
-    result{i} = aResult;
+for k = 1:10
+    for i=1:nBlock
+        block = blocks(i,:);
+        a = block(1, 1);
+        b = block(1, 2);
+        refBlock = refMatchedCase{i,1}(1:end-2,1:end-2);
+        refFreq = refMatchedCase{i,1}(1:end-2, end-1);
+        refCaseFreq = refMatchedCase{i,1}(1:end-2, end);
+        caseBlock = matchedCase{i,1}(1:end-2, 1:end-2);
+        caseFreq = matchedCase{i,1}(1:end-2, end-1);
+        caseRefFreq = matchedCase{i,1}(1:end-1, end);
+        refSeq = refSeq4(:,a:b);
+        caseSeq = caseSeq4(:,a:b);
+        alleleMapping = getMajorAllele(refSeq);
+        [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
+        [bResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping,1);
+        result{i} = aResult;
+        fprintf(1, 'a = %f,\t b = %f\n', aResult.fDistance, bResult.fDistance);
+    end
+    fprintf(1, '\n***********\n');
 end
 
 save('result.mat', 'result');
