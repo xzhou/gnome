@@ -30,7 +30,7 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
 
     %startParallel(2);
 
-    nRepeat = 1;
+    nRepeat = 10;
     result = cell(nBlock,nRepeat);
 
     for i=1:nBlock
@@ -46,7 +46,7 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
         refSeq = refSeq4(:,a:b);
         caseSeq = caseSeq4(:,a:b);
         alleleMapping = getMajorAllele(refSeq);
-        fprintf(1, 'block %d \n***********\n', i);
+        fprintf(1, '\n************ learning block %d ***********\n', i);
         parfor k = 1:nRepeat
             [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
             [bResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping,1);
@@ -64,4 +64,5 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
     %% reconstruct the learned block we use the
     seq = InnerBlockHelp.recoverCaseSeq(result);
     save('innterseq.mat', 'seq');
+    save;
 end
