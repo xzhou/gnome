@@ -8,7 +8,7 @@ function [currentFreq] = blockNaiveMutate(currentFreq)
     end
     x1 = randi(m);
     x2 = randi(m);
-    while x1 == x2
+    while x1 == x2 || currentFreq(x2, 1) == 0
         x1 = randi(m);
         x2 = randi(m);
     end

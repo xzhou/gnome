@@ -23,12 +23,24 @@ classdef InnerBlockHelp
                     bestResult{i,1} = result{i,bestI};
                 end
             end
-            seq = [];
+
+            
             %%reconstruct
             for i = 1:nBlock
                 aResult = bestResult{i,1};
                 aSeq = blockReconstruct(aResult.refBlock, aResult.finalFreq);
-                seq = [seq aSeq];
+                [m n] = size(aSeq);
+                s = sum(aResult.finalFreq);
+                if aSeq ~= s
+                    fprintf(1, 'error, %d, %d', m, s);
+                end
+                fprintf(1, 'total Seq =  %d\n', s);
+                
+                if i == 1
+                    seq = aSeq;
+                else
+                    seq = [seq aSeq];
+                end
             end
             return;
         end
