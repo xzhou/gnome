@@ -19,7 +19,7 @@ function [seq] = blockReconstruct(blocks, blockFreq)
     seq = blocks(rowIdentifier,:);
     [m n] = size(seq);
     if m ~= sum(blockFreq)
-        e = MException('blockReconstruct:x', 'error');
+        e = MException('blockReconstruct:x', 'can not recover the sequence!');
         throw(e);
     end
 end
