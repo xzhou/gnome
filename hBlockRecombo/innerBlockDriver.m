@@ -1,13 +1,16 @@
-function [seq] = innerBlockDriver()    
+function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)    
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
     clear;
     cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
     
-    blocks = [1 15; 16 55; 60 77];
+    if nargin == 0
+        rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+        [caseSeq4 refSeq4] = randomSelect(rawFastaData);    
+        blocks = [1 15; 16 55; 60 77];
+    end
+ 
     [nBlock tmp] = size(blocks);
-    
-    rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
-    [caseSeq4 refSeq4] = randomSelect(rawFastaData);
+
     nS = length(caseSeq4);
     Len = length(caseSeq4(1,:));
 
