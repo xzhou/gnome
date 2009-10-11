@@ -28,7 +28,7 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
     matchedCase = blockCheck(caseBlockFreqInfo, refBlockFreqInfo, blocks);
     refMatchedCase = blockCheck(refBlockFreqInfo, caseBlockFreqInfo, blocks);
 
-    %startParallel(2);
+    startParallel(2);
 
     nRepeat = 10;
     result = cell(nBlock,nRepeat);
