@@ -146,8 +146,6 @@ bufferMatrix = zeros(Len, Len, trials);
 
 %% inner block learning
 
-
-
 %%
 %currentSeq = caseSeq4;
 currentSeq = refSeq4;

@@ -6,11 +6,11 @@ function [currentFreq] = blockNaiveMutate(currentFreq)
         e = MException('blockNaiveMutate:column', 'frequency must by n by 1');
         throw(e);
     end
-    x1 = randint(1, 1, [1, m]);
-    x2 = randint(1, 1, [1, m]);
+    x1 = randi(m);
+    x2 = randi(m);
     while x1 == x2
-        x1 = randint(1, 1, [1, m]);
-        x2 = randint(1, 1, [1, m]);
+        x1 = randi(m);
+        x2 = randi(m);
     end
     
     currentFreq(x1, 1) = currentFreq(x1, 1) + 1;

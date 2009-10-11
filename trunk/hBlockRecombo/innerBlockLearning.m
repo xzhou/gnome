@@ -1,4 +1,5 @@
 function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcaseFreq, alleleMapping, alpha)
+    %alpha is the weight of r square in the learing process
     if nargin == 5
         alleleMapping = getMajorAllele(refSeq4);
         alpha = 0.6;
@@ -11,7 +12,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     expT = 1.0e-5;
     
     %% learning algorithm
-    maxIt = 1e5;
+    maxIt = 1e0;
     itr = 0;
     
     targetSeq = blockReconstruct(caseBlock, caseFreq);
@@ -68,7 +69,8 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     result.finalR = currentR;
     result.refFreq = refFreq;
     result.refcaseFreq = refcaseFreq;
-    
+    result.refBlock = refBlock;
+
     %calculate the frequency distance
     a = sum(abs(result.refcaseFreq - result.finalFreq));
     
