@@ -23,7 +23,7 @@ cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-for o = 1: 10
+%for o = 1: 10
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 
 [caseSeq4 refSeq4] = randomSelect(rawFastaData);
@@ -175,14 +175,10 @@ bufferMatrix = zeros(Len, Len, trials);
 %% 
 %currentSeq = caseSeq4;
 currentSeq = refSeq4;
-
 % currentSeq = afterInnerRecomboSeq;
-
 
 %currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
 finalTargetR = calcR(currentSeq, alleleMapping);
-
-
 
 for i = 1:(m-1)
     for j = i+1:m
@@ -247,8 +243,8 @@ postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
 % plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
 % plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
 % plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
-preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/77;
-postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/77/77;
+preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/76;
+postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/76/77;
 
 fprintf (1, ' PreSignRate = %f\n ', preSignRate);
 fprintf (1, 'PostSignRate = %f\n ', postSignRate);
@@ -264,7 +260,11 @@ fprintf (1, 'CorrectReference<0  %d\n ', sum(correctStatR.Tr<0));
 fclose(f);
 diary off;
 
+save;
 save('finalResult.mat', 'finalResult');
+save('caseSeq4.mat', 'caseSeq4');
+save('refSeq4.mat', 'refSeq4');
+save('finalTargetR.mat', 'finalTargetR');
 
-o = o+1;
-end
+%o = o+1;
+%end
