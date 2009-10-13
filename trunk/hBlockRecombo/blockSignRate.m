@@ -12,5 +12,4 @@ function [signAgreeRate] = blockSignRate(targetR, newR, blocks, newBlock)
     totalSign = sum(sum(abs(signDiff)))/2;
     
     signAgreeRate = nAgree/totalSign;
-    
 end

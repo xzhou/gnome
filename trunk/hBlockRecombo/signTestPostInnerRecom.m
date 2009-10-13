@@ -15,8 +15,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
 blocks = [1 15; 16 59; 60 77];
 
 
-cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
 
@@ -27,6 +27,8 @@ for o = 1: 10
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 
 [caseSeq4 refSeq4] = randomSelect(rawFastaData);
+
+
 nS = length(caseSeq4);
 Len = length(caseSeq4(1,:));
 
@@ -148,12 +150,12 @@ finalTargetR = preTargetR;
 
 %Some problems happens here about blocks??
 
-%for blocks larger than 3
-blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
-[m n] = size(blocks);
-%add learning marker
-blocks = [blocks, zeros(m, 1)];
-%blocks = blocks(blocks(:,3)>=3, :);
+% %for blocks larger than 3
+% blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
+% [m n] = size(blocks);
+% %add learning marker
+% blocks = [blocks, zeros(m, 1)];
+% %blocks = blocks(blocks(:,3)>=3, :);
 
 
 [m n] = size(blocks);
@@ -202,7 +204,6 @@ for i = 1:(m-1)
                 [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block2, block1, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                 blockRate(t,:) = [finalSignRate finalQual];
-                
                 if finalQual == 0 && finalSignRate ~= 1.0
                     pause
                 end
