@@ -1,7 +1,7 @@
 function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)    
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
 %     clear;
-%     cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+    cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
     
     if nargin == 0
         rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
@@ -56,7 +56,7 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
                 fprintf(1, 'error\n');
                 rethrow(exception);
             end
-            fprintf(1, 'block = %d repeat = %d \t a = %f,\t b = %f\n',i, k, aResult.fDistance, bResult.fDistance);
+            fprintf(1, 'block = %d repeat = %d \t a = %f\n',i, k, aResult.fDistance);
         end
     end
     %save('result.mat', 'result');
