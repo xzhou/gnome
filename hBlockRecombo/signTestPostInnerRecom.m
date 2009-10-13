@@ -83,7 +83,7 @@ alleleMapping = getMajorAllele(refSeq4);
 int2S = (caseSeq4 == repmat(alleleMapping,nS,1)) + 0;
 int2R = (refSeq4 == repmat(alleleMapping,nS,1)) + 0;
 
-%Test the power of Homer's test
+ %% Test the power of Homer's test
 
 singleFreS = sum(int2S, 1)/nS;
 singleFreR = sum(int2R, 1)/nS;
@@ -145,7 +145,7 @@ preStatR.Tr = preStatR.Tr/sqrt(Len*(Len-1)/2);
 sortPreStatR = sort(preStatR.Tr);
 preAbove95S = sum(preStatS.Tr>sortPreStatR(int8(nS*0.95)));
 
-finalTargetR = preTargetR;
+%finalTargetR = preTargetR;
 
 
 %Some problems happens here about blocks??
@@ -172,18 +172,21 @@ bufferMatrix = zeros(Len, Len, trials);
 
 
 
-%%
+%% 
 %currentSeq = caseSeq4;
-%currentSeq = refSeq4;
+currentSeq = refSeq4;
 
 % currentSeq = afterInnerRecomboSeq;
 
 
-currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
+%currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
+finalTargetR = calcR(currentSeq, alleleMapping);
+
+
 
 for i = 1:(m-1)
     for j = i+1:m
-        blockRate = zeros(trials, 2);            
+        blockRate = zeros(trials, 2);      
         block1 = blocks(i,:);
         block2 = blocks(j,:);
         if(block1(1,3) >= block2(1,3))
@@ -210,11 +213,12 @@ for i = 1:(m-1)
             end
         end
 
-        [maxVal, maxIdx] = max(blockRate(:,1));
+        [maxVal, maxIdx] = max(blockRate(:,2));
+        [minQ, minIdx] = min(blockRate(:,2));
         maxQ = min(blockRate(:,2));
         
         %Apply signs to these cross blocks
-        finalTargetR = finalTargetR.*(bufferMatrix(:,:,maxIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,maxIdx)~=0).*bufferMatrix(:,:,maxIdx);
+        finalTargetR = finalTargetR.*(bufferMatrix(:,:,minIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,minIdx)~=0).*bufferMatrix(:,:,minIdx);
         
         finalResult(i,j) = maxVal;
         
