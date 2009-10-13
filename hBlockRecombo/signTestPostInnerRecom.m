@@ -174,10 +174,10 @@ bufferMatrix = zeros(Len, Len, trials);
 
 %% 
 %currentSeq = caseSeq4;
-currentSeq = refSeq4;
+%currentSeq = refSeq4;
 % currentSeq = afterInnerRecomboSeq;
 
-%currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
+currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
 finalTargetR = calcR(currentSeq, alleleMapping);
 
 for i = 1:(m-1)
