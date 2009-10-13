@@ -35,7 +35,9 @@ function [ caseSeq4WithFreq ] = blockCheck(caseSeq4WithFreq, refSeq4WithFreq, bl
         caseBlock = [caseBlock; [alleleMapping, 0, 0]];
         
 		caseSeq4WithFreq{i,1} = caseBlock;
-    end
+	end
+	caseSeq4WithFreq;
+
 end
 
 function [singleAlleleFreq] = getSingleAlleleFreq(seq4, majorAlleleMapping)
@@ -55,8 +57,10 @@ function [refFreq] = findHyplotype(refSeq4WithFreq, patternHyplotypeWithFreq)
 	for i = 1:m
 		aHyplotype = refSeq4WithFreq(i,:);
 		if sum(patternHyplotypeWithFreq(:,1:end-1) ~= aHyplotype(:,1:end-1)) == 0
-			%patternHyplotypeWithFreq
-			%aHyplotype
+
+			patternHyplotypeWithFreq;
+			aHyplotype;
+
 			refFreq = aHyplotype(1, end);
 			break;
 		end

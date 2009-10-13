@@ -15,14 +15,15 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
 blocks = [1 15; 16 55; 60 77];
 
 
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
 
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
+for o = 1: 10
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 
 [caseSeq4 refSeq4] = randomSelect(rawFastaData);
@@ -74,15 +75,15 @@ for i = 1: nS
 end
 sortHomerStatR = sort(StatR.Tp);
 homerAbove95S = sum(StatS.Tp>sortHomerStatR(int8(nS*0.95)));
-figure;
-hold on;
-plot(index1, StatS.Tp, '.r');
-plot(index2, StatR.Tp, '.g');
-legend({'case' 'ref'});
-plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
-xlabel('individual index');
-ylabel('T_r value');
-title('Homer Test');
+% figure;
+% hold on;
+% plot(index1, StatS.Tp, '.r');
+% plot(index2, StatR.Tp, '.g');
+% legend({'case' 'ref'});
+% plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
+% xlabel('individual index');
+% ylabel('T_r value');
+% title('Homer Test');
 
 
 targetR = calcR(caseSeq4, alleleMapping);
@@ -211,9 +212,9 @@ postStatR.Tr = postStatR.Tr/sqrt(Len*(Len-1)/2);
 sortPostStatR = sort(postStatR.Tr);
 postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
 
-plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
-plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
-plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
+% plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
+% plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
+% plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
 preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/77;
 postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/77/77;
 
@@ -232,3 +233,6 @@ fclose(f);
 diary off;
 
 save('finalResult.mat', 'finalResult');
+
+o = o+1;
+end
