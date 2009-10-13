@@ -7,16 +7,6 @@ classdef InnerBlockLearner
     methods
         function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)    
         %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-            %clear the static objects
-            clear; 
-            cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
-
-            if nargin == 0
-                rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
-                [caseSeq4 refSeq4] = randomSelect(rawFastaData);    
-                blocks = [1 15; 16 55; 60 77];
-            end
-
             [nBlock tmp] = size(blocks);
 
             nS = length(caseSeq4);
@@ -76,6 +66,7 @@ classdef InnerBlockLearner
         end
         function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refcaseFreq, alleleMapping, alpha)
             %alpha is the weight of r square in the learing process
+            disp 'hello';
             if nargin == 5
                 alleleMapping = getMajorAllele(refSeq4);
                 alpha = 0.6;
@@ -88,7 +79,7 @@ classdef InnerBlockLearner
             expT = 1.0e-5;
 
             %% learning algorithm
-            maxIt = 1e5;
+            maxIt = 1e0;
             itr = 0;
 
             targetSeq = blockReconstruct(caseBlock, caseFreq);
