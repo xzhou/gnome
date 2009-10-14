@@ -6,7 +6,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targ
     
     %TODO calculate the size
     expT = numel(targetR)/2*1e-10;
-    maxIT = 100000;
+    maxIT = 10000;
     
     [currentQuality currentR] = blockEvaluateSeq(targetRs, currentSeq, alleleMapping, blocks, newBlock, smallFilter);
     initSignRate = blockSignRate(targetR, currentR, blocks, newBlock);

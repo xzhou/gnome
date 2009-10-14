@@ -161,7 +161,7 @@ blocks = [blocks, zeros(m, 1)];
 [m n] = size(blocks);
 finalResult = zeros(m, m);
 
-trials = 10;
+trials = 100;
 
 f = fopen('result.txt', 'w');
 
