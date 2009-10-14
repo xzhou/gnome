@@ -33,6 +33,22 @@ classdef InnerBlockHelp
                 end
             end
         end
+        function [signRate] = calcSignRate(caseR, refR)
+            [mc nc] = size(caseR);
+            [mr nr] = size(refR);
+            if mc ~= mr || nc ~= nr
+                e = MException('InnerBlockHelp:calcSingRate', 'inconsistent');
+                throw(e);
+            end
+            
+            caseSign = sign(caseR);
+            refSign = sign(refR);
+            
+            mix = caseSign.*refSign;
+            mix(logical(eye(mc))) = -2;
+            n = sum(sum(mix>=0));
+            signRate = n*1.0/mc/(mc-1);
+        end
     end
 end
 

@@ -12,7 +12,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     expT = 1.0e-5;
     
     %% learning algorithm
-    maxIt = 1e5;
+    maxIt = 1e4;
     itr = 0;
     
     targetSeq = blockReconstruct(caseBlock, caseFreq);
@@ -70,6 +70,9 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     result.refFreq = refFreq;
     result.refcaseFreq = refcaseFreq;
     result.refBlock = refBlock;
+    
+    result.initSignRate = InnerBlockHelp.calcSignRate(caseR, refR);
+    result.finalSignRate = InnerBlockHelp.calcSignRate(caseR, currentR);
 
     %calculate the frequency distance
     a = sum(abs(result.refcaseFreq - result.finalFreq));
