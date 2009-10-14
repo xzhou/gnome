@@ -150,12 +150,12 @@ preAbove95S = sum(preStatS.Tr>sortPreStatR(int8(nS*0.95)));
 
 %Some problems happens here about blocks??
 
-% %for blocks larger than 3
-% blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
-% [m n] = size(blocks);
-% %add learning marker
-% blocks = [blocks, zeros(m, 1)];
-% %blocks = blocks(blocks(:,3)>=3, :);
+%for blocks larger than 3
+blocks = [blocks blocks(:,2) - blocks(:,1) + 1];
+[m n] = size(blocks);
+%add learning marker
+blocks = [blocks, zeros(m, 1)];
+%blocks = blocks(blocks(:,3)>=3, :);
 
 
 [m n] = size(blocks);
