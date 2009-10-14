@@ -49,14 +49,14 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
         fprintf(1, '\n************ learning block %d ***********\n', i);
         parfor k = 1:nRepeat
             [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
-            [bResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping,1);
+            %[bResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping,1);
             try
                 result{i, k} = aResult;
             catch exception
                 fprintf(1, 'error\n');
                 rethrow(exception);
             end
-            fprintf(1, 'block = %d repeat = %d \t a = %f\n',i, k, aResult.fDistance);
+            fprintf(1, 'block = %d repeat = %d a = %f initSR = %f, finalSR = %f\n',i, k, aResult.fDistance, aResult.initSignRate, aResult.finalSignRate);
         end
     end
     %save('result.mat', 'result');
