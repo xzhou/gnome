@@ -15,8 +15,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
 blocks = [1 15; 16 59; 60 77];
 
 
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
 
@@ -161,7 +161,7 @@ blocks = [blocks, zeros(m, 1)];
 [m n] = size(blocks);
 finalResult = zeros(m, m);
 
-trials = 100;
+trials = 15;
 
 f = fopen('result.txt', 'w');
 
@@ -170,7 +170,50 @@ bufferMatrix = zeros(Len, Len, trials);
 
 %% inner block learning
 currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
-initCaseSeq = currentSeq;
+%initCaseSeq = currentSeq;
+%% Generate start point accoring to ref
+newCurrentSeq = zeros(nS, Len);
+currentBlockFreqInfo = cell(nBlock, 1);
+parfor i = 1:nBlock
+	currentBlockFreqInfo{i,1} = getBlockFreq(currentSeq, blocks(i,:));
+end
+currentMatchedRef = blockCheck(currentBlockFreqInfo, refBlockFreqInfo, blocks);
+currentMatchedCase = blockCheck(currentBlockFreqInfo, caseBlockFreqInfo, blocks);
+
+for i = 1:nBlock      
+    currentMatchedRef{i, 1} = currentMatchedRef{i,1}(1:end-2, :);
+    for j = 1 : nS
+        tempRefSeq4 = refSeq4(:, blocks(i,1):blocks(i,2));
+        k = 1; 
+        found = 0;
+        while ((k<=length(currentMatchedRef{i,1}(:,1))&&(found == 0)))
+            found = isequal(tempRefSeq4(j,:), currentMatchedRef{i,1}(k, 1:end-2));
+            k = k+1;
+        end
+        if ((found == 1)&&(currentMatchedRef{i,1}(k-1, end-1)~=0))
+            newCurrentSeq(j, blocks(i,1):blocks(i,2)) = currentMatchedRef{i,1}(k-1, 1:end-2);
+            currentMatchedRef{i,1}(k-1, end-1) = currentMatchedRef{i,1}(k-1, end-1)-1;
+            currentMatchedRef{i,1}(k-1, end) = currentMatchedRef{i,1}(k-1, end)-1;
+        else
+            disBetweenSeq = zeros(length(currentMatchedRef{i,1}), 1);
+            for l = 1 : length(currentMatchedRef{i,1}(:,1))
+                if ((currentMatchedRef{i,1}(l,end-1))>(currentMatchedRef{i,1}(l, end)))
+                    disBetweenSeq(l,1) = sum(tempRefSeq4(j,:) == currentMatchedRef{i,1}(l, 1:end-2));
+                end
+            end
+            [maxDisSum,maxDisIdx] = max(disBetweenSeq(:,1));
+            newCurrentSeq(j, blocks(i,1):blocks(i,2)) = currentMatchedRef{i,1}(maxDisIdx, 1:end-2);
+            currentMatchedRef{i,1}(maxDisIdx, end-1) = currentMatchedRef{i,1}(maxDisIdx, end-1)-1;
+        end
+    end
+end
+                    
+            
+            
+        
+
+
+
 finalTargetR = calcR(currentSeq, alleleMapping);
 
 for i = 1:(m-1)
@@ -180,7 +223,7 @@ for i = 1:(m-1)
         block2 = blocks(j,:);
         if(block1(1,3) >= block2(1,3))
             block1(1,4) = 1;
-            currentSeq = shuffleNewBlock(currentSeq, block2);
+            %currentSeq = shuffleNewBlock(currentSeq, block2);
             parfor t = 1:trials
                 [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block1, block2, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
@@ -191,7 +234,7 @@ for i = 1:(m-1)
             end
         else
             block2(1,4) = 1;
-            currentSeq = shuffleNewBlock(currentSeq, block1);
+            %currentSeq = shuffleNewBlock(currentSeq, block1);
             parfor t = 1:trials
                 [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block2, block1, alleleMapping, 0.01);
                 bufferMatrix(:,:,t) = sign(finalR.*blockMask);
@@ -201,6 +244,7 @@ for i = 1:(m-1)
                 end
             end
         end
+
 
         %for max recover rate
         [maxVal, maxIdx] = max(blockRate(:,1));
@@ -262,6 +306,7 @@ save('finalResult.mat', 'finalResult');
 save('caseSeq4.mat', 'caseSeq4');
 save('refSeq4.mat', 'refSeq4');
 save('finalTargetR.mat', 'finalTargetR');
+
 
 %o = o+1;
 %end
