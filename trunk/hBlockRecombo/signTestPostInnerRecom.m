@@ -169,15 +169,8 @@ f = fopen('result.txt', 'w');
 bufferMatrix = zeros(Len, Len, trials);
 
 %% inner block learning
-
-
-
-%% 
-%currentSeq = caseSeq4;
-%currentSeq = refSeq4;
-% currentSeq = afterInnerRecomboSeq;
-
 currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
+initCaseSeq = currentSeq;
 finalTargetR = calcR(currentSeq, alleleMapping);
 
 for i = 1:(m-1)
@@ -209,7 +202,10 @@ for i = 1:(m-1)
             end
         end
 
-        [maxVal, maxIdx] = max(blockRate(:,2));
+        %for max recover rate
+        [maxVal, maxIdx] = max(blockRate(:,1));
+        
+        %optimal
         [minQ, minIdx] = min(blockRate(:,2));
         maxQ = min(blockRate(:,2));
         
@@ -218,13 +214,14 @@ for i = 1:(m-1)
         
         finalResult(i,j) = maxVal;
         
-        if maxQ == blockRate(maxIdx, 2)
-            fprintf(f, '[%d-%d]x[%d-%d]\t = %f\t YES\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-            fprintf(1, '[%d-%d]x[%d-%d]\t = %f\t YES\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-        else
-            fprintf(f, '[%d-%d]x[%d-%d]\t = %f\t NO\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-            fprintf(1, '[%d-%d]x[%d-%d]\t = %f\t NO\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-        end
+        fprintf(1, 'optimal r dist = %f, signRate = %f\n', blockRate(minIdx,2),blockRate(minIdx,1));
+%         if maxQ == blockRate(maxIdx, 2)
+%             fprintf(f, '[%d-%d]x[%d-%d]\t = %f\t YES\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
+%             fprintf(1, '[%d-%d]x[%d-%d]\t = %f\t YES\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
+%         else
+%             fprintf(f, '[%d-%d]x[%d-%d]\t = %f\t NO\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
+%             fprintf(1, '[%d-%d]x[%d-%d]\t = %f\t NO\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
+%         end
     end
 end
 
