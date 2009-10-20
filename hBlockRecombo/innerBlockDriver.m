@@ -1,4 +1,4 @@
-function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)    
+function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks, verbose)    
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
 %     clear;
    % cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
@@ -7,6 +7,10 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
         rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
         [caseSeq4 refSeq4] = randomSelect(rawFastaData);    
         blocks = [1 15; 16 55; 60 77];
+    end
+    
+    if nargin == 3
+        verbose = false;
     end
  
     [nBlock tmp] = size(blocks);
@@ -46,8 +50,9 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
         refSeq = refSeq4(:,a:b);
         caseSeq = caseSeq4(:,a:b);
         alleleMapping = getMajorAllele(refSeq);
-        fprintf(1, '\n************ learning block %d ***********\n', i);
-       
+        if verbose
+            fprintf(1, '\n************ learning block %d ***********\n', i);
+        end
         parfor k = 1:nRepeat
             [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
             %[bResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping,1);
@@ -57,7 +62,9 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks)
                 fprintf(1, 'error\n');
                 rethrow(exception);
             end
-            fprintf(1, 'block = %d repeat = %d a = %f initSR = %f, finalSR = %f\n',i, k, aResult.fDistance, aResult.initSignRate, aResult.finalSignRate);
+            if verbose
+                fprintf(1, 'block = %d repeat = %d a = %f initSR = %f, finalSR = %f\n',i, k, aResult.fDistance, aResult.initSignRate, aResult.finalSignRate);
+            end
         end
     end
     %save('result.mat', 'result');
