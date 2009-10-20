@@ -1,6 +1,6 @@
 function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, targetSeq, currentSeq, blocks, newBlock, alleleMapping, smallFilter)
 
-    debugMode = 1;
+    debugMode = false;
 
     targetRs = targetR.*targetR;
     
@@ -46,5 +46,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targ
     finalQual = currentQuality;
     finalR = currentR;
     finalSignRate = signRate;
-    fprintf(1, 'initQ = %.20f \tfinalQ = %.20f initSR = %f \tfinalSR = %f\n', initQuality, finalQual, initSignRate, finalSignRate);
+    if debugMode
+        fprintf(1, 'initQ = %.20f \tfinalQ = %.20f initSR = %f \tfinalSR = %f\n', initQuality, finalQual, initSignRate, finalSignRate);
+    end
 end
