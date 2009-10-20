@@ -57,7 +57,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
             currentRs = newRs;
             currentR = newR;
             currentP = newP;
-            %fprintf(1, 'itr = %d\t newQuality = %.15f\n', itr, newQuality);
+            fprintf(1, 'itr = %d\t newQuality = %.15f\n', itr, newQuality);
         else
             %do nothing
         end
