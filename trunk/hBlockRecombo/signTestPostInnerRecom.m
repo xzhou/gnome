@@ -11,29 +11,46 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
             54 56; 57 57; 58 58; 59 59; 60 60; 61 61; 62 62; 63 63; 64 64; 65 65; 66 66;
             67 67; 68 68; 69 69; 70 70;
             71 77];
-        
-blocks = [1 15; 16 59; 60 77];
+       
+blocks = [1 15; 16 59; 60 77];            
+
+blocks = [1 24; 25 45; 46 111; 112 174];      
 
 
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
 
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-%for o = 1: 10
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+rawFastaData174 = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
 for iBigRepeat = 1:1
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
     
-    [caseSeq4 refSeq4] = randomSelect(rawFastaData);
-
-
-    nS = length(caseSeq4);
+    
+    %     %for 77 SNPs randomly select case and reference
+    %     [caseSeq4 refSeq4] = randomSelect(rawFastaData);
+    [caseSeq4 refSeq4] = randomSelect(rawFastaData174);
+    
+    
+    
+%     caseFasta = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
+%     refFasta = fastaread('chr10_FGFR2_200kb_phased_yri.fasta');
+%     
+    nS = length(caseSeq4(:,1));
     Len = length(caseSeq4(1,:));
+%     caseSeq4 = zeros(nS, Len);
+%     refSeq4 = zeros(nS,Len);
+%     
+%     for i = 1 :nS
+%         caseSeq4(i, :) = nt2int(caseFasta(i).Sequence) -1;
+%         refSeq4(i,:) = nt2int(refFasta(i).Sequence) -1;
+%     end
 
 
     %% test the block structure
@@ -284,8 +301,8 @@ for iBigRepeat = 1:1
     % plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
     % plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
     % plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
-    preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/76;
-    postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/76/77;
+    preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
+    postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
     
     
     fprintf (1, ' PreSignRate = %f\n ', preSignRate);
@@ -308,7 +325,3 @@ save('finalResult.mat', 'finalResult');
 save('caseSeq4.mat', 'caseSeq4');
 save('refSeq4.mat', 'refSeq4');
 save('finalTargetR.mat', 'finalTargetR');
-
-
-%o = o+1;
-%end

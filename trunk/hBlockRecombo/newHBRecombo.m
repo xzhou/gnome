@@ -1,6 +1,6 @@
 function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, targetSeq, currentSeq, blocks, newBlock, alleleMapping, smallFilter)
 
-    debugMode = false;
+    debugMode = true;
 
     targetRs = targetR.*targetR;
     
