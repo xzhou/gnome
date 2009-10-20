@@ -26,8 +26,9 @@ diary hbrecombo.log;
 %for o = 1: 10
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 
-for i = 1:1
-
+for iBigRepeat = 1:1
+    fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
+    
     [caseSeq4 refSeq4] = randomSelect(rawFastaData);
 
 
@@ -285,7 +286,8 @@ for i = 1:1
     % plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
     preSignRate = sum(sum(sign(targetR)==sign(refR)))/77/76;
     postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/76/77;
-
+    
+    
     fprintf (1, ' PreSignRate = %f\n ', preSignRate);
     fprintf (1, 'PostSignRate = %f\n ', postSignRate);
 
