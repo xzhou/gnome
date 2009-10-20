@@ -12,7 +12,7 @@ seqAll(end) = [];
 seqAll(end) = [];
 end
 
-RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));
+RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));   %reset the random number generator
 
 totalLength = length(seqAll);
 
