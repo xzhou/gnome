@@ -14,11 +14,11 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
        
 blocks = [1 15; 16 59; 60 77];            
 
-blocks = [1 24; 25 45; 46 111; 112 174];      
+%blocks = [1 24; 25 45; 46 111; 112 174];      
 
 
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
 %cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
@@ -27,7 +27,7 @@ delete('hbrecombo.log');
 diary hbrecombo.log;
 
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
-rawFastaData174 = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
+%rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
 for iBigRepeat = 1:1
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
@@ -35,7 +35,7 @@ for iBigRepeat = 1:1
     
     %     %for 77 SNPs randomly select case and reference
     %     [caseSeq4 refSeq4] = randomSelect(rawFastaData);
-    [caseSeq4 refSeq4] = randomSelect(rawFastaData174);
+    [caseSeq4 refSeq4] = randomSelect(rawFastaData);
     
     
     
@@ -242,7 +242,7 @@ for iBigRepeat = 1:1
                 block1(1,4) = 1;
                 %currentSeq = shuffleNewBlock(currentSeq, block2);
                 parfor t = 1:trials
-                    [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block1, block2, alleleMapping, 0.01);
+                    [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, newCurrentSeq, block1, block2, alleleMapping, 0.01);
                     bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                     blockRate(t,:) = [finalSignRate finalQual];
                     if finalQual == 0 && finalSignRate ~= 1.0
@@ -253,7 +253,7 @@ for iBigRepeat = 1:1
                 block2(1,4) = 1;
                 %currentSeq = shuffleNewBlock(currentSeq, block1);
                 parfor t = 1:trials
-                    [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, currentSeq, block2, block1, alleleMapping, 0.01);
+                    [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, newCurrentSeq, block2, block1, alleleMapping, 0.01);
                     bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                     blockRate(t,:) = [finalSignRate finalQual];
                     if finalQual == 0 && finalSignRate ~= 1.0
