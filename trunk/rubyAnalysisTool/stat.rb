@@ -1,6 +1,13 @@
-output = File.open('174.data','w')
+#!/usr/bin/env ruby
 
-File.open("174.log", 'r') do |file|
+inputFileName = ARGV[0]
+outputFileName = ARGV[1]
+puts inputFileName
+puts outputFileName
+
+output = File.open(outputFileName,'w')
+
+File.open(inputFileName, 'r') do |file|
   file.each_line do |line|
     tokens = line.split()
     if tokens.length == 3
