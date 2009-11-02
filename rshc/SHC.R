@@ -4,7 +4,6 @@
 ###############################################################################
 source("rcalc.R")
 
-
 #change 1 and 2 according to the 1 as major and 2 as minor
 majorize <- function(genoData, verbose = F, ...)
 {
@@ -76,7 +75,6 @@ majorize <- function(genoData, verbose = F, ...)
 	mGenoData
 }
 
-
 #calculate real R value using haplotype to see if any imporovements
 calculateRealR <- function(genotype, verbose = F)
 {
@@ -108,13 +106,14 @@ calculateRealR <- function(genotype, verbose = F)
 	}
 	
 	#print(combinedGenotyp)
-	
 	m <- nrow(combinedGenotyp)
 	n <- ncol(combinedGenotyp)
 	
 	r <- matrix(-2, n, n)
 	
 	diag(r) <- 0
+	
+	p00 <- r
 	
 	for(i in seq(1, n-1))
 	{
@@ -145,6 +144,9 @@ calculateRealR <- function(genotype, verbose = F)
 				}
 			}
 			
+			pAB = c00/(c00+c01+c10+c11)
+			p00[i,j] <- p00[j,i] <-  pAB
+						
 			c0x <- c00 + c01
 			c1x <- c10 + c11
 			cx0 <- c00 + c10
@@ -162,7 +164,6 @@ calculateRealR <- function(genotype, verbose = F)
 				r[j,i] <- r[i,j] <- D/sqrt(L)
 				#cat(i,j, r[i,j], "\n")
 			}
-			
 		}
 	}
 	
@@ -172,8 +173,9 @@ calculateRealR <- function(genotype, verbose = F)
 	}
 	
 	diag(r) <- NA
-	
-	r
+	diag(p00) <- NA
+	retL <- list("r" = r, "p00"=p00)
+	retL
 }
 
 diffR <- function(estR, realR)
@@ -402,27 +404,6 @@ calculateRValues <- function(genoData)
 	#stop("Debug check @calculateRValue")
 	
 	rValue <- retValue$r
-}
-
-
-calculatePairwiseAlleleFreq <- function(genotype)
-{
-	genotype <- majorize(genotype)
-	
-	m <- nrow(genotype)
-	n <- ncol(genotype)
-	
-	
-	
-	for(i in 1:(n-1))
-	{
-		for(j in (i+1):n)
-		{
-			#TODO add code here for pairwise genotype frequency
-			
-		}
-	}
-	
 }
 
 
@@ -838,7 +819,6 @@ stocasticHillClim <- function(var,...)
 			#cat(t, "p =", p)
 		}
 	}
-	
 }
 
 hillClimb <- function(var, targetRValues, max_it, nIndividuals, nSnps)
@@ -872,8 +852,7 @@ hillClimb <- function(var, targetRValues, max_it, nIndividuals, nSnps)
 	}
 }
 
-
-shcMain <- function(targetGenotypeFileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", max_it = 10000000, nIndividuals = 100, nSnps = 10)
+shcMain <- function(targetGenotypeFileName = "../data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", max_it = 10000000, nIndividuals = 100, nSnps = 10)
 {	
 	#-------------------------VARIABLES--------------------------------
 	#var is the global configuration variable

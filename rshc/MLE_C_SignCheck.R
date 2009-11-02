@@ -6,6 +6,8 @@
 source("SHC.R")
 library(mygenetics)
 # read the dump R value
+
+#
 readDumpRValue <- function()
 {
 	x <- read.table(file = "../data/sim_4000seq/80SNP_CEU_sim_4000seq.freq.txt", 
@@ -15,8 +17,7 @@ readDumpRValue <- function()
 	
 	nSnps = max(c[,2])
 	
-	
-	m = ncol(c)
+	m = nrow(c)
 	
 	dumpR = matrix(0.0, nSnps, nSnps)
 	for(k in 1:m)
@@ -30,6 +31,8 @@ readDumpRValue <- function()
 	dumpR
 }
 
+
+#tested correct, freeze
 readMLECounts <- function(verbose = F)
 {
 	x = read.table("../convexAnalysis/c11m.out")
@@ -121,6 +124,8 @@ calculateRValue <- function(pA, pB, c11m, c12m, c13m, c21m, c22m, c23m, c31m, c3
 	n3x3[3, 2] = c32m
 	n3x3[3, 3] = c33m
 	
+	#print(n3x3)
+	
 	loglik <- function(pAB, ...)
 	{
 		(2*n3x3[1,1]+n3x3[1,2]+n3x3[2,1])*log(pAB) +
@@ -174,9 +179,7 @@ main <- function()
 	c32m <- mleC$c32m
 	c33m <- mleC$c33m
 	pA <- mleC$pA
-	
-	print(c11m)
-	stop()
+
 	
 	m = nrow(c11m)
 	n = ncol(c11m)
@@ -188,6 +191,15 @@ main <- function()
 	{
 		for(j in (i+1):m)
 		{
+			#DEBUG
+#			if(i == 8 && j == 64)
+#			{
+#				cat("\n",
+#					c11m[i,j], c12m[i,j], c13m[i,j], "\n",
+#					c21m[i,j], c22m[i,j], c23m[i,j], "\n",
+#					c31m[i,j], c32m[i,j], c33m[i,j], "\n")
+#			}
+			
 			ret <- calculateRValue(pA[1,i], pA[1,j], 
 					c11m[i,j], c12m[i,j], c13m[i,j],
 					c21m[i,j], c22m[i,j], c23m[i,j],
@@ -199,11 +211,13 @@ main <- function()
 	
 	diag(mleR) <- NA
 	
-	print(mleR)
-	
-	stop()
+	#print(mleR)
 	
 	dumpR <- readDumpRValue()
+	
+	save(file = "mleR.RData", mleR)
+	save(file = "dumpR.RData", dumpR)
+	
 	recoverRate <- singRecoverate(mleR, dumpR)
 	
 	cat("recover rate = ", recoverRate, "\n")
@@ -233,8 +247,12 @@ test <- function()
 #	}
 }
 
-debug(main)
+#debug(calculateRValue)
 main()
+
+#debug(readDumpRValue)
+#x <- readDumpRValue()
+#print(x)
 
 
 

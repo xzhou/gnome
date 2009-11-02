@@ -7,7 +7,6 @@
 library(mygenetics)
 calcAllR <- function(g1,...)
 {
-
 	gvars <- sapply( g1, function(x) (is.genotype(x) && nallele(x)==2) )
 	if(any(gvars==FALSE))
 	{
@@ -21,7 +20,7 @@ calcAllR <- function(g1,...)
 	}
 	#do some thing here, I must try to recover those error
 	#those column is invalid
-	fnames = which(!gvars)
+	#fnames = which(!gvars)
 	
 	P <- matrix(nrow=ncol(g1),ncol=ncol(g1))
 	
@@ -57,7 +56,8 @@ calcAllR <- function(g1,...)
 	)
 	retval
 }
-	
+
+
 	
 rcalc <- function(g1, g2, ...)
 {

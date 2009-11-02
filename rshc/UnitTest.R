@@ -29,6 +29,3 @@ equalTest <- function()
 }
 
 #testCalculateRealR()
-
-
-
