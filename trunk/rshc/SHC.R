@@ -571,7 +571,7 @@ checkFinalPop <- function()
 }
 
 # read the file from ped file and convert it to standard genotype matrix
-readGenotypeFromFastaFile <- function(fileName = "../GenotypeLearnning/data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
+readGenotypeFromFastaFile <- function(fileName = "../data/sim_4000seq/80SNP_CEU_sim_4000seq.12encode", nIndividuals = -1, nSnps = -1)
 {
 	genoData <- read.table(fileName,
 			header = FALSE)
