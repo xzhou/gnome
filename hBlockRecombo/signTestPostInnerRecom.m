@@ -2,7 +2,15 @@
 %We will try to relax the consistency model for free recombination between
 %any blocks to see if we can recover more signs;
 
+try
+    addpath '/home/xzhou/research_linux/gnome/workspace/hBlockRecombo'
+    addpath '/home/xzhou/research_linux/gnome/workspace/MyDrTest'
+catch exception
+    %do nothing
+end
+
 %start computing slaves
+
 startParallel(2);
 
 blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16; 
@@ -18,8 +26,9 @@ blocks = [1 24; 25 45; 46 111; 112 174];
 
 
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
-%cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+
 
 [nBlock tmp] = size(blocks);
 
@@ -191,7 +200,6 @@ for iBigRepeat = 1:1
     %% inner block learning
     currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
 
-
     %initCaseSeq = currentSeq;
     %% Generate start point accoring to ref
     newCurrentSeq = zeros(nS, Len);
@@ -229,7 +237,6 @@ for iBigRepeat = 1:1
             end
         end
     end
-
 
     finalTargetR = calcR(currentSeq, alleleMapping);
     

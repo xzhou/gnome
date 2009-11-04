@@ -74,7 +74,6 @@ classdef InnerBlockLearner
                 alpha = 0.6;
             end
 
-
             %defines the randomness of searching strategy
             expT = 1.0e-5;
 
