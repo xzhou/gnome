@@ -19,18 +19,20 @@ function [retval] = mleR(pA, pB, n3x3)
     %maxium likelyhood function
     %matlab support closure :-)
     function [v] = mleFunc(pAB)
-        v = (2*n3x3(1,1)+n3x3(1,2)+n3x3(2,1))*log(pAB) +...
-			(2*n3x3(1,3)+n3x3(1,2)+n3x3(2,3))*log(pA-pAB) +...
-			(2*n3x3(3,1)+n3x3(2,1)+n3x3(3,2))*log(pB-pAB) +...
-			(2*n3x3(3,3)+n3x3(3,2)+n3x3(2,3))*log(1-pA-pB+pAB) +... 
+        v = (2*n3x3(1,1)+n3x3(1,2)+n3x3(2,1))*log(pAB) + ...
+			(2*n3x3(1,3)+n3x3(1,2)+n3x3(2,3))*log(pA-pAB) + ...
+			(2*n3x3(3,1)+n3x3(2,1)+n3x3(3,2))*log(pB-pAB) + ...
+			(2*n3x3(3,3)+n3x3(3,2)+n3x3(2,3))*log(1-pA-pB+pAB) + ... 
 			n3x3(2,2)*log(pAB*(1-pA-pB+pAB) + (pA-pAB)*(pB-pAB));
         %NOTE: we will call fminbnb to maximize mle
-        v = -v;
+        %v = -v;
     end
 
-    [x pAB] = fminbnd(@mleFunc, Dmin-eps, Dmax+eps);
+    [x fmin] = fminbnd(@mleFunc, Dmin, Dmax)
     
-    estD = pAB - pA*pB;
+    pAB = -fmin;
+    
+    estD = pAB - pA*pB
     
     %D prime
     if(estD > 0)
