@@ -12,13 +12,13 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
             67 67; 68 68; 69 69; 70 70;
             71 77];
        
-blocks = [1 15; 16 59; 60 77];            
+%blocks = [1 15; 16 59; 60 77];            
 
-%blocks = [1 24; 25 45; 46 111; 112 174];      
+blocks = [1 24; 25 45; 46 111; 112 174];      
 
 
-cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+%cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
+cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
 %cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
 
 [nBlock tmp] = size(blocks);
@@ -26,15 +26,14 @@ cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
-%rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
+%rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
 for iBigRepeat = 1:1
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
     
     
-    %     %for 77 SNPs randomly select case and reference
-    %     [caseSeq4 refSeq4] = randomSelect(rawFastaData);
+%      for 77 SNPs randomly select case and reference
     [caseSeq4 refSeq4] = randomSelect(rawFastaData);
     
     
@@ -116,15 +115,15 @@ for iBigRepeat = 1:1
     end
     sortHomerStatR = sort(StatR.Tp);
     homerAbove95S = sum(StatS.Tp>sortHomerStatR(int8(nS*0.95)));
-    % figure;
-    % hold on;
-    % plot(index1, StatS.Tp, '.r');
-    % plot(index2, StatR.Tp, '.g');
-    % legend({'case' 'ref'});
-    % plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
-    % xlabel('individual index');
-    % ylabel('T_r value');
-    % title('Homer Test');
+    figure;
+    hold on;
+    plot(index1, StatS.Tp, '.r');
+    plot(index2, StatR.Tp, '.g');
+    legend({'case' 'ref'});
+    plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
+    xlabel('individual index');
+    ylabel('T_r value');
+    title('Homer Test');
 
 
     targetR = calcR(caseSeq4, alleleMapping);
@@ -232,6 +231,8 @@ for iBigRepeat = 1:1
 
 
     finalTargetR = calcR(currentSeq, alleleMapping);
+    
+    targetR = fix(targetR.*10000)./10000;
 
     for i = 1:(m-1)
         for j = i+1:m
@@ -298,9 +299,9 @@ for iBigRepeat = 1:1
     sortPostStatR = sort(postStatR.Tr);
     postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
 
-    % plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
-    % plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
-    % plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
+    plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
+    plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
+    plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
     preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
     postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
     

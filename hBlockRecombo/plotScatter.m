@@ -5,7 +5,7 @@ if nargin <= 4
 	figTitle = 'unknown title';
 end
 
-nS = length(caseSeq4);
+nS = length(caseSeq4(:,1));
 Len = length(caseSeq4(1,:));
 
 alleleMapping = getMajorAllele(refSeq4);
