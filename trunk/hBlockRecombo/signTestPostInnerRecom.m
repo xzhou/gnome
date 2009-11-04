@@ -26,8 +26,15 @@ blocks = [1 24; 25 45; 46 111; 112 174];
 
 
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
-%cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
-cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+%for different platform
+
+try
+    cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+    disp 'WINDOWS'
+catch e
+    disp 'LINUX'
+    cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+end
 
 
 [nBlock tmp] = size(blocks);
