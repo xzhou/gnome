@@ -127,6 +127,7 @@ for iBigRepeat = 1:1
 
 
     targetR = calcR(caseSeq4, alleleMapping);
+	targetR = fix(targetR.*10000)./10000;
     refR = calcR(refSeq4, alleleMapping);
 
     preTargetR = abs(targetR).*sign(refR);
@@ -232,7 +233,6 @@ for iBigRepeat = 1:1
 
     finalTargetR = calcR(currentSeq, alleleMapping);
     
-    targetR = fix(targetR.*10000)./10000;
 
     for i = 1:(m-1)
         for j = i+1:m
