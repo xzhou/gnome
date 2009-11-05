@@ -12,9 +12,10 @@ function [r pA] = estimateR(genotypeSeq)
         for j = i+1:n
             p1 = pA(i);
             p2 = pA(j);
-            n3x3 = counts(i,j,:,:);
+            n3x3 = reshape(counts(i,j,:,:), 3, 3);
             x = mleR(p1, p2, n3x3);
             r(i,j) = x.r;
+            r(j,i) = x.r;
         end
     end
 end
@@ -22,7 +23,7 @@ end
 function [result] = getCounts(genotypeSeq)
     [m n] = size(genotypeSeq);
 
-    pA = zeros(n);      %single allele frequency
+    pA = zeros(n,1);      %single allele frequency
     
     % 9 genotype counts, eg. 
     % counts(1,1) 
@@ -35,8 +36,8 @@ function [result] = getCounts(genotypeSeq)
             seqB = genotypeSeq(:,j);
             
             % some redundancy here
-            pA(i) = (2*sum(seqA == 0) + sum(seqA == 1))/n;
-            pA(j) = (2*sum(seqB == 0) + sum(seqB == 1))/n;
+            pA(i) = (2*sum(seqA == 0) + sum(seqA == 1))/2.0/m;
+            pA(j) = (2*sum(seqB == 0) + sum(seqB == 1))/2.0/m;
             
             % for pairwise
             for k = 1:n
