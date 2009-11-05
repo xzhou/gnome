@@ -3,10 +3,10 @@ function [retval] = mleR(pA, pB, n3x3)
     [m n] = size(n3x3);
     if m ~= 3 || n ~= 3
         disp 'error'
-        e = MException('mleR:dim', 'in consistent dimenstion');
+        e = MException('mleR:dim', 'xzhou: in consistent dimenstion');
         throw(e);
     end
-    
+
     pa = 1 - pA;
     pb = 1 - pB;
     

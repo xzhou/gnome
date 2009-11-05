@@ -20,10 +20,11 @@ function [] = recombMain()
     
     %% reading genotype data
     fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
+    
     genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
     
     %% test
-    totalR = estimateR(genotypeAll);
+    [totalR pA] = estimateR(genotypeAll);
     return;
     
     %% for experiments
