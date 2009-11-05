@@ -5,7 +5,7 @@ function [r pA] = estimateR(genotypeSeq)
     %allocate the data structure
     result = getCounts(genotypeSeq);
     
-    pA = result.pA
+    pA = result.pA;
     counts = result.counts;
     
     for i = 1:n-1
