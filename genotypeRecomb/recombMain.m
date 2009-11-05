@@ -18,7 +18,14 @@ function [] = recombMain()
         disp 'LINUX'
     end
     
+    %% reading genotype data
     fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
     genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
     
+    %% for experiments
+    [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
+    
+    %%calculate target estimated R
+    targetR = estimateR(caseSeq);
+    initRefR = estimateR(refSeq);
 end
