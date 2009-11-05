@@ -9,14 +9,16 @@ classdef genotypeHelpFuncs
             majorAllele = getMajorAllele(seq4);
             
             [m n] = size(seq4);
-            if mod(m, 2) ~= 0
+            if(mod(m, 2) ~= 0)
                 disp 'unpaired sequence'
-                e = MException('readGenotypeFromFasta:m', 'unpaired sequence');
-                throw(e)
+                m = m - 1;
+                %e = MException('readGenotypeFromFasta:m', 'unpaired sequence');
+                %throw(e)
             end
             
-            nIndividual = m/2;
-            genotype = matrix(nIndividual, n);
+            nIndividual = round(m/2);
+            
+            genotype = zeros(nIndividual, n);
             for i = 1:nIndividual           
                for j = 1:n
                    a = seq4(i, j);%the first allele
