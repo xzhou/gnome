@@ -22,6 +22,10 @@ function [] = recombMain()
     fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
     genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
     
+    %% test
+    totalR = estimateR(genotypeAll);
+    return;
+    
     %% for experiments
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
     
