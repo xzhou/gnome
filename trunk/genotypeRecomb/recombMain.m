@@ -18,13 +18,19 @@ function [] = recombMain()
         disp 'LINUX'
     end
     
+    try
+        startParallel(2);
+    catch e
+        disp "failed to run in parallele"
+    end
+    
     %% reading genotype data
     fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
     
     genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
     
     %% test
-    [totalR pA] = estimateR(genotypeAll);
+    [totalR pA counts] = estimateR(genotypeAll);
 %    return;
     
     %% for experiments
