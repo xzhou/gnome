@@ -1,4 +1,4 @@
-function [r pA] = estimateR(genotypeSeq)
+function [r pA, counts] = estimateR(genotypeSeq)
     [m n] = size(genotypeSeq);
     
     r = zeros(n, n);    %pairwise allele requency
@@ -15,7 +15,7 @@ function [r pA] = estimateR(genotypeSeq)
             n3x3 = reshape(counts(i,j,:,:), 3, 3);
             x = mleR(p1, p2, n3x3);
             r(i,j) = x.r;
-            r(j,i) = x.r;
+            %r(j,i) = x.r;
         end
     end
 end
