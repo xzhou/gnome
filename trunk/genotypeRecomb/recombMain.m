@@ -11,7 +11,7 @@ function [] = recombMain()
     
     %% cd to data
     try
-        cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+         cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
         disp 'WINDOWS'
     catch e
         cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
@@ -25,7 +25,7 @@ function [] = recombMain()
     
     %% test
     [totalR pA] = estimateR(genotypeAll);
-    return;
+%    return;
     
     %% for experiments
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
