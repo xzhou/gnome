@@ -41,9 +41,17 @@ def fasta2ped(fastaFileName, pedFileName):
         pedFile.write("\n")
     pedSequence
     pedFile.close()
-    
+
+
+def convertMID():
+    ceu = "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.mid"
+    yri = "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.mid"
+    fasta2ped(ceu, "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/ceu.ped")
+    fasta2ped(yri, "/home/xzhou/research_linux/gnome/workspace/data/88_77_CEU_YRI_DATA/yri.ped")
+
 if __name__ == '__main__':
-    fastaFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.fasta"
-    pedFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.ped"
-    fasta2ped(fastaFileName, pedFileName)
+    #fastaFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.fasta"
+    #pedFileName = "../../data/sim_4000seq/80SNP_CEU_sim_4000seq.ped"
+    #fasta2ped(fastaFileName, pedFileName)
+    convertMID()
     pass
