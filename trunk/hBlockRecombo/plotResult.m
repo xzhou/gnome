@@ -13,6 +13,5 @@ hold on;
 plot(index1, postS, '.r');
 plot(index2, postR, '.g');
 
-
 end
 

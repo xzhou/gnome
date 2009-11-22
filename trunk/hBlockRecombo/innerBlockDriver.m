@@ -10,7 +10,7 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks, verbose)
     end
     
     if nargin == 3
-        verbose = false;
+        verbose = true;
     end
  
     [nBlock tmp] = size(blocks);
