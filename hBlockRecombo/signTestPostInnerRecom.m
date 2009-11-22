@@ -44,7 +44,7 @@ diary hbrecombo.log;
 %rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
-for iBigRepeat = 1:1
+for iBigRepeat = 1:100
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
     
     
