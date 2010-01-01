@@ -15,7 +15,7 @@ function [r pA, counts] = estimateR(genotypeSeq)
             n3x3 = reshape(counts(i,j,:,:), 3, 3);
             x = mleR(p1, p2, n3x3);
             r(i,j) = x.r;
-            %r(j,i) = x.r;
+            r(j,i) = x.r;
         end
     end
 end
@@ -40,16 +40,15 @@ function [result] = getCounts(genotypeSeq)
             pA(j) = (2*sum(seqB == 0) + sum(seqB == 1))/2.0/m;
             
             % for pairwise
-            for k = 1:n
+            for k = 1:m
                 A = seqA(k);
                 B = seqB(k);
                 counts(i,j,A+1,B+1) = counts(i,j,A+1,B+1) + 1;
-                counts(j,i,A+1,B+1) = counts(j,i,A+1,B+1) + 1;
+                counts(j,i,B+1,A+1) = counts(j,i,B+1,A+1) + 1;
             end
         end
     end
     
     result.pA = pA;
     result.counts = counts;
-    
 end

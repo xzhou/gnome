@@ -29,7 +29,7 @@ function [retval] = mleR(pA, pB, n3x3)
     end
 
     %maximum likelihood estimation with 10 digital precesion
-    pAB = fminbnd(@mleFunc, pmin, pmax, optimset('TolX',1e-10));
+    pAB = fminbnd(@mleFunc, pmin, pmax, optimset('TolX',1e-15));
     
     estD = pAB - pA*pB;
     
