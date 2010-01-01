@@ -24,6 +24,8 @@ classdef genotypeHelpFuncs
                    a = seq4(i, j);%the first allele
                    b = seq4(i+1, j);%the next allele
                    m = majorAllele(j);%the major allele
+                   
+                   %convert to genotype
                    if (a == m && b == m)
                        genotype(i,j) = 0;
                    elseif(a ~= m && b ~= m)

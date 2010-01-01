@@ -31,5 +31,4 @@ for i=1:rows/2
     refGenotype(i,:) = seqAll(selR(i),:);
 end
 
-
 end
