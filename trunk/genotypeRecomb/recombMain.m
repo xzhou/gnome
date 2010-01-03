@@ -18,11 +18,8 @@ function [] = recombMain()
         disp 'LINUX'
     end
     
-    try
-        startParallel(2);
-    catch e
-        disp "failed to run in parallele"
-    end
+    %start slave lab
+    startParallel(2);
     
     %% reading genotype data
     fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
@@ -33,9 +30,9 @@ function [] = recombMain()
     
     genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
     
-    %% test
+    %% init r
     [totalR pA counts] = estimateR(genotypeAll);
-%    return;
+    return;
     
     %% for experiments
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
@@ -55,5 +52,6 @@ function [] = recombMain()
     
     %% doing interblock learning starting from new sequence
     [result] = gInterSeqLearning(caseSeq, caseSeqAfterInnerBlockLearning, blocks, false);
+    
     
 end
