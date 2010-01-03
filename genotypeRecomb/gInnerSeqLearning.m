@@ -55,7 +55,6 @@ function [ seq ] = gInnerSeqLearning( targetSeq, refSeq, blocks, verbose )
       end 
     end
     
-
   end
   
   seq = InnerBlockHelp.recoverCaseSeq(result);
