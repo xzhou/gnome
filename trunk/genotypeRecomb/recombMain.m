@@ -49,10 +49,11 @@ function [] = recombMain()
       end
     end
     
-    %% doing innerblock learning
-    [seq] = gInnerSeqLearning(caseSeq, refSeq, blocks, false);
+    %% doing innerblock learning to approach the frequency
+    [caseSeqAfterInnerBlockLearning] = gInnerSeqLearning(caseSeq, refSeq, blocks, false);
     
-    %% doing interblock learning
     
+    %% doing interblock learning starting from new sequence
+    [result] = gInterSeqLearning(caseSeq, caseSeqAfterInnerBlockLearning, blocks, false);
     
 end
