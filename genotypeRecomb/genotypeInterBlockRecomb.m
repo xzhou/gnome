@@ -10,7 +10,7 @@ function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, allel
     trials = 1000;
     nInterBlockRecomb = 1000;
     alpha = 0.01    %the weight of 
-    %==============end config===============
+    %==============end config==============
     
     [nIndividual nSnps] = size(startingSeq);
 
