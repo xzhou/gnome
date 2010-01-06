@@ -1,4 +1,4 @@
-function [finalSeq finalR finalSignRate finalQual blockMask] = pairGenotypeRecombo(targetR, caseSeq, startingSeq, block1, block2, alleleMapping, alpha)
+function [finalSeq finalR finalSignRate finalQual blockMask] = pairGenotypeRecombo(targetR, caseSeq, startingSeq, block1, block2, alpha)
     %function pairGenotypeRecombo recombine sequences
     %======= config =========
     expT = numel(targetR)/2*1e-10;
@@ -10,7 +10,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = pairGenotypeRecom
     targetRs = targetR.*targetR;
     
     %initialize
-    [currentQuality currentR] = evalGenotypeSeq(targetRs, startingSeq, alleleMapping, block1, block2, alleleMapping, alpha, smallFilter);
+    [currentQuality currentR] = evalGenotypeSeq(targetRs, startingSeq, alleleMapping, block1, block2, alpha, smallFilter);
     initSignRate = blockSignRate(targetR, currentR, block1, block2);
     initQuality = currentQuality;
     
@@ -20,7 +20,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = pairGenotypeRecom
     while t < maxIT
         t = t + 1;
         newSampelSeq = newMutate(currentSeq, block2);
-        [newQuality newR blockMask] = evalGenotypeSeq(targetRs, currentSeq, alleleMapping, block1, block2, alleleMapping, alpha, smallFilter);
+        [newQuality newR blockMask] = evalGenotypeSeq(targetRs, currentSeq, alleleMapping, block1, block2, alpha, smallFilter);
         Qdiff = newQuality - currentQuality;
         if Qdiff < 0
             p = 1/(1+exp(Qdiff/expT));
