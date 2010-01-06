@@ -51,7 +51,7 @@ function [] = recombMain()
     
     
     %% doing interblock learning starting from new sequence
-    [result] = gInterSeqLearning(caseSeq, caseSeqAfterInnerBlockLearning, blocks, false);
+    [result] = genotypeInterBlockRecomb(caseSeq, caseSeqAfterInnerBlockLearning, blocks, false);
     
     
 end
