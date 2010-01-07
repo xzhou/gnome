@@ -13,7 +13,7 @@ function [ result ] = gInnerBlockLearning(caseBlock, caseFreq, refBlock, refFreq
   [refR refF refC] = estimateR(refGSeq);
   refRs = refR.*refR;
   
-  currentFreq = refF;
+  currentFreq = refFreq;
   currentRs = refRs;
   currentF = refF;
   currentQuality = eval(targetRs, currentRs, targetF, currentF);

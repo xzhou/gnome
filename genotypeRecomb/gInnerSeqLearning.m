@@ -44,7 +44,7 @@ function [ seq ] = gInnerSeqLearning( targetSeq, refSeq, blocks, verbose )
       fprintf(1, '\n************learning block %d ***************\n', i);
     end
     
-    parfor k = 1:nRepeat
+    for k = 1:nRepeat
       [aResult] = gInnerBlockLearning(targetBlock, targetFreq, refBlock, refFreq);
       try
         result{i,k} = aResult;

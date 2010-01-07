@@ -38,13 +38,13 @@ function [] = recombMain()
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
     
     %calculate target estimated R
-    parfor pi = 0:1
-      if pi == 0
-        targetR = estimateR(caseSeq);
-      elseif pi == 1
-        initRefR = estimateR(refSeq);
-      end
-    end
+%     parfor pi = 0:1
+%       if pi == 0
+%         targetR = estimateR(caseSeq);
+%       elseif pi == 1
+%         initRefR = estimateR(refSeq);
+%       end
+%     end
     
     %% doing innerblock learning to approach the frequency
     [caseSeqAfterInnerBlockLearning] = gInnerSeqLearning(caseSeq, refSeq, blocks, false);
