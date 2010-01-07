@@ -32,7 +32,7 @@ function [] = recombMain()
     
     %% init r
     [totalR pA counts] = estimateR(genotypeAll);
-    return;
+    
     
     %% for experiments
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
@@ -54,4 +54,5 @@ function [] = recombMain()
     [result] = genotypeInterBlockRecomb(caseSeq, caseSeqAfterInnerBlockLearning, blocks, false);
     
     
+    %check the sign recover rate
 end
