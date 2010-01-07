@@ -1,6 +1,7 @@
 function [ seq ] = gInnerSeqLearning( targetSeq, refSeq, blocks, verbose )
-%GINNERSEQLEARNING Summary of this function goes here
-%   Detailed explanation goes here
+%GINNERSEQLEARNING gInnerSeqLearning will return the sequence after inner
+%block learning
+
   if nargin == 3
     verbose = false;
   end
@@ -54,11 +55,14 @@ function [ seq ] = gInnerSeqLearning( targetSeq, refSeq, blocks, verbose )
         fprintf(1, 'block = %d repeat = %d a = %f initSR = %f, finalSR = %f\n',i, k, aResult.fDistance, aResult.initSignRate, aResult.finalSignRate);
       end 
     end
-    
   end
+  
+  %recover function will select the best quality result and reconstruct the
+  %seqeunce
   
   seq = InnerBlockHelp.recoverCaseSeq(result);
   %save('innerseq.mat', 'seq');
   save;
+  
 end
 
