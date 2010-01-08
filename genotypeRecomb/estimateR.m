@@ -8,7 +8,7 @@ function [r pA counts] = estimateR(genotypeSeq)
     counts = result.counts;
     
     for i = 1:n-1
-       parfor j = i+1:n
+       for j = i+1:n
             p1 = pA(i);
             p2 = pA(j);
             n3x3 = reshape(counts(i,j,:,:), 3, 3);
