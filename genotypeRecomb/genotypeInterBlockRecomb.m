@@ -46,7 +46,6 @@ function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, false
             
             %assign the optimal sign to final TargetR
             finalTargetR = finalTargetR.*(bufferMatrix(:,:,minIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,minIdx)~=0).*bufferMatrix(:,:,minIdx);
-            
         end
     end
     
