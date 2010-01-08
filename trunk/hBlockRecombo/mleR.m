@@ -28,11 +28,11 @@ function [retval] = mleR(pA, pB, n3x3)
         %v = -v;
     end
 
-    [x fmin] = fminbnd(@mleFunc, Dmin, Dmax)
+    [x fmin] = fminbnd(@mleFunc, Dmin, Dmax);
     
     pAB = -fmin;
     
-    estD = pAB - pA*pB
+    estD = pAB - pA*pB;
     
     %D prime
     if(estD > 0)

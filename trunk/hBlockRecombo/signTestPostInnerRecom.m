@@ -41,8 +41,8 @@ end
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-%rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
-rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
+rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+%rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
 for iBigRepeat = 1:100
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
@@ -141,8 +141,13 @@ for iBigRepeat = 1:100
     title('Homer Test');
 
 
-    targetR = calcR(caseSeq4, alleleMapping);
+    %targetR = calcR(caseSeq4, alleleMapping);
+    %round to precision 1e-4
+    
+    targetGenotypeSeq = haplotype2genotype(caseSeq4);
+    targetR = estimateR(targetGenotypeSeq);
 	targetR = fix(targetR.*10000)./10000;
+    
     refR = calcR(refSeq4, alleleMapping);
 
     preTargetR = abs(targetR).*sign(refR);
