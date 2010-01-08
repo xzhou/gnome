@@ -1,4 +1,4 @@
-function [r pA, counts] = estimateR(genotypeSeq)
+function [r pA counts] = estimateR(genotypeSeq)
     [m n] = size(genotypeSeq);
     r = zeros(n, n);    %pairwise allele requency
     %allocate the data structure
