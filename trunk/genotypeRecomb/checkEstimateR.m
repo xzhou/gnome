@@ -18,7 +18,5 @@ singleAlleleFrequency = singleAlleleFrequency';
 genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
 singleStat = getCounts(genotypeAll);
 [totalR pA counts] = estimateR(genotypeAll);
-
-
 %r from R 
 display 'end'
