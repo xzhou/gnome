@@ -21,3 +21,4 @@ singleStat = getCounts(genotypeAll);
 
 
 %r from R 
+display 'end'

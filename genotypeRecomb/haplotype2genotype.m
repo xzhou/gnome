@@ -9,8 +9,8 @@ function [genotype] = haplotype2genotype(haplotypeSeq, majorAllele)
     genotype = zeros(nIndividual, n);
     for i = 1:nIndividual           
        for j = 1:n
-           a = haplotypeSeq(i, j);%the first allele
-           b = haplotypeSeq(i+1, j);%the next allele
+           a = haplotypeSeq(2*i-1, j);%the first allele
+           b = haplotypeSeq(2*i, j);%the next allele
            m = majorAllele(j);%the major allele
 
            %convert to genotype
