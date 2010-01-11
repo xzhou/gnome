@@ -19,7 +19,6 @@ function [result] = getCounts(genotypeSeq)
             pA(i) = (2*sum(seqA == 0) + sum(seqA == 1))/2.0/m;
             pA(j) = (2*sum(seqB == 0) + sum(seqB == 1))/2.0/m;
             
-            
             % for pairwise
             for k = 1:m
                 A = seqA(k);

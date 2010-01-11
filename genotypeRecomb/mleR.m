@@ -31,6 +31,12 @@ function [retval] = mleR(pA, pB, n3x3)
     %maximum likelihood estimation with 10 digital precesion
     pAB = fminbnd(@mleFunc, pmin, pmax, optimset('TolX',1e-15));
     
+    if pAB < 0
+        e = MException('mleR:pAB', 'pAB less than 0, program paused');
+        pause;
+        throw(e);
+    end
+    
     estD = pAB - pA*pB;
     
     %D prime
