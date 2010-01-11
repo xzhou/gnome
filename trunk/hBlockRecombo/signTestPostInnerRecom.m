@@ -143,11 +143,12 @@ for iBigRepeat = 1:100
     title('Homer Test');
 
 
-    %targetR = calcR(caseSeq4, alleleMapping);
+    targetRealR = calcR(caseSeq4, alleleMapping);
+    realSingleAlleleFreq = GnomeCalculator.getSingleAlleleFreq(caseSeq4, alleleMapping);
     %round to precision 1e-4
     
-    targetGenotypeSeq = haplotype2genotype(caseSeq4);
-    targetR = estimateR(targetGenotypeSeq);
+    targetGenotypeSeq = haplotype2genotype(caseSeq4, alleleMapping);
+    [targetR pA counts] = estimateR(targetGenotypeSeq);
     targetR = fix(targetR.*10000)./10000;
     
     refR = calcR(refSeq4, alleleMapping);
