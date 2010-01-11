@@ -145,10 +145,7 @@ classdef InnerBlockLearner
             %if fDistance < 1, the learning process is good
             result.fDistance = a*1.0/b;
         end
-        function [newSeq, newBlockFreq] = getNextSeq(hyplotypes, currentBlockFreq)
-            newBlockFreq = blockNaiveMutate(currentBlockFreq);
-            newSeq = blockReconstruct(hyplotypes, newBlockFreq);
-        end
+
         %evaluate normalized r square difference and p difference 
         function [newQuality] = eval(targetRs, currentRs, targetFreq, currentFreq, alpha)
             %we think R square has more weight than single allele frequence

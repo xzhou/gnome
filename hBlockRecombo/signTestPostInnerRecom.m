@@ -19,9 +19,9 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
             54 56; 57 57; 58 58; 59 59; 60 60; 61 61; 62 62; 63 63; 64 64; 65 65; 66 66;
             67 67; 68 68; 69 69; 70 70;
             71 77];       
-%blocks = [1 15; 16 59; 60 77];            
+blocks = [1 15; 16 59; 60 77];            
 
-blocks = [1 24; 25 45; 46 111; 112 174];      
+%blocks = [1 24; 25 45; 46 111; 112 174];      
 
 
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
@@ -43,6 +43,9 @@ diary hbrecombo.log;
 
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
 %rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
+
+%sequence = 
+
 
 for iBigRepeat = 1:100
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
@@ -118,7 +121,6 @@ for iBigRepeat = 1:100
     int2R = (refSeq4 == repmat(alleleMapping,nS,1)) + 0;
 
      %% Test the power of Homer's test
-
     singleFreS = sum(int2S, 1)/nS;
     singleFreR = sum(int2R, 1)/nS;
     StatS.Tp = zeros(nS, 1);
@@ -146,7 +148,7 @@ for iBigRepeat = 1:100
     
     targetGenotypeSeq = haplotype2genotype(caseSeq4);
     targetR = estimateR(targetGenotypeSeq);
-	targetR = fix(targetR.*10000)./10000;
+    targetR = fix(targetR.*10000)./10000;
     
     refR = calcR(refSeq4, alleleMapping);
 
@@ -212,7 +214,7 @@ for iBigRepeat = 1:100
     currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
 
     %initCaseSeq = currentSeq;
-    %% Generate start point accoring to ref
+    %Generate start point according to ref
     newCurrentSeq = zeros(nS, Len);
     currentBlockFreqInfo = cell(nBlock, 1);
     parfor i = 1:nBlock
@@ -220,9 +222,11 @@ for iBigRepeat = 1:100
     end
     currentMatchedRef = blockCheck(currentBlockFreqInfo, refBlockFreqInfo, blocks);
     currentMatchedCase = blockCheck(currentBlockFreqInfo, caseBlockFreqInfo, blocks);
-
-    for i = 1:nBlock      
+    
+    %for each block ???
+    for i = 1:nBlock
         currentMatchedRef{i, 1} = currentMatchedRef{i,1}(1:end-2, :);
+        %for each
         for j = 1 : nS
             tempRefSeq4 = refSeq4(:, blocks(i,1):blocks(i,2));
             k = 1; 
@@ -251,14 +255,13 @@ for iBigRepeat = 1:100
 
     finalTargetR = calcR(currentSeq, alleleMapping);
     
-
     for i = 1:(m-1)
         for j = i+1:m
             blockRate = zeros(trials, 2);      
             block1 = blocks(i,:);
             block2 = blocks(j,:);
             if(block1(1,3) >= block2(1,3))
-                block1(1,4) = 1;
+                block1(1,4) = 1;%??
                 %currentSeq = shuffleNewBlock(currentSeq, block2);
                 parfor t = 1:trials
                     [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, newCurrentSeq, block1, block2, alleleMapping, 0.01);
@@ -269,7 +272,7 @@ for iBigRepeat = 1:100
                     end
                 end
             else
-                block2(1,4) = 1;
+                block2(1,4) = 1;%??
                 %currentSeq = shuffleNewBlock(currentSeq, block1);
                 parfor t = 1:trials
                     [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, newCurrentSeq, block2, block1, alleleMapping, 0.01);
