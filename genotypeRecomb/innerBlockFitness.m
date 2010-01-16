@@ -4,4 +4,7 @@ function rDifference = innerBlockFitness(genotypeBlock, caseBlockSeq)
 
 [r2 PA2 count2] = estimateR(caseBlockSeq);
 
-rDifference = sum(sum(abs(r1-r2)));
+r1s = r1.*r1;
+r2s = r2.*r2;
+
+rDifference = sum(sum(abs(r1s-r2s)))/2;
