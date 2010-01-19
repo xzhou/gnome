@@ -28,7 +28,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
     
     %initialize
     currentFreq = refFreq;
-    currentQuality = eval(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq, alpha);
+    currentQuality = myEval(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq, alpha);
     
     %fprintf(1, '%f\n', currentQuality);
     
@@ -42,7 +42,7 @@ function [result] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, r
         newRs = newR.*newR;
         %newP is the single allele frequency of the new allele frequency
         newP = GnomeCalculator.getSingleAlleleFreq(newSeq4, alleleMapping);
-        newQuality = eval(caseRs, newRs, caseAlleleFreq, newP, alpha);
+        newQuality = myEval(caseRs, newRs, caseAlleleFreq, newP, alpha);
         Qdiff = newQuality - currentQuality;
         %using statistic hill climbing algorithm to change
         if Qdiff < 0
