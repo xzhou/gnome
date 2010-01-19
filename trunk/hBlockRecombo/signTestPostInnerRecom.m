@@ -7,6 +7,12 @@ try
     addpath '/home/xzhou/research_linux/gnome/workspace/MyDrTest'
 catch exception
     %do nothing
+    try 
+        addpath '/u/zhou/research_linux/gnome/workspace/hBlockRecombo'
+        addpath '/u/zhou/research_linux/gnome/workspace/MyDrTest'
+    catch e
+        disp 'location error';
+    end
 end
 
 %start computing slaves
@@ -31,8 +37,13 @@ try
     cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
     disp 'WINDOWS'
 catch e
-    disp 'LINUX'
-    cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+    try 
+        cd '/home/xzhou/research_linux/gnome/workspace/data/HAPMAP';
+        disp 'LINUX'
+    catch e
+        cd '/u/zhou/research_linux/gnome/workspace/data/HAPMAP';
+        disp 'Hulk'
+    end
 end
 
 
@@ -141,7 +152,6 @@ for iBigRepeat = 1:100
     xlabel('individual index');
     ylabel('T_r value');
     title('Homer Test');
-
 
     targetRealR = calcR(caseSeq4, alleleMapping);
     realSingleAlleleFreq = GnomeCalculator.getSingleAlleleFreq(caseSeq4, alleleMapping);
@@ -324,9 +334,11 @@ for iBigRepeat = 1:100
     plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
     plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
     plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
-    preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
-    postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
+    %preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
+    %postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
     
+    preSignRate = sum(sum(sign(targetRealR)==sign(refR)))/Len/(Len-1);
+    postSignRate = sum(sum(sign(targetRealR)==sign(finalTargetR)))/Len/(Len-1);
     
     fprintf (1, ' PreSignRate = %f\n ', preSignRate);
     fprintf (1, 'PostSignRate = %f\n ', postSignRate);
