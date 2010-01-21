@@ -51,4 +51,8 @@ function [genotype, alleleMapping] = readPedFile(fileName)
             end
         end
     end
+    
+    %return value
+    genotype = newGenotype;
+    alleleMapping = majorAllele;
 end

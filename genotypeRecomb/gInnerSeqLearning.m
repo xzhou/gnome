@@ -1,4 +1,4 @@
-function [ seq ] = gInnerSeqLearning( targetSeq, refSeq, blocks, verbose )
+function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
 %GINNERSEQLEARNING gInnerSeqLearning will return the sequence after inner
 %block learning
 
@@ -63,6 +63,5 @@ function [ seq ] = gInnerSeqLearning( targetSeq, refSeq, blocks, verbose )
   seq = InnerBlockHelp.recoverCaseSeq(result);
   %save('innerseq.mat', 'seq');
   save;
-  
 end
 
