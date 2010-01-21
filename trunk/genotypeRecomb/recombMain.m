@@ -1,25 +1,17 @@
 %this is the main function
 function [] = recombMain()
-    
-    change_env()
-
-    startParallel(2);
-    
+    change_env()    %change the environment
+    startParallel(2); %start parallelel
     
     %======== start configuration ==============
-    
-    
     dataPath = '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
     genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped';
-    %manually defien the strucuture
-    blocks = [1, 24; 25, 65; 66; 81];
-    
+    blocks = [1, 24; 25, 65; 66, 81];       %manually defien the strucuture
     %======== end configuration   ==============
     
-    all = readSeq4(fastaFile);
-    realR = calcR(all);
-    
-    genotypeAll = genotypeHelpFuncs.readGenotypeFromFasta(fastaFile);
+    %goto data directory
+    cd(dataPath);
+    [genotypeAll majorAllele] = readPedFile(genotypeFile);
     
     %% init r
     [totalR pA counts] = estimateR(genotypeAll);
@@ -27,7 +19,7 @@ function [] = recombMain()
     %% for experiments
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
     
-    %calculate target estimated R
+%     %calculate target estimated R
 %     parfor pi = 0:1
 %       if pi == 0
 %         targetR = estimateR(caseSeq);
@@ -38,6 +30,7 @@ function [] = recombMain()
     
     %% doing innerblock learning to approach the frequency
     [caseSeqAfterInnerBlockLearning] = gInnerSeqLearning(caseSeq, refSeq, blocks, false);
+    
     
     
     %% doing interblock learning starting from new sequence

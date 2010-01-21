@@ -3,10 +3,10 @@ function [] = change_env()
     path = pwd;
     if start_with(path, '/home/xzhou')
         disp 'running on xzhou.info'
-        addpath '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/genotypeRecomb'
-        addpath '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo'
+        addpath '~/research_linux/gnome/bioWorkspace/genomeprj/genotypeRecomb'
+        addpath '~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo'
         addpath '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis'
-        cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED'      
+        cd '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED'      
     elseif start_with(path, '/u')
         disp 'running on hulk.cs.indiana.edu'
     elseif start_with(path, 'D:')

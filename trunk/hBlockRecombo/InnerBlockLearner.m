@@ -94,7 +94,7 @@ classdef InnerBlockLearner
 
             %initialize
             currentFreq = refFreq;
-            currentQuality = eval(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq, alpha);
+            currentQuality = getQuality(caseRs, currentR.*currentR, caseAlleleFreq, currentAlleleFreq, alpha);
 
             %fprintf(1, '%f\n', currentQuality);
 
@@ -108,7 +108,7 @@ classdef InnerBlockLearner
                 newRs = newR.*newR;
                 %newP is the single allele frequency of the new allele frequency
                 newP = GnomeCalculator.getSingleAlleleFreq(newSeq4, alleleMapping);
-                newQuality = eval(caseRs, newRs, caseAlleleFreq, newP, alpha);
+                newQuality = getQuality(caseRs, newRs, caseAlleleFreq, newP, alpha);
                 Qdiff = newQuality - currentQuality;
                 %using statistic hill climbing algorithm to change
                 if Qdiff < 0
@@ -147,7 +147,7 @@ classdef InnerBlockLearner
         end
 
         %evaluate normalized r square difference and p difference 
-        function [newQuality] = eval(targetRs, currentRs, targetFreq, currentFreq, alpha)
+        function [newQuality] = getQuality(targetRs, currentRs, targetFreq, currentFreq, alpha)
             %we think R square has more weight than single allele frequence
             if nargin == 4
                 alpha = 0.6;
