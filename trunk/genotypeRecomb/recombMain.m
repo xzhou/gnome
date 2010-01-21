@@ -1,13 +1,20 @@
 %this is the main function
 function [] = recombMain()
     
-    
+    change_env()
 
     startParallel(2);
     
-    %% reading genotype data
-    fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
-    blocks = [1 15; 16 59; 60 77];      %static block assignment
+    
+    %======== start configuration ==============
+    
+    
+    dataPath = '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
+    genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped';
+    %manually defien the strucuture
+    blocks = [1, 24; 25, 65; 66; 81];
+    
+    %======== end configuration   ==============
     
     all = readSeq4(fastaFile);
     realR = calcR(all);
@@ -16,7 +23,6 @@ function [] = recombMain()
     
     %% init r
     [totalR pA counts] = estimateR(genotypeAll);
-    
     
     %% for experiments
     [caseSeq, refSeq] = randomSelectGenotype(genotypeAll);
