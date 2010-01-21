@@ -1,7 +1,9 @@
 function rDifference = innerBlockFitness(genotypeBlock, caseBlockSeq)
 
-[r1 PA1 count1] = estimateR(genotypeBlock);
+%[r1 PA1 count1] = estimateR(genotypeBlock);
+r1 = calcR(genotypeBlock);
 
+caseBlockSeq = haplotype2genotype(caseBlockSeq);
 [r2 PA2 count2] = estimateR(caseBlockSeq);
 
 r1s = r1.*r1;
