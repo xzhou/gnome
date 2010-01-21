@@ -214,22 +214,22 @@ for iBigRepeat = 1:100
     %% inner block learning
     %currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
     
-    type innerBlockMutate.m
-    type innerBlockFitness.m
-    currentSeq = zeros(size(caseSeq4));
-    m=nBlock;
-    for i = 1:m
-        %fitnessfcn = @(x) innerBlockFitness(x,caseSeq(:,1:15));
-        fitnessfcn = @(x) innerBlockFitness(x,caseSeq4(:,blocks(i,1):blocks(i,2)));
-        
-        options = saoptimset('DataType', 'custom', 'AnnealingFcn', @innerBlockMutate, ...
-            'StallIterLimit',800, 'ReannealInterval', 800);
-        % Finally, we call simulated annealing with our problem information.
-        genotypeBlock = simulannealbnd(fitnessfcn, refSeq4(:,blocks(i,1):blocks(i,2)), [], [], options);
-        %genotypeBlock = simulannealbnd(fitnessfcn, refSeq, [], [], options);
-        
-        currentSeq(:,blocks(i,1):blocks(i,2)) = genotypeBlock;
-    end
+%     type innerBlockMutate.m
+%     type innerBlockFitness.m
+%     currentSeq = zeros(size(caseSeq4));
+%     m=nBlock;
+%     for i = 1:m
+%         %fitnessfcn = @(x) innerBlockFitness(x,caseSeq(:,1:15));
+%         fitnessfcn = @(x) innerBlockFitness(x,caseSeq4(:,blocks(i,1):blocks(i,2)));
+%         
+%         options = saoptimset('DataType', 'custom', 'AnnealingFcn', @innerBlockMutate, ...
+%             'StallIterLimit',800, 'ReannealInterval', 800);
+%         % Finally, we call simulated annealing with our problem information.
+%         genotypeBlock = simulannealbnd(fitnessfcn, refSeq4(:,blocks(i,1):blocks(i,2)), [], [], options);
+%         %genotypeBlock = simulannealbnd(fitnessfcn, refSeq, [], [], options);
+%         
+%         currentSeq(:,blocks(i,1):blocks(i,2)) = genotypeBlock;
+%     end
     
     %initCaseSeq = currentSeq;
     %%Generate start point according to ref
@@ -333,20 +333,21 @@ for iBigRepeat = 1:100
     type interBlockFitness.m
     
     signMatrix = zeros(size(caseSeq4));
+    seqAfterInnerLearning = haplotype2genotype(currentSeq);
     signMatrix = sign(estimateR(seqAfterInnerLearning));
     for i= 1:(m-1)
         for j = i+1:m
             block1 = blocks(i,:);
             block2 = blocks(j,:);
             if(block1(1,3)>= block2(1,3))
-                fitnessfcn = @(x) interBlockFitness(x,caseSeq,block1,block2);
+                fitnessfcn = @(x) interBlockFitness(x,caseSeq4,block1,block2);
                 %interBlockMutateNew = @(optimValues, problemData) interBlockMutate(optimValues, problemData, block2);
                 options = saoptimset('DataType', 'custom', 'AnnealingFcn', @interBlockMutate, ...
                     'StallIterLimit',800, 'ReannealInterval', 800);
                 genotypeBlock = simulannealbnd(fitnessfcn, seqAfterInnerLearning, [], [], options);
                 
             else
-                fitnessfcn = @(x) interBlockFitness(x,caseSeq,block1,block2);
+                fitnessfcn = @(x) interBlockFitness(x,caseSeq4,block1,block2);
                 %interBlockMutateNew = @(optimValues, problemData) interBlockMutate(optimValues, problemData, block1);
                 options = saoptimset('DataType', 'custom', 'AnnealingFcn', @interBlockMutate, ...
                     'StallIterLimit',800, 'ReannealInterval', 800);
