@@ -10,6 +10,11 @@ function [] = change_env()
         cd '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED'      
     elseif start_with(path, '/u')
         disp 'running on hulk.cs.indiana.edu'
+        addpath '~/research_linux/gnome/bioWorkspace/genomeprj/genotypeRecomb'
+        addpath '~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo'
+        addpath '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis'
+        addpath '~/research_linux/gnome/bioWorkspace/genomeprj/readFiles'
+        cd '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED'
     elseif start_with(path, 'D:')
         disp 'running on Windows, please update th path here :)'
     end

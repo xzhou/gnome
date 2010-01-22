@@ -4,7 +4,7 @@ function [] = recombMain()
     startParallel(2); %start parallelel
     
     %======== start configuration ==============
-    dataPath = '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
+    dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
     genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped';
     blocks = [1, 24; 25, 65; 66, 81];       %manually defien the strucuture
     %======== end configuration   ==============
