@@ -34,5 +34,5 @@ function [newQuality] = calcRDiff(targetRs, newRs, smallRFilter)
     targetRs(targetRs < smallRFilter) = 0;
     newRs(targetRs < smallRFilter) = 0;
     
-    newQuality = sum(sum(abs(targetRs - newRs)))/2;
+    newQuality = nansum(nansum(abs(targetRs - newRs)))/2;
 end

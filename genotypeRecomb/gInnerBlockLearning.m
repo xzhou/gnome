@@ -2,7 +2,7 @@ function [ result ] = gInnerBlockLearning(caseBlock, caseFreq, refBlock, refFreq
 % using estimated r square value to learn learn genotype block
 %% config
   expT = 1.0e-5;
-  maxItr = 1e1;
+  maxItr = 100;
 
 %% learning
   targetGSeq = blockReconstruct(caseBlock, caseFreq);
@@ -17,7 +17,7 @@ function [ result ] = gInnerBlockLearning(caseBlock, caseFreq, refBlock, refFreq
   currentRs = refRs;
   currentF = refF;
   currentQuality = getQuality(targetRs, currentRs, targetF, currentF);
-  
+  currentR = refR;
   itr = 0;
   while itr < maxItr
     itr = itr + 1;
@@ -43,9 +43,7 @@ function [ result ] = gInnerBlockLearning(caseBlock, caseFreq, refBlock, refFreq
   result.finalQual = currentQuality;
   result.fianlR = currentR;
   result.refFreq = refFreq;
-  result.refcaseFreq = refcaseFreq;
   result.refBlock = refBlock;
-  
   result.initSignRate = InnerBlockHelp.calcSignRate(targetR, refR);
   result.finalSignRate = InnerBlockHelp.calcSignRate(targetR, currentR);
 end

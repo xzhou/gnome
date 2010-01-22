@@ -45,6 +45,7 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
     if verbose
       fprintf(1, '\n************learning block %d ***************\n', i);
     end
+    %%TODO
     parfor k = 1:nRepeat
       [aResult] = gInnerBlockLearning(targetBlock, targetFreq, refBlock, refFreq);
       try
@@ -53,7 +54,7 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
         fprintf(1, 'error\n')
       end
       if verbose
-        fprintf(1, 'block = %d repeat = %d a = %f initSR = %f, finalSR = %f\n',i, k, aResult.fDistance, aResult.initSignRate, aResult.finalSignRate);
+        fprintf(1, 'block = %d repeat = %d finalQ = %f initSR = %f, finalSR = %f\n',i, k, aResult.finalQual, aResult.initSignRate, aResult.finalSignRate);
       end 
     end
   end
