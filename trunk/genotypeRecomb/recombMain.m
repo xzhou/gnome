@@ -12,6 +12,7 @@ function [] = recombMain()
     %goto data directory
     cd(dataPath);
     [genotypeAll majorAllele] = readPedFile(genotypeFile);
+    disp(['reading ', genotypeFile, ' complete']);
     
     %% init r
     [totalR pA counts] = estimateR(genotypeAll);
@@ -29,8 +30,8 @@ function [] = recombMain()
 %     end
     
     %% doing innerblock learning to approach the frequency
+    disp(['start inner block learning']);
     [caseSeqAfterInnerBlockLearning] = gInnerSeqLearning(caseSeq, refSeq, blocks, false);
-    
     
     
     %% doing interblock learning starting from new sequence

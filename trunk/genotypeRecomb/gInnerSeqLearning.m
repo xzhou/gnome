@@ -3,11 +3,13 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
 %block learning
 
   if nargin == 3
-    verbose = false;
+    verbose = true;
   end
+  
+  verbose = true;
 
   if verbose
-    disp "staring genotype block learning"
+    disp 'staring genotype block learning'
   end
   
   [nBlock tmp] = size(blocks);
@@ -43,8 +45,7 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
     if verbose
       fprintf(1, '\n************learning block %d ***************\n', i);
     end
-    
-    for k = 1:nRepeat
+    parfor k = 1:nRepeat
       [aResult] = gInnerBlockLearning(targetBlock, targetFreq, refBlock, refFreq);
       try
         result{i,k} = aResult;
