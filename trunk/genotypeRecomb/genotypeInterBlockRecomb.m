@@ -14,7 +14,7 @@ function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, false
     
     [nIndividual nSnps] = size(startingSeq);
 
-    initR = estimateR(startingSeq, alleleMapping);
+    initR = estimateR(startingSeq);
 
     learningResult = zeros(nSnps, nSnps, trials);
     for i = 1:(nBlocks-1)

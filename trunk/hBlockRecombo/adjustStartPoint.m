@@ -1,5 +1,4 @@
 function newCurrentSeq = adjustStartPoint(currentSeq, refSeq, blocks)
-
     nS = length(refSeq(:,1));
     Len = length(refSeq(1,:));
     newCurrentSeq = zeros(nS, Len);

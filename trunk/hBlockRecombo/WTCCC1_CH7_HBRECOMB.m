@@ -124,12 +124,9 @@ for iBigRepeat = 1:100
     ylabel('T_r value');
     title('Homer Test');
 
-    targetRealR = calcR(caseSeq4, alleleMapping);
+    targetR = calcR(caseSeq4, alleleMapping);
     realSingleAlleleFreq = GnomeCalculator.getSingleAlleleFreq(caseSeq4, alleleMapping);
     %round to precision 1e-4
-    
-    targetGenotypeSeq = haplotype2genotype(caseSeq4, alleleMapping);
-    [targetR pA counts] = estimateR(targetGenotypeSeq);
     targetR = fix(targetR.*10000)./10000;
     
     refR = calcR(refSeq4, alleleMapping);
@@ -200,7 +197,7 @@ for iBigRepeat = 1:100
     finalTargetR = calcR(currentSeq, alleleMapping);
     
     signMatrix = zeros(size(caseSeq4));
-    signMatrix = sign(estimateR(currentSeq));
+    signMatrix = sign(calcR(currentSeq));
     for i = 1:(m-1)
         for j = i+1:m
             blockRate = zeros(trials, 2);      
