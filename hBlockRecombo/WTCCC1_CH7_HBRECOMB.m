@@ -26,7 +26,7 @@ end
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-rawFastaData = fastaread('Affx_gt_58C_Chiamo_07.tped.fasta');
+rawFastaData = fastaread('newAffx.fasta');
 
 
 for iBigRepeat = 1:100
@@ -113,13 +113,13 @@ for iBigRepeat = 1:100
         StatR.Tp(i) = (singleFreS - singleFreR)*(2*int2R(i,:)' - 1);
     end
     sortHomerStatR = sort(StatR.Tp);
-    homerAbove95S = sum(StatS.Tp>sortHomerStatR(int8(nS*0.95)));
+    homerAbove95S = sum(StatS.Tp>sortHomerStatR(int16(nS*0.95)));
     figure;
     hold on;
     plot(index1, StatS.Tp, '.r');
     plot(index2, StatR.Tp, '.g');
     legend({'case' 'ref'});
-    plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
+    plot(ones(2*nS).*sortHomerStatR(int16(nS*0.95)));
     xlabel('individual index');
     ylabel('T_r value');
     title('Homer Test');
@@ -153,7 +153,7 @@ for iBigRepeat = 1:100
 
 
     sortCorrectStatR = sort(correctStatR.Tr);
-    correctAbove95S = sum(correctStatS.Tr>sortCorrectStatR(int8(nS*0.95)));
+    correctAbove95S = sum(correctStatS.Tr>sortCorrectStatR(int16(nS*0.95)));
 
     %For caculating the Tr befor recombination
     for i = 1:nS
@@ -164,7 +164,7 @@ for iBigRepeat = 1:100
     preStatR.Tr = preStatR.Tr/sqrt(Len*(Len-1)/2);
 
     sortPreStatR = sort(preStatR.Tr);
-    preAbove95S = sum(preStatS.Tr>sortPreStatR(int8(nS*0.95)));
+    preAbove95S = sum(preStatS.Tr>sortPreStatR(int16(nS*0.95)));
 
     %finalTargetR = preTargetR;
 
@@ -261,16 +261,16 @@ for iBigRepeat = 1:100
     postStatR.Tr = postStatR.Tr/sqrt(Len*(Len-1)/2);
 
     sortPostStatR = sort(postStatR.Tr);
-    postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
+    postAbove95S = sum(postStatS.Tr>sortPostStatR(int16(nS*0.95)));
 
     plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
     plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
     plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
-    %preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
-    %postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
+    preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
+    postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
     
-    preSignRate = sum(sum(sign(targetRealR)==sign(refR)))/Len/(Len-1);
-    postSignRate = sum(sum(sign(targetRealR)==sign(finalTargetR)))/Len/(Len-1);
+    %preSignRate = sum(sum(sign(targetRealR)==sign(refR)))/Len/(Len-1);
+    %postSignRate = sum(sum(sign(targetRealR)==sign(finalTargetR)))/Len/(Len-1);
     
     fprintf (1, ' PreSignRate = %f\n ', preSignRate);
     fprintf (1, 'PostSignRate = %f\n ', postSignRate);
