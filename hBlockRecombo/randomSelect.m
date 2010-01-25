@@ -1,4 +1,4 @@
-function [caseSeq4 refSeq4] = randomSelect(sequenceAll)
+function [caseSeq4 refSeq4] = randomSelect(sequenceAll, number)
 %function random divide the sequenceAll into 2 groups and convert it into a
 %caseSeq and refSeq
 
@@ -30,7 +30,8 @@ end
 
 selR = sel;
 
-for i = 1:totalLength/4
+%for i = 1:totalLength/4
+for i=1:number
     seqS(i*2-1) = seqAll(selS(i)*2-1);
     seqS(i*2) = seqAll(selS(i)*2);
     

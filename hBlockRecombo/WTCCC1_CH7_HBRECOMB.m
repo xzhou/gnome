@@ -34,7 +34,7 @@ for iBigRepeat = 1:100
     
     
 %      for 77 SNPs randomly select case and reference
-    [caseSeq4 refSeq4] = randomSelect(rawFastaData);
+    [caseSeq4 refSeq4] = randomSelect(rawFastaData, 250);
     
     
     
