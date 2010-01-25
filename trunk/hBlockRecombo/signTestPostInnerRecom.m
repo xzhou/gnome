@@ -25,7 +25,8 @@ blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16;
             54 56; 57 57; 58 58; 59 59; 60 60; 61 61; 62 62; 63 63; 64 64; 65 65; 66 66;
             67 67; 68 68; 69 69; 70 70;
             71 77];       
-blocks = [1 15; 16 59; 60 77];            
+blocks = [1 15; 16 59; 60 77];    
+blocks = [1 24; 25 65; 66 81];
 
 %blocks = [1 24; 25 45; 46 111; 112 174];      
 
@@ -52,7 +53,7 @@ end
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+rawFastaData = fastaread('newAffx.fasta');
 %rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
 %sequence = 
