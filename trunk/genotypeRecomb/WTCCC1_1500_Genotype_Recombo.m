@@ -23,14 +23,14 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %goto data directory
     cd(wtccc1Conf.dataPath);
-    [genotypeAll majorAllele] = readPedFile(wtccc1Conf.genotypeFile);
+    [genotypeAll majorAllele, idInfo] = readPedFile(wtccc1Conf.genotypeFile);
     disp(['reading ', wtccc1Conf.genotypeFile, ' complete']);
     
     %% init r
     %[totalR pA counts] = estimateR(genotypeAll);
     
     %% for experiments
-    [caseSeq, refSeq] = randomSelectGenotype(genotypeAll, wtccc1Conf.sampleSize);
+    [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf.sampleSize);
     [m n] = size(caseSeq)
     fprintf(1, 'sample size %d X %d\n', m, n);
     
