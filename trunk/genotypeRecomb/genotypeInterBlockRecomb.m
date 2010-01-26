@@ -1,4 +1,4 @@
-function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, false)
+function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, config)
     %recombination of genotype sequence
     [nBlocks tmp] = size(blocks);
     if tmp <= 2
@@ -7,9 +7,9 @@ function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, false
     end
 
     %==============config==================
-    trials = 1000;
-    nInterBlockRecomb = 1000;
-    alpha = 0.01    %the weight of single allele frequency
+    trials = config.trials
+    nInterBlockRecomb = config.nInterBlockRecomb;
+    alpha = config.alpha    %the weight of single allele frequency
     %==============end config==============
     
     [nIndividual nSnps] = size(startingSeq);

@@ -1,13 +1,10 @@
-function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
+function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks,  config)
 %GINNERSEQLEARNING gInnerSeqLearning will return the sequence after inner
 %block learning
 
-  if nargin == 3
-    verbose = true;
-  end
-  
-  verbose = true;
-
+    verbose = config.verbose;
+    nRepeat = config.nRepeat;
+    
   if verbose
     disp 'staring genotype block learning'
   end
@@ -26,7 +23,6 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
     refBlockFreqInfo{i,1} = gBlockFreq(refSeq, blocks(i,:));
   end
   
-  nRepeat = 10;
   result = cell(nBlock, nRepeat);
   
   for i = 1:nBlock
@@ -47,7 +43,7 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks, verbose )
     end
     %%TODO
     parfor k = 1:nRepeat
-      [aResult] = gInnerBlockLearning(targetBlock, targetFreq, refBlock, refFreq);
+      [aResult] = gInnerBlockLearning(targetBlock, targetFreq, refBlock, refFreq, config);
       try
         result{i,k} = aResult;
       catch e
