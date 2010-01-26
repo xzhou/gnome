@@ -1,4 +1,4 @@
-function [genotype, alleleMapping] = readPedFile(fileName)
+function [genotype, alleleMapping, idInfo] = readPedFile(fileName)
 %READ_PED_FILE will read genotype sequence from a ped file and save it to a
 %matrix
     if nargin == 0
@@ -11,10 +11,12 @@ function [genotype, alleleMapping] = readPedFile(fileName)
     
     startParallel(2);
     
+    idInfo = [];
     genotype = [];
     parfor i=1:m
         aSeq = M{i, :};
         tokens = strsplit(' ', aSeq);
+        idInfo = [idInfo, tokens(:, 2)]
         tokens = tokens(:, 7:end);
         tokens = [tokens{1:end}];
         genotype = [genotype; nt2int(tokens)];
