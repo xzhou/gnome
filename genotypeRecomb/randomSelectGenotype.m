@@ -1,34 +1,46 @@
-%this function divide the genotype sequence into two groups
-function [caseGenotype, refGenotype] = randomSelectGenotype(genotype)
+function [caseGenotype, refGenotype, caseID, refID] = randomSelectGenotype(genotype, idInfo, number)
+%%RANDOM_SELECT_GENOTYPE will randomly select two groups of people from genotype    
+    seqAll = genotype;
+    [rows columns] = size(seqAll);
+    
+    if 2*number > rows
+        MException('GenotypeRecomb:randomSelectGenotype', 'not enough individuals');
+    end
 
-seqAll = genotype;
-[rows columns] = size(seqAll);
+    if(mod(rows, 2) == 1)
+        seqAll(end, :) = [];
+    end
 
-if(mod(rows, 2) == 1)
-    seqAll(end, :) = [];
-end
+    RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));
 
-RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));
+    [nIndividuals nSnps] = size(seqAll);
 
-[rows columns] = size(seqAll);
-
-sel = [1:rows];
-a = rows;
-selS = zeros(1, rows/2);
-selR = zeros(1, rows/2);
-
-for i=1:rows/2
-    c=randi(a,1,1);
-    selS(1,i) = sel(1,c);
-    sel(c) = [];
-    a = a-1;
-end
-
-selR = sel;
-
-for i=1:rows/2
-    caseGenotype(i,:) = seqAll(selS(i),:);
-    refGenotype(i,:) = seqAll(selR(i),:);
-end
-
+    %randomly select the case and reference group
+    rowIndexs = 1:nIndividuals;
+    a = nIndividuals;
+    selectedID = [];
+    for i = 1:(2*number)
+       r = randi(a, 1, 1);
+       selectedID = [selectedID, rowIndexs(r)];
+       rowIndexs(r) = [];
+       a = a - 1;
+    end
+    
+    %randomly select case from the randomly selected population
+    caseIndex = [];
+    a = 2*number;
+    for i = 1:number
+       c = randi(a, 1, 1);
+       caseIndex = [caseIndex, selectedID(c)];
+       selectedID(c) = [];
+       a = a - 1;
+    end
+    
+    referenceIndex = selectedID;
+    
+    caseGenotype = genotype(caseIndex, :);
+    refGenotype = genotype(referenceIndex, :);
+    
+    caseID = idInfo(caseIndex);
+    refID  = idInfo(referenceIndex);
 end
