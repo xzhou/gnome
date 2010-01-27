@@ -17,8 +17,8 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
-    wtccc1Conf.maxItr = 100;
-    wtccc1Conf.nRepeat = 10;
+    wtccc1Conf.maxItr = 10;
+    wtccc1Conf.nRepeat = 5;
     
     %inter block learning configuration
     wtccc1Conf.trials = 1000;
