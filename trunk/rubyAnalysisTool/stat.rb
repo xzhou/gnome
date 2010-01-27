@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 
 inputFileName = ARGV[0]
-outputFileName = ARGV[1]
+outputFileName = inputFileName + "result"
 puts inputFileName
 puts outputFileName
 
