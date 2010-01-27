@@ -1,5 +1,7 @@
-function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, config)
+function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, config)
     %recombination of genotype sequence
+
+    blocks = config.blocks;
     [nBlocks tmp] = size(blocks);
     if tmp <= 2
       %extend the block to pre calculate the size
@@ -48,7 +50,5 @@ function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, blocks, confi
             finalTargetR = finalTargetR.*(bufferMatrix(:,:,minIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,minIdx)~=0).*bufferMatrix(:,:,minIdx);
         end
     end
-    
     result.finalTargetR = finalTargetR;
-
 end

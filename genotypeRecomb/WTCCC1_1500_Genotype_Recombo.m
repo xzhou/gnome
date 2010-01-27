@@ -18,7 +18,7 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
     wtccc1Conf.maxItr = 10;
-    wtccc1Conf.nRepeat = 5;
+    wtccc1Conf.nRepeat = 1;
     
     %inter block learning configuration
     wtccc1Conf.trials = 1000;
@@ -64,10 +64,10 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
     [randomCaseSeq] = gInnerSeqLearning(caseSeq, refSeq, wtccc1Conf);
     
-    caseSeqAfterInnerBlockLearning = adjustStartPoint(randomCaseSeq, refSeq, blocks);
+    caseSeqAfterInnerBlockLearning = adjustStartPoint(randomCaseSeq, refSeq, wtccc1Conf.blocks);
     
     %% doing interblock learning starting from new sequence
-    [result] = genotypeInterBlockRecomb(caseSeq, caseSeqAfterInnerBlockLearning, blocks, wtccc1Conf);
+    [result] = genotypeInterBlockRecomb(caseSeq, caseSeqAfterInnerBlockLearning, wtccc1Conf);
     
     %check the sign recover rate against phasing since we don't have the
     %real data
