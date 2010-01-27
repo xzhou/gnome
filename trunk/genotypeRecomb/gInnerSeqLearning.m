@@ -1,16 +1,16 @@
-function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks,  config)
+function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, config)
 %GINNERSEQLEARNING gInnerSeqLearning will return the sequence after inner
 %block learning
 
     verbose = config.verbose;
     nRepeat = config.nRepeat;
+    blocks = config.blocks;
     
   if verbose
     disp 'staring genotype block learning'
   end
   
   [nBlock tmp] = size(blocks);
-  
   [nS len] = size(targetSeq);
   
   targetBlockFreqInfo = cell(nBlock, 1);
@@ -39,7 +39,7 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks,  config)
     blockRefSeq = refSeq(:,a:b);
     
     if verbose
-      fprintf(1, '\n************learning block %d ***************\n', i);
+      fprintf(config.logfid, '\n************learning block %d ***************\n', i);
     end
     %%TODO
     parfor k = 1:nRepeat
@@ -47,10 +47,10 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, blocks,  config)
       try
         result{i,k} = aResult;
       catch e
-        fprintf(1, 'error\n')
+        fprintf(config.logfid, 'error\n')
       end
       if verbose
-        fprintf(1, 'block = %d repeat = %d finalQ = %f initSR = %f, finalSR = %f\n',i, k, aResult.finalQual, aResult.initSignRate, aResult.finalSignRate);
+        fprintf(config.logfid, 'block = %d repeat = %d initQ = %f finalQ = %f initSR = %f, finalSR = %f\n',i, k, aResult.initQ, aResult.finalQual, aResult.initSignRate, aResult.finalSignRate);
       end 
     end
   end

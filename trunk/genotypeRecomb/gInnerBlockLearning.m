@@ -17,6 +17,7 @@ function [ result ] = gInnerBlockLearning(caseBlock, caseFreq, refBlock, refFreq
   currentRs = refRs;
   currentF = refF;
   currentQuality = getQuality(targetRs, currentRs, targetF, currentF);
+  result.initQ = currentQuality;
   currentR = refR;
   itr = 0;
   while itr < maxItr
