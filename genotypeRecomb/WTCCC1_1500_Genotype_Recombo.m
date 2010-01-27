@@ -1,5 +1,6 @@
 %this is the main function
 function [] = WTCCC1_1500_Genotype_Recombo()
+    addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
     change_env()    %change the environment
     startParallel(2); %start parallelel
     
@@ -9,10 +10,14 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.phaseFastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
     wtccc1Conf.blocks = [1, 24; 25, 65; 66, 81];       %manually define the strucuture
     wtccc1Conf.sampleSize = 250;    %the number of individuals for case or reference
+    wtccc1Conf.logFileName = 'WTCCC1_1500.log';
+    
+    %output options
+    wtccc1Conf.verbose = true;
     
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
-    wtccc1Conf.maxItr = 5;
+    wtccc1Conf.maxItr = 100;
     wtccc1Conf.nRepeat = 10;
     
     %inter block learning configuration
@@ -20,6 +25,15 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.nInterBlockRecomb = 1000;
     wtccc1Conf.alpha = 0.01;
     %<<<<<<<<<<<<<<< end configuration <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    
+    %>>>>>>>>>>>>>>> initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    if wtccc1Conf.verbose
+        wtccc1Conf.logfid = 1;
+    else
+        wtccc1Conf.logfid = fopen(wtccc1Conf.logFileName, 'w');
+    end
+    %<<<<<<<<<<<<<<< end initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    
     
     %goto data directory
     cd(wtccc1Conf.dataPath);
@@ -31,8 +45,11 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %% for experiments
     [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf.sampleSize);
-    [m n] = size(caseSeq)
-    fprintf(1, 'sample size %d X %d\n', m, n);
+    %casePhaseSeq = getPhaseSeq(caseID);
+    %refPhaseSeq = getPhaseSeq(refID);
+    
+    [m n] = size(caseSeq);
+    fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
     
 %     %calculate target estimated R
 %     parfor pi = 0:1
@@ -44,8 +61,8 @@ function [] = WTCCC1_1500_Genotype_Recombo()
 %     end
     
     %% doing innerblock learning to approach the frequency
-    disp(['start inner block learning']);
-    [randomCaseSeq] = gInnerSeqLearning(caseSeq, refSeq, blocks, wtccc1Conf);
+    fprintf(wtccc1Conf.logfid, 'start inner block learning');
+    [randomCaseSeq] = gInnerSeqLearning(caseSeq, refSeq, wtccc1Conf);
     
     caseSeqAfterInnerBlockLearning = adjustStartPoint(randomCaseSeq, refSeq, blocks);
     
