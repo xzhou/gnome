@@ -12,9 +12,9 @@ function newCurrentSeq = adjustStartPoint(currentSeq, refSeq, blocks)
         currentBlockFreqInfo{i,1} = getBlockFreq(currentSeq, blocks(i,:));
     end
     currentMatchedRef = blockCheck(currentBlockFreqInfo, refBlockFreqInfo, blocks);
-    %currentMatchedCase = blockCheck(currentBlockFreqInfo, caseBlockFreqInfo, blocks);
+    %currentMatchedCase = blockCheck(currentBlockFreqInfo,
+    %caseBlockFreqInfo, blocks);
     
-    %for each block ???
     for i = 1:nBlock
         currentMatchedRef{i, 1} = currentMatchedRef{i,1}(1:end-2, :);
         %for each

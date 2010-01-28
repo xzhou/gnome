@@ -1,8 +1,7 @@
-function [currentQuality currentR] = evalGenotypeSeq(targetRs, currentGenotypeSeq, alleleMapping, block1, block2, alleleMapping, alpha, smallFilter)
-    if nargin <= 5
-        alpha = 0.1;
-        smallFilter = 0;
-    end
+function [currentQuality currentR blockMask] = evalGenotypeSeq(targetRs, currentGenotypeSeq, block1, block2, config)
+    
+    alpha = config.alpha;
+    smallFilter = config.smallFilter;
     
     blockMask = getBlockMaskForEval(targetRs, block1, block2);
         
@@ -17,8 +16,9 @@ function [currentQuality currentR] = evalGenotypeSeq(targetRs, currentGenotypeSe
     
     %filter the small r values
     targetRs(targetRs < smallFilter) = 0;
-    newRs(newRs < samllFilter) = 0;
+    newRs(newRs < smallFilter) = 0;
     
-    newQuality = sum(sum(abs(targetRs - newRs)))/2;
+    currentQuality = sum(sum(abs(targetRs - newRs)))/2;
+    currentR = newR;
     
 end

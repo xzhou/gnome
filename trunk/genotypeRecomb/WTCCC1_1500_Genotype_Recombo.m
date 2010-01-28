@@ -17,13 +17,17 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
-    wtccc1Conf.maxItr = 10;
+    wtccc1Conf.maxItr = 2;
     wtccc1Conf.nRepeat = 1;
     
     %inter block learning configuration
-    wtccc1Conf.trials = 1000;
-    wtccc1Conf.nInterBlockRecomb = 1000;
-    wtccc1Conf.alpha = 0.01;
+    wtccc1Conf.trials = 1;
+    wtccc1Conf.nInterBlockRecomb = 1;
+    wtccc1Conf.alpha = 0.01;    %combination of r^2 diff and cx0 idff
+    wtccc1Conf.smallFilter = 0;
+    
+    
+    wtccc1Conf.maxIT = 1;
     %<<<<<<<<<<<<<<< end configuration <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     
     %>>>>>>>>>>>>>>> initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -50,16 +54,7 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
-    
-%     %calculate target estimated R
-%     parfor pi = 0:1
-%       if pi == 0
-%         targetR = estimateR(caseSeq);
-%       elseif pi == 1
-%         initRefR = estimateR(refSeq);
-%       end
-%     end
-    
+
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
     [randomCaseSeq] = gInnerSeqLearning(caseSeq, refSeq, wtccc1Conf);
@@ -71,4 +66,14 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %check the sign recover rate against phasing since we don't have the
     %real data
+    %calculate target estimated R
+
+    targetR = estimateR(caseSeq);
+    initRefR = estimateR(refSeq);
+     
+    initSignRate = signRate(targetR, initRefR);
+    finalSignRate = signRate(targetR, result.finalTargetR);
+
+    fprintf(1, 'initSignRate %f, \tfinalSignRate, %f', initSignRate, finalSignRate);
+    
 end

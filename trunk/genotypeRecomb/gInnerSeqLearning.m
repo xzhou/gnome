@@ -60,6 +60,6 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, config)
   
   seq = InnerBlockHelp.recoverCaseSeq(result);
   %save('innerseq.mat', 'seq');
-  save;
+  %save;
 end
 
