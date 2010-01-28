@@ -20,14 +20,13 @@ catch e
     end
 end
 
-
 [nBlock tmp] = size(blocks);
 
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-rawFastaData = fastaread('newAffx.fasta');
-
+%rawFastaData = fastaread('newAffx.fasta');
+rawFastaData = fastaread('Affx_gt_58C_Chiamo_07.tped.fasta');
 
 for iBigRepeat = 1:100
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
@@ -35,9 +34,7 @@ for iBigRepeat = 1:100
     
 %      for 77 SNPs randomly select case and reference
     [caseSeq4 refSeq4] = randomSelect(rawFastaData, 250);
-    
-    
-    
+
 %     caseFasta = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 %     refFasta = fastaread('chr10_FGFR2_200kb_phased_yri.fasta');
 %     

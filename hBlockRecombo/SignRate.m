@@ -10,7 +10,7 @@ function [rate totalSign correctSign] = SignRate(targetR, sampleR, blockLens)
         signDiff = targetSign.*sampleSign;
         signDiff(logical(eye(size(signDiff)))) = 0;
 
-        correctSign = sum(sum(double(signDiff == 1)))/2;
+        correctSign = nansum(nansum(double(signDiff == 1)))/2;
 
         [m n] = size(targetR);
 
