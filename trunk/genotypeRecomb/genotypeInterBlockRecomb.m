@@ -49,4 +49,5 @@ function [result] = genotypeInterBlockRecomb(caseSeq, startingSeq, config)
     end
     
     result.finalTargetR = bestR;
+    save('interblock');
 end
