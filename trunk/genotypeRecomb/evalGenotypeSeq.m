@@ -18,7 +18,7 @@ function [currentQuality currentR blockMask] = evalGenotypeSeq(targetRs, current
     targetRs(targetRs < smallFilter) = 0;
     newRs(newRs < smallFilter) = 0;
     
-    currentQuality = sum(sum(abs(targetRs - newRs)))/2;
+    currentQuality = nansum(nansum(abs(targetRs - newRs)))/2;
     currentR = newR;
     
 end
