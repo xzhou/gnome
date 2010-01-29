@@ -2,7 +2,7 @@
 function [] = WTCCC1_1500_Genotype_Recombo()
     addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
     change_env()    %change the environment
-    startParallel(2); %start parallelel
+    startParallel(); %start parallelel
     
     %>>>>>>>>>>>>>>> start configuration >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     wtccc1Conf.dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
@@ -17,17 +17,17 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
-    wtccc1Conf.maxItr = 2;
-    wtccc1Conf.nRepeat = 1;
+    wtccc1Conf.maxItr = 10000;
+    wtccc1Conf.nRepeat = 10;
     
     %inter block learning configuration
-    wtccc1Conf.trials = 1;
+    wtccc1Conf.trials = 10;
     wtccc1Conf.nInterBlockRecomb = 1;
     wtccc1Conf.alpha = 0.01;    %combination of r^2 diff and cx0 idff
     wtccc1Conf.smallFilter = 0;
     
     
-    wtccc1Conf.maxIT = 1;
+    wtccc1Conf.maxIT = 10000;
     %<<<<<<<<<<<<<<< end configuration <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     
     %>>>>>>>>>>>>>>> initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -71,8 +71,8 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     targetR = estimateR(caseSeq);
     initRefR = estimateR(refSeq);
      
-    initSignRate = signRate(targetR, initRefR);
-    finalSignRate = signRate(targetR, result.finalTargetR);
+    initSignRate = SignRate(targetR, initRefR);
+    finalSignRate = SignRate(targetR, result.finalTargetR);
 
     fprintf(1, 'initSignRate %f, \tfinalSignRate, %f', initSignRate, finalSignRate);
     

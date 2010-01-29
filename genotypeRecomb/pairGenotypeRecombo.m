@@ -25,20 +25,18 @@ function [finalSeq finalR fianlSignRate finalQual blockMask] = pairGenotypeRecom
         else
             p = 1/(1+exp(Qdiff/expT));
         end
-        
         x = rand(1);
         if x < p
-            currentSeq = newSampleSeq;
+            currentSeq = newSeq;
             currentQuality = newQuality;
             currentR = newR;
-            signRate = blockSignRate(targetR, newR, blocks, newBlock);
-            
+            signRate = blockSignRate(targetR, newR, block1, block2);
             if verbose
-                %print
+                
             end
         else
            if verbose
-               %print
+                
            end
         end
     end
