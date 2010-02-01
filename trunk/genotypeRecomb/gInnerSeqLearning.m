@@ -23,6 +23,10 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, config)
     refBlockFreqInfo{i,1} = gBlockFreq(refSeq, blocks(i,:));
   end
   
+  [commonStart] = compareCaseRef(refBlockFreqInfo, targetBlockFreqInfo, blocks);
+  
+  save('commonStart.mat', 'commonStart');
+  
   result = cell(nBlock, nRepeat);
   
   for i = 1:nBlock
@@ -58,8 +62,15 @@ function [ seq ] = gInnerSeqLearning(targetSeq, refSeq, config)
   %recover function will select the best quality result and reconstruct the
   %seqeunce
   
+  save('innerBlockResult.mat', 'result');
   seq = InnerBlockHelp.recoverCaseSeq(result);
-  save('innerseq.mat');
-  %save;
+  save;
+  learnedFreqInfo = cell(nBlock, 1);
+  for i = 1:nBlock
+    learnedFreqInfo{i, 1} = gBlockFreq(seq, blocks(i,:));
+  end
+  [commonEnd] = compareCaseRef(learnedFreqInfo, targetBlockFreqInfo, blocks);
+  
+  save('commonEnd.mat', 'commonEnd');
 end
 
