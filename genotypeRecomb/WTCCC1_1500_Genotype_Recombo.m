@@ -52,6 +52,8 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     %casePhaseSeq = getPhaseSeq(caseID);
     %refPhaseSeq = getPhaseSeq(refID);
     
+    save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID');
+    
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
 
