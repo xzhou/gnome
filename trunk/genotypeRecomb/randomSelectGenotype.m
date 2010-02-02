@@ -41,6 +41,6 @@ function [caseGenotype, refGenotype, caseID, refID] = randomSelectGenotype(genot
     caseGenotype = genotype(caseIndex, :);
     refGenotype = genotype(referenceIndex, :);
     
-    caseID = idInfo(caseIndex);
-    refID  = idInfo(referenceIndex);
+    caseID = (idInfo(caseIndex))';
+    refID  = (idInfo(referenceIndex))';
 end

@@ -1,3 +1,5 @@
+svn ci -m "update"
+
 rsync  ./genotypeRecomb/* zhou@hulk.cs.indiana.edu:~/research_linux/gnome/bioWorkspace/genomeprj/genotypeRecomb
 
 rsync  ./hBlockRecombo/* zhou@hulk.cs.indiana.edu:~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo

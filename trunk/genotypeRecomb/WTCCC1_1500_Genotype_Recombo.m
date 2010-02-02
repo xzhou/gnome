@@ -44,13 +44,15 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     [genotypeAll majorAllele, idInfo] = readPedFile(wtccc1Conf.genotypeFile);
     disp(['reading ', wtccc1Conf.genotypeFile, ' complete']);
     
+    [haplotypeSeq] = fastaread(wtccc1Conf.phaseFastaFile);
+    
     %% init r
     %[totalR pA counts] = estimateR(genotypeAll);
     
     %% for experiments
     [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf.sampleSize);
-    %casePhaseSeq = getPhaseSeq(caseID);
-    %refPhaseSeq = getPhaseSeq(refID);
+    casePhaseSeq = getPhaseSeq(caseID, haplotypeSeq);
+    refPhaseSeq = getPhaseSeq(refID, haplotypeSeq);
     
     save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID');
     

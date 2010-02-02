@@ -57,10 +57,8 @@ function [refFreq] = findHyplotype(refSeq4WithFreq, patternHyplotypeWithFreq)
 	for i = 1:m
 		aHyplotype = refSeq4WithFreq(i,:);
 		if sum(patternHyplotypeWithFreq(:,1:end-1) ~= aHyplotype(:,1:end-1)) == 0
-
 			patternHyplotypeWithFreq;
 			aHyplotype;
-
 			refFreq = aHyplotype(1, end);
 			break;
 		end
