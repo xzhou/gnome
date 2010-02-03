@@ -17,6 +17,8 @@ function [phasedSeq] = getPhaseSeq(id, fastaSeq)
         end
         if flag == 0
             fprintf(1, '%s can not find\n', idName);
+            e = MException('findPhasedSeq:line20', ['can not find', idName]);
+            throw(e);
         end
     end
 end
