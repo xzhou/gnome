@@ -6,7 +6,7 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     %>>>>>>>>>>>>>>> start configuration >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     wtccc1Conf.dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
-    wtccc1Conf.genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped';
+    wtccc1Conf.genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped.fixed';
     wtccc1Conf.phaseFastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
     wtccc1Conf.blocks = [1, 24; 25, 65; 66, 81];       %manually define the strucuture
     wtccc1Conf.sampleSize = 250;    %the number of individuals for case or reference
@@ -55,8 +55,14 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     fprintf(1, 'ref\n');
     refPhaseSeq = getPhaseSeq(refID, haplotypeSeq);
     
-    save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID');
+    save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID', 'casePhaseSeq', 'refPhaseSeq');
     
+    %analysis sequences
+    casePhaseIntSeq = seq2int(casePhaseSeq);
+    refPahseIntSeq = seq2int(refPhaseSeq);
+    [hBlockSummary] = analysisPhasedCaseRef(casePhaseIntSeq, refPahseIntSeq, wtccc1Conf.blocks);
+    
+        
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
 
