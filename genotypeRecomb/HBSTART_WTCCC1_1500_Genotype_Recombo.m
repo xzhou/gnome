@@ -52,15 +52,16 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     %% for experiments
     [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf.sampleSize);
     casePhaseSeq = getPhaseSeq(caseID, haplotypeSeq);
+    fprintf(1, 'ref\n');
     refPhaseSeq = getPhaseSeq(refID, haplotypeSeq);
     
+    save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID', 'casePhaseSeq', 'refPhaseSeq');
     
-    
-    %analysis seeverqever
+    %analysis sequences
     casePhaseIntSeq = seq2int(casePhaseSeq);
     refPahseIntSeq = seq2int(refPhaseSeq);
-    [caseRef, summaryResult, caseInfo, refInfo] = analysisPhasedCaseRef(casePhaseIntSeq, refPahseIntSeq, wtccc1Conf.blocks);
-    save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID', 'casePhaseSeq', 'refPhaseSeq', 'caseRef', 'summaryResult');
+    [hBlockSummary] = analysisPhasedCaseRef(casePhaseIntSeq, refPahseIntSeq, wtccc1Conf.blocks);
+    
         
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
