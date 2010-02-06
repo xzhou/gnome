@@ -1,5 +1,6 @@
 %this is the main function
-function [] = WTCCC1_1500_Genotype_Recombo()
+function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
+%This function will start from a genotype pool
     addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
     change_env()    %change the environment
     startParallel(); %start parallelel
@@ -9,9 +10,10 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped.fixed';
     wtccc1Conf.phaseFastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
     wtccc1Conf.blocks = [1, 24; 25, 65; 66, 81];       %manually define the strucuture
-    wtccc1Conf.sampleSize = 250;    %the number of individuals for case or reference
+    wtccc1Conf.caseSize= 250;    %the number of individuals for case or reference
+    wtccc1Conf.refSize = 500;   %we use more sample in reference group
     wtccc1Conf.logFileName = 'WTCCC1_1500.log';
-    
+
     %output options
     wtccc1Conf.verbose = true;
     
@@ -45,26 +47,29 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     disp(['reading ', wtccc1Conf.genotypeFile, ' complete']);
     
     [haplotypeSeq] = fastaread(wtccc1Conf.phaseFastaFile);
-    
-    %% init r
-    %[totalR pA counts] = estimateR(genotypeAll);
-    
+
     %% for experiments
-    [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf.sampleSize);
+    [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf);
+    
+    %get phased sequence
     casePhaseSeq = getPhaseSeq(caseID, haplotypeSeq);
-    fprintf(1, 'ref\n');
     refPhaseSeq = getPhaseSeq(refID, haplotypeSeq);
     
     save('caseref.mat', 'caseSeq', 'refSeq', 'caseID', 'refID', 'casePhaseSeq', 'refPhaseSeq');
     
     %analysis sequences
-    casePhaseIntSeq = seq2int(casePhaseSeq);
-    refPahseIntSeq = seq2int(refPhaseSeq);
-    [hBlockSummary] = analysisPhasedCaseRef(casePhaseIntSeq, refPahseIntSeq, wtccc1Conf.blocks);
+    casePhaseIntSeqWithID = seq2int(casePhaseSeq);
+    refPahseIntSeqWithID = seq2int(refPhaseSeq);
+    casePhaseIntSeqNoID = getSeqMatrix(casePhaseIntSeqWithID);
+    refPhaseIntSeqNoID = getSeqMatrix(refPahseIntSeqWithID);
     
-        
+    [hBlockSummary, blockCoverRate, caseFreqInfo, refFreqInfo] = analysisPhasedCaseRef(casePhaseIntSeqNoID, refPhaseIntSeqNoID, wtccc1Conf.blocks);
+    
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
+    
+    [sampledHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
+    [sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
     
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');

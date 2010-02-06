@@ -1,5 +1,6 @@
 function [caseRef, coverRate, seq1Info, seq2Info] = analysisPhasedCaseRef(intSeq1, intSeq2, blocks)
-    [nseq, tmp] = size(intSeq1);
+%get hyplotype block cover information
+[nseq, tmp] = size(intSeq1);
     seq1Info = getSeqFreqInfo(intSeq1, blocks);
     seq2Info = getSeqFreqInfo(intSeq2, blocks);
     [caseRef] = compareCaseRef(seq1Info, seq2Info, blocks);
