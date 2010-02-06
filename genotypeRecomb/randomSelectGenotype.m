@@ -1,10 +1,21 @@
-function [caseGenotype, refGenotype, caseID, refID] = randomSelectGenotype(genotype, idInfo, number)
-%%RANDOM_SELECT_GENOTYPE will randomly select two groups of people from genotype    
+function [caseGenotype, refGenotype, caseID, refID] = randomSelectGenotype(genotype, idInfo, config)
+%%RANDOM_SELECT_GENOTYPE will randomly select two groups of people from
+%%genotype    
+
+    if isstruct(config)
+        caseSize = config.caseSize;
+        refSize = config.refSize;
+    else
+        caseSize = config;
+        refSize = config;
+    end
+
     seqAll = genotype;
     [rows columns] = size(seqAll);
-    
-    if 2*number > rows
-        MException('GenotypeRecomb:randomSelectGenotype', 'not enough individuals');
+
+    if caseSize + refSize > rows
+        e = MException('GenotypeRecomb:randomSelectGenotype', 'not enough individuals');
+        throw(e);
     end
 
     if(mod(rows, 2) == 1)
@@ -19,7 +30,7 @@ function [caseGenotype, refGenotype, caseID, refID] = randomSelectGenotype(genot
     rowIndexs = 1:nIndividuals;
     a = nIndividuals;
     selectedID = [];
-    for i = 1:(2*number)
+    for i = 1:(caseSize + refSize)
        r = randi(a, 1, 1);
        selectedID = [selectedID, rowIndexs(r)];
        rowIndexs(r) = [];
@@ -28,8 +39,8 @@ function [caseGenotype, refGenotype, caseID, refID] = randomSelectGenotype(genot
     
     %randomly select case from the randomly selected population
     caseIndex = [];
-    a = 2*number;
-    for i = 1:number
+    a = refSize + caseSize;
+    for i = 1:caseSize
        c = randi(a, 1, 1);
        caseIndex = [caseIndex, selectedID(c)];
        selectedID(c) = [];
