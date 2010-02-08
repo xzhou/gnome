@@ -18,8 +18,8 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
-    wtccc1Conf.maxItr = 10;
-    wtccc1Conf.nRepeat = 2;
+    wtccc1Conf.maxItr = 10000;
+    wtccc1Conf.nRepeat = 10;
     
     %inter block learning configuration
     wtccc1Conf.trials = 10;
