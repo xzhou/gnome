@@ -1,10 +1,10 @@
 function [ result ] = gInnerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, conf)
 % using estimated r square value to learn learn genotype block
-%% config
+% config
 expT = conf.innerBlockExpT;
 maxItr = conf.maxItr;
 
-%% learning
+% learning
 targetGSeq = blockReconstruct(caseBlock, caseFreq);
 [targetR targetF targetC] = estimateR(targetGSeq);
 targetRs = targetR.*targetR;
