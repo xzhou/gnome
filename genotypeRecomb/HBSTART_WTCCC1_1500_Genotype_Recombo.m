@@ -1,6 +1,5 @@
-%this is the main function
 function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
-%This function will start from a genotype pool
+%%This function will start from a genotype pool
     addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
     change_env()    %change the environment
     startParallel(); %start parallelel
