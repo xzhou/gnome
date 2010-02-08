@@ -46,7 +46,7 @@ for i = 1:nBlock
         fprintf(config.logfid, '\n************learning block %d ***************\n', i);
     end
     %%TODO
-    for k = 1:nRepeat
+    parfor k = 1:nRepeat
         [aResult] = gInnerBlockLearning(targetBlock, targetFreq, refBlock, refFreq, config);
         try
             result{i,k} = aResult;
