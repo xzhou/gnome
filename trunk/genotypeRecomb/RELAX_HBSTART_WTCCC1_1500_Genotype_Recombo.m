@@ -1,6 +1,7 @@
 %this is the main function
-function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
-%This function will start from a genotype pool
+function [] = RELAX_HBSTART_WTCCC1_1500_Genotype_Recombo()
+%this function will start from a block pool and first sample each block and
+%then connect them
     addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
     change_env()    %change the environment
     startParallel(); %start parallelel
@@ -19,8 +20,8 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     %inner block learning configuration
     wtccc1Conf.innerBlockExpT = 1.0e-6;
-    wtccc1Conf.maxItr = 10;
-    wtccc1Conf.nRepeat = 2;
+    wtccc1Conf.maxItr = 10000;
+    wtccc1Conf.nRepeat = 10;
     
     %inter block learning configuration
     wtccc1Conf.trials = 10;
@@ -68,7 +69,8 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
     
-    [sampledHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
+    %[sampledHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
+    [sampledHapSeq] = blockSampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
     [sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
     
     %% doing innerblock learning to approach the frequency
@@ -83,7 +85,6 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     %check the sign recover rate against phasing since we don't have the
     %real data
     %calculate target estimated R
-
     targetR = estimateR(caseSeq);
     initRefR = estimateR(refSeq);
      
