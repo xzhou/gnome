@@ -73,7 +73,7 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
-    [randomCaseSeq] = gInnerSeqLearning(caseSeq, refSeq, wtccc1Conf);
+    [randomCaseSeq] = gInnerSeqLearning(caseSeq, sampledGenoSeq, wtccc1Conf);
     
     caseSeqAfterInnerBlockLearning = adjustStartPoint(randomCaseSeq, refSeq, wtccc1Conf.blocks);
     
