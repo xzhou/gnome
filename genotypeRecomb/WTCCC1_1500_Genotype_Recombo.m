@@ -4,7 +4,7 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     change_env()    %change the environment
     startParallel(); %start parallelel
     
-    %>>>>>>>>>>>>>>> start configuration >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    %=============== start configuration =================================>
     wtccc1Conf.dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
     wtccc1Conf.genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped.fixed';
     wtccc1Conf.phaseFastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
@@ -26,19 +26,17 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.alpha = 0.01;    %combination of r^2 diff and cx0 idff
     wtccc1Conf.smallFilter = 0;
     
-    
     wtccc1Conf.maxIT = 10000;
-    %<<<<<<<<<<<<<<< end configuration <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    %=============== end configuration ====================================
     
-    %>>>>>>>>>>>>>>> initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    %=============== initialization =======================================
     if wtccc1Conf.verbose
         wtccc1Conf.logfid = 1;
     else
         wtccc1Conf.logfid = fopen(wtccc1Conf.logFileName, 'w');
     end
-    %<<<<<<<<<<<<<<< end initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    
-    
+    %=============== end initialization =================================>>
+
     %goto data directory
     cd(wtccc1Conf.dataPath);
     [genotypeAll majorAllele, idInfo] = readPedFile(wtccc1Conf.genotypeFile);
@@ -46,15 +44,10 @@ function [] = WTCCC1_1500_Genotype_Recombo()
     
     [haplotypeSeq] = fastaread(wtccc1Conf.phaseFastaFile);
     
-    %% init r
-    %[totalR pA counts] = estimateR(genotypeAll);
-    
     %% for experiments
     [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf.sampleSize);
     casePhaseSeq = getPhaseSeq(caseID, haplotypeSeq);
     refPhaseSeq = getPhaseSeq(refID, haplotypeSeq);
-    
-    
     
     %analysis seeverqever
     casePhaseIntSeq = seq2int(casePhaseSeq);
