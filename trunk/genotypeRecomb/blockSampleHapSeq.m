@@ -10,7 +10,7 @@ sampledSeq = [];
 for i = 1:nBlock
     a = blocks(i,1);
     b = blocks(i,2);
-    oneBlock = hapSeqNoID(a:b, :);
+    oneBlock = hapSeqNoID(:,a:b);
     newBlock = mySample(oneBlock, config);
     sampledSeq = [sampledSeq, newBlock];
 end

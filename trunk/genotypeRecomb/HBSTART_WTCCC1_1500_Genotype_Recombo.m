@@ -4,7 +4,7 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     change_env()    %change the environment
     startParallel(); %start parallelel
     
-    %>>>>>>>>>>>>>>> start configuration >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    %=============== start configuration ==================================
     wtccc1Conf.dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
     wtccc1Conf.genotypeFile = 'Affx_gt_58C_Chiamo_07.tped.extract.inp.ped.fixed';
     wtccc1Conf.phaseFastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
@@ -29,16 +29,15 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     
     wtccc1Conf.maxIT = 10000;
-    %<<<<<<<<<<<<<<< end configuration <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    %=============== end configuration ====================================
     
-    %>>>>>>>>>>>>>>> initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    %=============== initialization =======================================
     if wtccc1Conf.verbose
         wtccc1Conf.logfid = 1;
     else
         wtccc1Conf.logfid = fopen(wtccc1Conf.logFileName, 'w');
     end
-    %<<<<<<<<<<<<<<< end initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-    
+    %=============== end initialization ===================================
     
     %goto data directory
     cd(wtccc1Conf.dataPath);
@@ -69,7 +68,7 @@ function [] = HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     [sampledHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
     [sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
-    
+
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
     [randomCaseSeq] = gInnerSeqLearning(caseSeq, sampledGenoSeq, wtccc1Conf);
