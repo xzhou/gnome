@@ -12,7 +12,7 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.phaseFastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
     wtccc1Conf.blocks = [1, 24; 25, 65; 66, 81];       %manually define the strucuture
     wtccc1Conf.caseSize= 250;    %the number of individuals for case or reference
-    wtccc1Conf.refSize = 500;   %we use more sample in reference group
+    wtccc1Conf.refSize = 1250;   %we use more sample in reference group
     wtccc1Conf.logFileName = 'WTCCC1_1500.log';
 
     %output options
@@ -72,7 +72,8 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     [sampGenotype] = selectGenotype(refPhaseIntSeqNoID, wtccc1Conf);
     
     
-    %[sampledHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
+    [refHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
+    [bestCoverRef] = selectBestCoverRef(refHapSeq, caseSeq, wtccc1Conf);
     %[sampledHapSeq] = blockSampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
     %[sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
     
