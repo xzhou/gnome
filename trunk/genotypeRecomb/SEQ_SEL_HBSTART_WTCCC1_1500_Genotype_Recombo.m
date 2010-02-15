@@ -15,6 +15,10 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.refSize = 1250;   %we use more sample in reference group
     wtccc1Conf.logFileName = 'WTCCC1_1500.log';
 
+    %hyplotype pre selection configuration
+    wtccc1Conf.alg = 1;
+    wtccc1Conf.maxItr = 0;
+    
     %output options
     wtccc1Conf.verbose = true;
     
