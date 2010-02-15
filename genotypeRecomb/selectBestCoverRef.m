@@ -4,11 +4,13 @@ function [bestGenotypeCoverSeq] = selectBestCoverRef(refHapPool, caseSeq, wtccc1
 %We will use a learning algorithm to get the best coverage
 
 %configuration
-alg = wtccc1Conf.selAlg;
-maxItr = wtccc1Conf.maxItr;
+[nHType, tmp] = size(refHapPool)
+maxItr = nHType*(nHType-1)/2;
 
 [targetRs, targetR, targetCounts] = estimateR(caseSeq);
 [nSeq, nSnps] = size(caseSeq);
+
+[initRefGSeq] = getSmallDistanceSeqs(refHapPool, nSeq);
 
 itr = 0;
 while itr < maxItr
