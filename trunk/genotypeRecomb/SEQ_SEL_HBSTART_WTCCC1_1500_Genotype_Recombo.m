@@ -1,7 +1,8 @@
-%this is the main function
+%MAIN
 function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
-%this function will start from a block pool and first sample each block and
-%then connect them
+% this function first select a reference genotype sequence that with
+% closest rs difference and then adjust the genotype frequency and then
+% reconstruct the genoteyp sequence
     addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
     change_env()    %change the environment
     startParallel(); %start parallelel
@@ -75,9 +76,12 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     [sampGenotype] = selectGenotype(refPhaseIntSeqNoID, wtccc1Conf);
     
+    estTargetR = estimateR(caseSeq);
+    estTargetRs = estTargetRs.*estTargetRs
     
     [refHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
-    [bestCoverRef] = selectBestCoverRef(refHapSeq, caseSeq, wtccc1Conf);
+    sampledGenoSeq = getSmallDistanceSeqs(refHapSeq, m, estTargetRs, majorAllele);
+    
     %[sampledHapSeq] = blockSampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
     %[sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
     
