@@ -1,6 +1,7 @@
 function [r c00 c01 c10 c11] = calcPairwiseFreq(int4q, alleleMapping)
 %   c00 is the major/major
-    int2seq = (int4q == repmat(alleleMapping, length(int4q), 1)) + 0;
+[nIndividual, nSnps] = size(int4q);
+    int2seq = (int4q == repmat(alleleMapping, nIndividual, 1)) + 0;
     [m n] = size(int2seq);
     
     for i = 1:n
@@ -27,5 +28,4 @@ function [r c00 c01 c10 c11] = calcPairwiseFreq(int4q, alleleMapping)
             r(i,j) = rij;
         end
     end
-
 end
