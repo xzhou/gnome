@@ -1,6 +1,10 @@
 function [genotype, alleleMapping, idInfo] = readPedFile(fileName)
 %READ_PED_FILE will read genotype sequence from a ped file and save it to a
 %matrix
+
+%major allele = 0
+%mix = 1
+%minor = 3
     if nargin == 0
         M = importdata('Affx_gt_58C_Chiamo_07.tped.extract.inp.ped');
     else

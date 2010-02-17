@@ -54,7 +54,7 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     [haplotypeSeq] = fastaread(wtccc1Conf.phaseFastaFile);
 
-    %% for experiments
+    %for experiments
     [caseSeq, refSeq, caseID, refID] = randomSelectGenotype(genotypeAll, idInfo, wtccc1Conf);
     
     %get phased sequence
@@ -75,22 +75,20 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
     
     [sampGenotype] = selectGenotype(refPhaseIntSeqNoID, wtccc1Conf);
-    
+
+    %select small distance genotype sequences
     estTargetR = estimateR(caseSeq);
     estTargetRs = estTargetRs.*estTargetRs
-    
     [refHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
     sampledGenoSeq = getSmallDistanceSeqs(refHapSeq, m, estTargetRs, majorAllele);
-    
-    %[sampledHapSeq] = blockSampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
-    %[sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
     
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
     [randomCaseSeq] = gInnerSeqLearning(caseSeq, sampledGenoSeq, wtccc1Conf);
     
+    %% get starting point
     caseSeqAfterInnerBlockLearning = adjustStartPoint(randomCaseSeq, refSeq, wtccc1Conf.blocks);
-    
+
     %% doing interblock learning starting from new sequence
     [result] = genotypeInterBlockRecomb(caseSeq, caseSeqAfterInnerBlockLearning, wtccc1Conf);
     

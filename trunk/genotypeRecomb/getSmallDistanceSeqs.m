@@ -14,9 +14,10 @@ for i = 1:nHap
     for j = i:nHap
         A = refHapPool(i,:);
         B = refHapPool(j,:);
+        rs = calcSelfRs([A;B]);
+        f = singleAlleleFreqOfHapSeq([A;B], alleleMapping);
         AB = haplotype2genotype([A;B], alleleMapping);
-        rs = calcSelfCorr(AB);
-        diff = getRsDiff(rs, targetRS);
+        diff = getRsFDiff(rs, f, targetRS, targetf, alpha);
         rsdiff(i,j) = diff;
         %rsdiff(j,i) = diff;
     end
@@ -56,7 +57,6 @@ for i = 1:m
     oneGenoSeq = haplotype2genotype(hseq, alleleMapping);
     gSeq(i,:) = oneGenoSeq;
 end
-gSeq;
 end
 
 

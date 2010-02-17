@@ -1,4 +1,4 @@
-svn ci -m "update"
+#svn ci -m "update"
 
 rsync  ./genotypeRecomb/* zhou@hulk.cs.indiana.edu:~/research_linux/gnome/bioWorkspace/genomeprj/genotypeRecomb
 
