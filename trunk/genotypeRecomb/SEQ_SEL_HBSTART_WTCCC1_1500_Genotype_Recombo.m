@@ -50,6 +50,7 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     %goto data directory
     cd(wtccc1Conf.dataPath);
     [genotypeAll majorAllele, idInfo] = readPedFile(wtccc1Conf.genotypeFile);
+    wtccc1Conf.majorAllele = majorAllele;
     disp(['reading ', wtccc1Conf.genotypeFile, ' complete']);
     
     [haplotypeSeq] = fastaread(wtccc1Conf.phaseFastaFile);
@@ -77,9 +78,11 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     %select small distance genotype sequences
     [estTargetR, targetF, counts] = estimateR(caseSeq);
     estTargetRs = estTargetR.*estTargetR;
-    [refHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
+    
     fprintf(wtccc1Conf.logfid, 'starting samll distance selection\n');
-    [sampledGenoSeq, xyVal] = getSmallDistanceSeqs(refHapSeq, m, estTargetRs, targetF, majorAllele);
+    
+    [refHapPool] = getHapPool(refPhaseIntSeqNoID, wtccc1Conf);
+    [sampledGenoSeq] = getSmallDistSeq(refHapPool, m, estTargetRs, targetF, majorAllele);
     save('smallDistSelect.mat');
     
     %compare sampledGenotype improvement with random result
