@@ -74,13 +74,22 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
     
-    [sampGenotype] = selectGenotype(refPhaseIntSeqNoID, wtccc1Conf);
-
     %select small distance genotype sequences
-    estTargetR = estimateR(caseSeq);
-    estTargetRs = estTargetRs.*estTargetRs
+    [estTargetR, targetF, counts] = estimateR(caseSeq);
+    estTargetRs = estTargetR.*estTargetR;
     [refHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
-    sampledGenoSeq = getSmallDistanceSeqs(refHapSeq, m, estTargetRs, majorAllele);
+    fprintf(wtccc1Conf.logfid, 'starting samll distance selection\n');
+    [sampledGenoSeq, xyVal] = getSmallDistanceSeqs(refHapSeq, m, estTargetRs, targetF, majorAllele);
+    save('smallDistSelect.mat');
+    
+    %compare sampledGenotype improvement with random result
+    randomRef = randomKRow(refSeq, wtccc1Conf.caseSize);
+    randomRefR = estimateR(randomRef);
+    sampledRefR = estimateR(sampledGenoSeq);
+    
+    randomDiff = getRsFDiff(randomRefR.*randomRefR, 0, estTargetRs, 0, 0);
+    sampleDiff = getRsFDiff(sampledRefR.*sampledRefR, 0, estTargetRs, 0, 0);
+    fprintf(wtccc1Conf.logfid, 'random diff = %f, sample diff = %f\n', randomDiff, sampleDiff);
     
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');

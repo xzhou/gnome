@@ -1,9 +1,7 @@
 function [rs, r] = calcSelfRs(doubleHapSeq, alleleMapping)
 %the input data is two haplotyoe sequence, we calculate the "rsquare"
 [r c00 c01 c10 c11] = calcPairwiseFreq(doubleHapSeq, alleleMapping);
-
 [m n] = size(doubleHapSeq);
-
 r = zeros(n, n);
 rs = r;
 
