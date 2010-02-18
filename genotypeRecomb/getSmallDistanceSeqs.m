@@ -1,4 +1,4 @@
-function [gSeq, xyVal] = getSmallDistanceSeqs(refHapPool, nSeq, targetRs, alleleMapping)
+function [gSeq, xyVal] = getSmallDistanceSeqs(refHapPool, nSeq, targetRs, targetF, alleleMapping)
 %calculate the r square of a single sequence and then compare the distance
 %to target rsquare, and put the smallest nSeq sequence to bestSeq, this is
 %very similiar to homer's test
@@ -11,20 +11,22 @@ rsdiff = NaN(nHap,nHap);
 
 %for each possible haplotype combination, calculate the r square distance
 for i = 1:nHap
-    for j = i:nHap
-        A = refHapPool(i,:);
+    A = refHapPool(i,:);
+    parfor j = i:nHap
         B = refHapPool(j,:);
-        rs = calcSelfRs([A;B]);
+        rs = calcSelfRs([A;B], alleleMapping);
         f = singleAlleleFreqOfHapSeq([A;B], alleleMapping);
-        AB = haplotype2genotype([A;B], alleleMapping);
-        diff = getRsFDiff(rs, f, targetRS, targetf, alpha);
+        %AB = haplotype2genotype([A;B], alleleMapping);
+        diff = getRsFDiff(rs, f, targetRs, targetF);
         rsdiff(i,j) = diff;
         %rsdiff(j,i) = diff;
     end
 end
 
+rsdiff = copyUpperToLower(rsdiff);
+
 if nGenoCombo > nSeq
-    xy = topk(rsdiff, nSeq);
+    xyVal = topk(rsdiff, nSeq);
 else
     %not enough combination, select all and padding according to frequency
     nMissing = nSeq - nGenoCombo;
@@ -52,7 +54,8 @@ function [gSeq] = constructGenotypeSeq(hapPool, indexes, alleleMapping)
 [nHap, nSnps] = size(hapPool);
 gSeq = zeros(m, nSnps);
 for i = 1:m
-    [x y] = indexes(i, 1:2);
+    x = indexes(i, 1);
+    y = indexes(i, 2);
     hseq = hapPool([x, y], :);
     oneGenoSeq = haplotype2genotype(hseq, alleleMapping);
     gSeq(i,:) = oneGenoSeq;
