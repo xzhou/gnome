@@ -29,7 +29,6 @@ function [] = RELAX_HBSTART_WTCCC1_1500_Genotype_Recombo()
     wtccc1Conf.alpha = 0.01;    %combination of r^2 diff and cx0 idff
     wtccc1Conf.smallFilter = 0;
     
-    
     wtccc1Conf.maxIT = 10000;
     %<<<<<<<<<<<<<<< end configuration <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
     
