@@ -70,7 +70,10 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     casePhaseIntSeqNoID = getSeqMatrix(casePhaseIntSeqWithID);
     refPhaseIntSeqNoID = getSeqMatrix(refPahseIntSeqWithID);
     
+    %check haplotype coverage
     [hBlockSummary, blockCoverRate, caseFreqInfo, refFreqInfo] = analysisPhasedCaseRef(casePhaseIntSeqNoID, refPhaseIntSeqNoID, wtccc1Conf.blocks);
+    % print haplotype coverage for each block
+    printCoverRate(wtccc1Conf.logfid, blockCoverRate, 'hyplotype analysis');
     
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
@@ -81,18 +84,26 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     
     fprintf(wtccc1Conf.logfid, 'starting samll distance selection\n');
     
-    [refHapPool] = getHapPool(refPhaseIntSeqNoID, wtccc1Conf);
-    [sampledGenoSeq] = getSmallDistSeq(refHapPool, m, estTargetRs, targetF, majorAllele);
+    [refHapPool] = getHapPool(refPhaseIntSeqNoID, wtccc1Conf.blocks);
+    [sampledGenoSeq] = getSmallDistSeq(refHapPool, m, estTargetRs, targetF, majorAllele, wtccc1Conf.blocks);
     save('smallDistSelect.mat');
+    [sampledGnotypeSummary, blockCoverRateGenotype, caseFreqInfo, sampleFreqInfo] = analysisPhasedCaseRef(caseSeq, sampledGenoSeq, wtccc1Conf.blocks);
+    printCoverRate(wtccc1Conf.logfid, blockCoverRateGenotype, 'genotype cover rate');
+    
     
     %compare sampledGenotype improvement with random result
     randomRef = randomKRow(refSeq, wtccc1Conf.caseSize);
+    [randomSummary, randomCoverRate, caseFreqInfo, randomFreqInfo] = analysisPhasedCaseRef(caseSeq, randomRef, wtccc1Conf.blocks);
+    printCoverRate(wtccc1Conf.logfid, randomCoverRate, 'random seq cover rate');
+    
+    %compare random and sample
     randomRefR = estimateR(randomRef);
     sampledRefR = estimateR(sampledGenoSeq);
     
     randomDiff = getRsFDiff(randomRefR.*randomRefR, 0, estTargetRs, 0, 0);
     sampleDiff = getRsFDiff(sampledRefR.*sampledRefR, 0, estTargetRs, 0, 0);
     fprintf(wtccc1Conf.logfid, 'random diff = %f, sample diff = %f\n', randomDiff, sampleDiff);
+    save('initComplete.mat');
     
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
