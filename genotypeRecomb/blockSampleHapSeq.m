@@ -12,6 +12,7 @@ for i = 1:nBlock
     b = blocks(i,2);
     oneBlock = hapSeqNoID(:,a:b);
     newBlock = mySample(oneBlock, config);
+    %concatinate sequences
     sampledSeq = [sampledSeq, newBlock];
 end
 

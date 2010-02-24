@@ -40,7 +40,6 @@ function [] = RELAX_HBSTART_WTCCC1_1500_Genotype_Recombo()
     end
     %<<<<<<<<<<<<<<< end initialization >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     
-    
     %goto data directory
     cd(wtccc1Conf.dataPath);
     [genotypeAll majorAllele, idInfo] = readPedFile(wtccc1Conf.genotypeFile);
@@ -63,15 +62,26 @@ function [] = RELAX_HBSTART_WTCCC1_1500_Genotype_Recombo()
     casePhaseIntSeqNoID = getSeqMatrix(casePhaseIntSeqWithID);
     refPhaseIntSeqNoID = getSeqMatrix(refPahseIntSeqWithID);
     
-    [hBlockSummary, blockCoverRate, caseFreqInfo, refFreqInfo] = analysisPhasedCaseRef(casePhaseIntSeqNoID, refPhaseIntSeqNoID, wtccc1Conf.blocks);
+    [~, blockCoverRate, caseFreqInfo, refFreqInfo] = analysisPhasedCaseRef(casePhaseIntSeqNoID, refPhaseIntSeqNoID, wtccc1Conf.blocks);
+    printCoverRate(wtccc1Conf.logfid, blockCoverRate, 'random hyplotype');
     
     [m n] = size(caseSeq);
     fprintf(wtccc1Conf.logfid, 'sample size %d X %d\n', m, n);
     
     %[sampledHapSeq] = sampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
     [sampledHapSeq] = blockSampleHapSeq(refPhaseIntSeqNoID, wtccc1Conf);
-    [sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
+    [~, sampleHapCoverRate, ~, ~] = analysisPhasedCaseRef(casePhaseIntSeqNoID, sampledHapSeq, wtccc1Conf.blocks);
+    printCoverRate(wtccc1Conf.logfid, sampleHapCoverRate, 'sample hap cover rate');
     
+    [sampledGenoSeq] = hapSeq2GenoSeq(sampledHapSeq, majorAllele);
+    [~, sampleCoverRate, caseFreqInfo, sampleFreqInfo] = analysisPhasedCaseRef(caseSeq, sampledGenoSeq, wtccc1Conf.blocks);
+    printCoverRate(wtccc1Conf.logfid, sampleCoverRate, 'sample genotype cover rate');
+    
+    randomRef = randomKRow(refSeq, wtccc1Conf.caseSize);
+    [randomSummary, randomCoverRate, caseFreqInfo, randomFreqInfo] = analysisPhasedCaseRef(caseSeq, randomRef, wtccc1Conf.blocks);
+    printCoverRate(wtccc1Conf.logfid, randomCoverRate, 'random seq cover rate');
+    plotCoverRate(caseFreqInfo, 'case');
+
     %% doing innerblock learning to approach the frequency
     fprintf(wtccc1Conf.logfid, 'start inner block learning');
     [randomCaseSeq] = gInnerSeqLearning(caseSeq, sampledGenoSeq, wtccc1Conf);
@@ -90,6 +100,6 @@ function [] = RELAX_HBSTART_WTCCC1_1500_Genotype_Recombo()
     initSignRate = SignRate(targetR, initRefR);
     finalSignRate = SignRate(targetR, result.finalTargetR);
 
-    fprintf(1, 'initSignRate %f, \tfinalSignRate, %f', initSignRate, finalSignRate);
+    fprintf(1, 'initSignRate %f, \tfinaSignRate, %f', initSignRate, finalSignRate);
     
 end

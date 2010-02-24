@@ -90,7 +90,6 @@ function [] = SEQ_SEL_HBSTART_WTCCC1_1500_Genotype_Recombo()
     [sampledGnotypeSummary, blockCoverRateGenotype, caseFreqInfo, sampleFreqInfo] = analysisPhasedCaseRef(caseSeq, sampledGenoSeq, wtccc1Conf.blocks);
     printCoverRate(wtccc1Conf.logfid, blockCoverRateGenotype, 'genotype cover rate');
     
-    
     %compare sampledGenotype improvement with random result
     randomRef = randomKRow(refSeq, wtccc1Conf.caseSize);
     [randomSummary, randomCoverRate, caseFreqInfo, randomFreqInfo] = analysisPhasedCaseRef(caseSeq, randomRef, wtccc1Conf.blocks);

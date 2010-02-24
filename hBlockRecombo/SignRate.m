@@ -6,22 +6,17 @@ function [rate totalSign correctSign] = SignRate(targetR, sampleR, blockLens)
     if nargin == 2
         targetSign = sign(targetR);
         sampleSign = sign(sampleR);
-
         signDiff = targetSign.*sampleSign;
         signDiff(logical(eye(size(signDiff)))) = 0;
-
         correctSign = nansum(nansum(double(signDiff == 1)))/2;
-
-        [m n] = size(targetR);
-
+        [m ~] = size(targetR);
         totalSign = m*(m-1)/2;
-
+        %remove Nan value
+        totalSign = totalSign - sum(sum(isnan(triu(signDiff))));
         rate = correctSign/totalSign;
     else
         nBlock = length(blockLens);
-        
         maskMatrix = zeros(size(targetR));
-        
         %remove the sign inside block
         for i = 1:nBlock
             if i == 1
@@ -33,7 +28,6 @@ function [rate totalSign correctSign] = SignRate(targetR, sampleR, blockLens)
             end
             maskMatrix(lim1:lim2, lim1:lim2) = 1;
         end
-        
         maskMatrix = logical(maskMatrix);
         reverseMask = ~maskMatrix;
         targetSign = sign(targetR);

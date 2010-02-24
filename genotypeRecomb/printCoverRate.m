@@ -5,6 +5,6 @@ fprintf(fid, '***%s***\n', str);
 for i = 1:nBlock
     tr = blockCoverRate(i).typeCoverate;
     sr = blockCoverRate(i).seqCoverate;
-    fprintf(fid, 'hyplotype block %d, type coverate = %f, seq coverrate = %f\n', i, tr, sr);
+    fprintf(fid, 'block %d, type coverate = %f, seq coverrate = %f\n', i, tr, sr);
 end
 end
