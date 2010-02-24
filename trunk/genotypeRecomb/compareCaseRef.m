@@ -1,5 +1,6 @@
 function [common] = compareCaseRef(caseInfo, refInfo, blocks)
-%returns the shared hyplotype 
+%returns the shared hyplotype
+% common is a structure = [caseIdx, refIdx, caseFreq, refFreq];
 [m n] = size(blocks);
 common = cell(3,1);
 for i = 1:m
