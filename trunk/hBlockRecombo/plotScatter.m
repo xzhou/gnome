@@ -1,4 +1,4 @@
-function [ h ] = plotScatter(caseSeq4, refSeq4, caseR, refR, figTitle)
+function [ h ] = plotScatter(caseSeq4, refSeq4, caseR, refR, figTitle, iBigRepeat)
 %in this function, we will plot the scatter graph based on 
 
 if nargin <= 4
@@ -35,11 +35,12 @@ plot(index1, StatS.Tr, '.r');
 plot(index2, StatR.Tr, '.g');
 legend({'case' 'ref'});
 
-plot(ones(2*nS)*sortR(int8(nS*0.95)));
+plot(ones(2*nS)*sortR(int16(nS*0.95)));
 xlabel('individual index');
 ylabel('T_r value');
 title(figTitle);
-
+filename = strcat('Trial', num2str(iBigRepeat),figTitle);
+print(h,'-dpdf',filename);
 
 end
 

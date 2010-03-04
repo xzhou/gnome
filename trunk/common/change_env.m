@@ -9,7 +9,12 @@ function [] = change_env()
         addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
         addpath '~/research_linux/gnome/bioWorkspace/genomeprj/MyDrTest';
     elseif start_with(path, 'D:')
-        disp 'running on Windows, please update th path here :)'
+        disp 'running on Windows, please update th path here :)';
+        addpath 'D:\IUBResearch\Projects\Bioinfor\code\genotypeRecomb';
+        addpath 'D:\IUBResearch\Projects\Bioinfor\code\hBlockRecombo';
+        addpath 'D:\IUBResearch\Projects\Bioinfor\code\readFiles';
+        addpath 'D:\IUBResearch\Projects\Bioinfor\code\common';
+        addpath 'D:\IUBResearch\Projects\Bioinfor\code\MyDrTest';
     end
 end
 
