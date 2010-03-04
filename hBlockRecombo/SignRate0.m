@@ -1,4 +1,4 @@
-function [rate totalSign correctSign] = SignRate(targetR, sampleR, blockLens)
+function [rate totalSign correctSign] = SignRate0(targetR, sampleR, blockLens)
 %calculate the sign recover rate for the blocks
 % @targetR the target R value
 % @sampleR the sample R value
@@ -12,10 +12,13 @@ function [rate totalSign correctSign] = SignRate(targetR, sampleR, blockLens)
         signDiff(logical(eye(size(signDiff)))) = 0;
         correctSign = nansum(nansum(double(signDiff == 1)))/2;
         [m ~] = size(targetR);
+        testR=targetR;
+        testR(logical(triu(ones(m))))=1;
+        adjust = sum(sum(testR==0));
         totalSign = m*(m-1)/2;
         %remove Nan value
-        totalSign = totalSign - sum(sum(isnan(triu(signDiff))));
-        rate = correctSign/totalSign;
+        totalSign = totalSign - adjust;
+        rate = (correctSign-adjust)/totalSign;
     else
         nBlock = length(blockLens);
         maskMatrix = zeros(size(targetR));

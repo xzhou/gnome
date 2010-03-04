@@ -1,4 +1,4 @@
-function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, targetSeq, currentSeq, blocks, newBlock, alleleMapping, smallFilter)
+function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, targetSeq, refSeq4, currentSeq, blocks, newBlock, alleleMapping, smallFilter)
 
     debugMode = true;
 
@@ -8,7 +8,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targ
     expT = numel(targetR)/2*1e-10;
     maxIT = 10000;
     
-    [currentQuality currentR] = blockEvaluateSeq(targetRs, currentSeq, alleleMapping, blocks, newBlock, smallFilter);
+    [currentQuality currentR] = blockEvaluateSeq(targetRs, currentSeq, refSeq4, alleleMapping, blocks, newBlock, smallFilter);
     initSignRate = blockSignRate(targetR, currentR, blocks, newBlock);
     
     initQuality = currentQuality;
@@ -19,7 +19,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targ
     while t < maxIT
         t = t + 1;
         newSampleSeq = newMutate(currentSeq, newBlock);
-        [newQuality newR blockMask] = blockEvaluateSeq(targetRs, newSampleSeq, alleleMapping, blocks, newBlock, smallFilter);
+        [newQuality newR blockMask] = blockEvaluateSeq(targetRs, newSampleSeq, refSeq4,  alleleMapping, blocks, newBlock, smallFilter);
         Qdiff = newQuality - currentQuality;
         if Qdiff < 0
             p = 1/(1+exp(Qdiff/expT));
@@ -35,7 +35,7 @@ function [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targ
             signRate = blockSignRate(targetR, newR, blocks, newBlock);
             
             if debugMode == 1
-                %fprintf(1, '%d currentQ = %f, signRate = %f\n', t, currentQuality, signRate);
+                fprintf(1, '%d currentQ = %f, signRate = %f\n', t, currentQuality, signRate);
             end
         else
             %debug information

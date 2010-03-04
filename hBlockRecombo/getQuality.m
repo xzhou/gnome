@@ -29,6 +29,10 @@ function [newQuality] = calcRDiff(targetRs, newRs, smallRFilter)
     %make sure remove the diagnal elements
     targetRs(logical(eye(size(targetRs)))) = 0;
     newRs(logical(eye(size(newRs)))) = 0;
+   
+    %filter those points whoes Rs is 0 in either Case or Ref
+    targetRs(logical(targetRs==0))=NaN;
+    newRs(logical(newRs==0))=NaN;
     
     %filter the small r values
     targetRs(targetRs < smallRFilter) = 0;

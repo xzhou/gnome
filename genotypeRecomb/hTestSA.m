@@ -42,32 +42,16 @@ delete('hbrecombo.log');
 diary hbrecombo.log;
 
 rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
-%rawFastaData = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
 
-%sequence = 
-
-
-for iBigRepeat = 1:100
+for iBigRepeat = 1:1
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
     
     
 %      for 77 SNPs randomly select case and reference
     [caseSeq4 refSeq4] = randomSelect(rawFastaData);
     
-    
-    
-%     caseFasta = fastaread('chr10_FGFR2_200kb_phased_CEU.fasta');
-%     refFasta = fastaread('chr10_FGFR2_200kb_phased_yri.fasta');
-%     
     nS = length(caseSeq4(:,1));
     Len = length(caseSeq4(1,:));
-%     caseSeq4 = zeros(nS, Len);
-%     refSeq4 = zeros(nS,Len);
-%     
-%     for i = 1 :nS
-%         caseSeq4(i, :) = nt2int(caseFasta(i).Sequence) -1;
-%         refSeq4(i,:) = nt2int(refFasta(i).Sequence) -1;
-%     end
 
 
     %% test the block structure
@@ -89,24 +73,6 @@ for iBigRepeat = 1:100
     save('caseBlockFreq.mat', 'caseBlockFreqInfo');
     save('caseMatch.mat', 'matchedCase');
     save('refMatchedCase.mat', 'refMatchedCase');
-
-    % %% Construct current sequence accorting to CASE frequence
-    % 
-    % afterInnerRecomboSeq = zeros(nS, Len);
-    % tempRefMatchedCase = refMatchedCase;
-    % n = 1;
-    % for i = 1 : length(refMatchedCase)
-    %     tempRefMatchedCase{i, 1}(end-1:end, :) = [];
-    %     for j = 1: length(tempRefMatchedCase{i,1})
-    %         if tempRefMatchedCase{i,1}(j, end) ~= 0
-    %             for k = 1 : tempRefMatchedCase{i,1}(j, end)
-    %             afterInnerRecomboSeq(n, blocks(i,1):blocks(i,2)) = tempRefMatchedCase{i,1}(j, 1:end-2);
-    %             n = n+1;
-    %             end
-    %         end
-    %     end
-    %     n= 1;
-    % end
 
 
     %% plot initialization
@@ -143,12 +109,13 @@ for iBigRepeat = 1:100
     title('Homer Test');
 
 
-    targetRealR = calcR(caseSeq4, alleleMapping);
+    %targetRealR = calcR(caseSeq4, alleleMapping);
+    targetR = calcR(caseSeq4, alleleMapping);
     realSingleAlleleFreq = GnomeCalculator.getSingleAlleleFreq(caseSeq4, alleleMapping);
     %round to precision 1e-4
     
-    targetGenotypeSeq = haplotype2genotype(caseSeq4, alleleMapping);
-    [targetR pA counts] = estimateR(targetGenotypeSeq);
+    %targetGenotypeSeq = haplotype2genotype(caseSeq4, alleleMapping);
+    %[targetR pA counts] = estimateR(targetGenotypeSeq);
     targetR = fix(targetR.*10000)./10000;
     
     refR = calcR(refSeq4, alleleMapping);
@@ -212,25 +179,33 @@ for iBigRepeat = 1:100
     bufferMatrix = zeros(Len, Len, trials);
 
     %% inner block learning
-    %currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
+    %currentSeq1 = innerBlockDriver(caseSeq4, refSeq4, blocks);
     
-%     type innerBlockMutate.m
-%     type innerBlockFitness.m
-%     currentSeq = zeros(size(caseSeq4));
-%     m=nBlock;
-%     for i = 1:m
-%         %fitnessfcn = @(x) innerBlockFitness(x,caseSeq(:,1:15));
-%         fitnessfcn = @(x) innerBlockFitness(x,caseSeq4(:,blocks(i,1):blocks(i,2)));
-%         
-%         options = saoptimset('DataType', 'custom', 'AnnealingFcn', @innerBlockMutate, ...
-%             'StallIterLimit',800, 'ReannealInterval', 800);
-%         % Finally, we call simulated annealing with our problem information.
-%         genotypeBlock = simulannealbnd(fitnessfcn, refSeq4(:,blocks(i,1):blocks(i,2)), [], [], options);
-%         %genotypeBlock = simulannealbnd(fitnessfcn, refSeq, [], [], options);
-%         
-%         currentSeq(:,blocks(i,1):blocks(i,2)) = genotypeBlock;
-%     end
+    type innerBlockMutate.m
+    type innerBlockFitness.m
+    currentSeq = zeros(size(refSeq4));
+    m=nBlock;
+    for i = 1:m
+        %fitnessfcn = @(x) innerBlockFitness(x,caseSeq(:,1:15));
+        fitnessfcn = @(x) innerBlockFitness(x,caseSeq4(:,blocks(i,1):blocks(i,2)));
+        
+        options = saoptimset('DataType', 'custom', 'AnnealingFcn', @innerBlockMutate, ...
+            'StallIterLimit',800, 'ReannealInterval', 800);
+        % Finally, we call simulated annealing with our problem information.
+        [genotypeBlock,funval, exitflag, output] = simulannealbnd(fitnessfcn, refSeq4(:,blocks(i,1):blocks(i,2)), [], [], options);
+        %genotypeBlock = simulannealbnd(fitnessfcn, refSeq, [], [], options);
+        
+        currentSeq(:,blocks(i,1):blocks(i,2)) = genotypeBlock;
+    end
     
+    
+    r1 = calcR(currentSeq);
+   % r11 = calcR(currentSeq1);
+    r2 = calcR(caseSeq4);
+    r3 = calcR(refSeq4);
+    diff1 = sum(sum(abs(r1.*r1-r2.*r2)))/2;
+    diff2 = sum(sum(abs(r2.*r2-r3.*r3)))/2;
+   % diff3 = sum(sum(abs(r11.*r11-r2.*r2)))/2;
     %initCaseSeq = currentSeq;
     %%Generate start point according to ref
     newCurrentSeq = zeros(nS, Len);
@@ -240,6 +215,15 @@ for iBigRepeat = 1:100
     end
     currentMatchedRef = blockCheck(currentBlockFreqInfo, refBlockFreqInfo, blocks);
     currentMatchedCase = blockCheck(currentBlockFreqInfo, caseBlockFreqInfo, blocks);
+    
+    current1BlockFreqInfo = cell(nBlock, 1);
+    parfor i = 1:nBlock
+        current1BlockFreqInfo{i,1} = getBlockFreq(currentSeq1, blocks(i,:));
+    end
+    current1MatchedRef = blockCheck(current1BlockFreqInfo, refBlockFreqInfo, blocks);
+    current1MatchedCase = blockCheck(current1BlockFreqInfo, caseBlockFreqInfo, blocks);
+    
+    
     
     %for each block ???
     for i = 1:nBlock
