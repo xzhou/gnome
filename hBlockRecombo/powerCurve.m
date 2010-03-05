@@ -1,5 +1,6 @@
 function [] = powerCurve(allSeq, threshold, N, maskMatrix)
-% function powerCurve will test the power of Tr with Homer's attack.
+% function powerCurve will test the power of Tr with Homer's attack. The
+% population is generated using MC model
 % @caseSeq is the case hyplotype sequence
 % @refSeq is reference hyplotype sequence
 % @threshold filter r value that larger than threshold
@@ -90,7 +91,7 @@ function [] = powerCurve(allSeq, threshold, N, maskMatrix)
         all_p_P = sum(sample_P,1)/nP;
         all_p_M0 = sum(sample_M,1)/nM;
         
-        %add the individual to the sample
+        %add the individual to the sample as case
         sample_M(end,:)=A;
         
         all_r_MA = corrcoef(sample_M);  %calculate r value

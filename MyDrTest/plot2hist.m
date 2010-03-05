@@ -22,3 +22,4 @@ D_M0 = sort(D_M0);
 indx = floor(length(D_M0)*(1-alpha));
 threshold = (D_M0(indx)+D_M0(indx+1))/2;
 power = sum(D_MA>threshold)/length(D_MA);
+end
