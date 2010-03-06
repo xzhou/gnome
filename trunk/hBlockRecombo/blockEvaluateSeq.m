@@ -41,14 +41,16 @@ function [newQuality newR blockMask] = blockEvaluateSeq(targetRs, newSampleSeq, 
     normalRDiff = rDiff/nElements;
     
     %measure the C00 distance between ref and currentSeq
-%     [newR newC00 newC01 newC10 newC11] = calcPairwiseFreq(newSampleSeq, alleleMapping);
-%     [refR refC00 refC01 refC10 refC11] = calcPairwiseFreq(refSeq4, alleleMapping);
-%     
-%     c00Diff = sum(sum(abs(newC00.*blockMask-refC00.*blockMask)));
-%     normalC00Diff = c00Diff/nElements/500;
-%     
-%     newQuality = normalRDiff*alpha + (1-alpha)*normalC00Diff; 
-    newQuality = normalRDiff;
+    
+    newC00 = calcC00(newSampleSeq, alleleMapping);
+    [newR newC001 newC01 newC10 newC11] = calcPairwiseFreq(newSampleSeq, alleleMapping);
+    [refR refC00 refC01 refC10 refC11] = calcPairwiseFreq(refSeq4, alleleMapping);
+    
+    c00Diff = sum(sum(abs(newC00.*blockMask-refC00.*blockMask)));
+    normalC00Diff = c00Diff/nElements/500;
+    
+    newQuality = normalRDiff*alpha + (1-alpha)*normalC00Diff; 
+    %newQuality = normalRDiff;
     
 end
 
