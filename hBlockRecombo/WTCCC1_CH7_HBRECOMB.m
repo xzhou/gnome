@@ -160,6 +160,8 @@ for iBigRepeat = 1: bigRepeat
     realTargetR = calcR(caseSeq4, alleleMapping);
     
     refR = calcR(refSeq4, alleleMapping);
+    
+	[refR2 refC00 refC01 refC10 refC11] = calcPairwiseFreq(refSeq4, alleleMapping);
 
     preTargetR = abs(targetR).*sign(refR);
 
@@ -238,8 +240,8 @@ for iBigRepeat = 1: bigRepeat
     bufferMatrix = zeros(Len, Len, trials);
 
     %% inner block learning
-    currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
-    %currentSeq = refSeq4;
+    %currentSeq = innerBlockDriver(caseSeq4, refSeq4, blocks);
+    currentSeq = refSeq4;
     
     currentBlockFreqInfo = cell(nBlock, 1);
 
@@ -267,7 +269,7 @@ for iBigRepeat = 1: bigRepeat
             if(block1(1,3) >= block2(1,3))
                 block1(1,4) = 1;%??
                 %currentSeq = shuffleNewBlock(currentSeq, block2);
-                parfor t = 1:trials
+                for t = 1:trials
                     [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, refSeq4, newCurrentSeq, block1, block2, alleleMapping, 0);
                     bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                     blockRate(t,:) = [finalSignRate finalQual];
@@ -278,7 +280,7 @@ for iBigRepeat = 1: bigRepeat
             else
                 block2(1,4) = 1;%??
                 %currentSeq = shuffleNewBlock(currentSeq, block1);
-                parfor t = 1:trials
+                for t = 1:trials
                     [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, refSeq4, newCurrentSeq, block2, block1, alleleMapping, 0);
                     bufferMatrix(:,:,t) = sign(finalR.*blockMask);
                     blockRate(t,:) = [finalSignRate finalQual];
