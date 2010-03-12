@@ -34,12 +34,16 @@ caseTr = zeros(nSeg, trial, nCase);
 refTr = zeros(nSeg, trial, nRef);
 
 %calculate power
+%for different recover rate
 for i = 1:nSeg
-    fprintf(1, '%d\n', i);
+    %fprintf(1, '%d\n', i);
     p = 0.1 * i;
+    fprintf(1, 'p = %f\%\n', p*100);
+    %try multiple times
     for j = 1:trial
         pMask = getMaskP(nSnps, p);
         pCaseR = caseR .* pMask;
+        %for each individual
         for k = 1:nCase
             Yc = caseSeq(k,:);
             Tr = getTr(Yc, pCaseR, refR);
