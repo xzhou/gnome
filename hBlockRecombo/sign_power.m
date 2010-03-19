@@ -1,4 +1,4 @@
-function [caseTr, refTr] = sign_power(hapSeq, nCase, nRef, trial)
+function [caseTr, refTr, testTr] = sign_power(hapSeq, nCase, nRef, nTest, trial)
 %explore the relationship between sign and power. Previously we though some
 %sign has larger power. And even 10% sign has significant power. I think
 %it's now stable since some pair has negative effects to the power,
@@ -12,7 +12,7 @@ uniqueHapSeq = unique(hapSeq, 'rows');
 
 [m, nSnps] = size(uniqueHapSeq);
 
-totalSample = nCase + nRef;
+totalSample = nCase + nRef + nTest;
 if totalSample > m
     e = MException('signPower:notEnoughUniqueSeq', 'xzhou: not enough unique sequence');
     throw(e);
@@ -21,7 +21,8 @@ end
 idx = randsample(m, totalSample);
 
 caseSeq = uniqueHapSeq(idx(1:nCase), :);
-refSeq = uniqueHapSeq(idx(nCase+1:end), :);
+refSeq = uniqueHapSeq(idx(nCase+1:nCase+nRef), :);
+testSeq = uniqueHapSeq(idx(nCase+nRef+1:end), :);
 
 caseR = corrcoef(caseSeq);
 refR = corrcoef(refSeq);
@@ -32,13 +33,14 @@ refR(isnan(refR)) = 0;%invariant sites
 nSeg = 10; %divide 1-100 into 10 segment
 caseTr = zeros(nSeg, trial, nCase);
 refTr = zeros(nSeg, trial, nRef);
+testTr = zeros(nSeg, trial, nTest);
 
 %calculate power
 %for different recover rate
 for i = 1:nSeg
     %fprintf(1, '%d\n', i);
     p = 0.1 * i;
-    fprintf(1, 'p = %f\%\n', p*100);
+    fprintf(1, 'p = %f%%\n', p*100);
     %try multiple times
     for j = 1:trial
         pMask = getMaskP(nSnps, p);
@@ -53,6 +55,11 @@ for i = 1:nSeg
             Yr = refSeq(k, :);
             Tr = getTr(Yr, pCaseR, refR);
             refTr(i, j, k) = Tr;
+        end
+        for k = 1:nTest
+            Yt = testSeq(k, :);
+            Tt = getTr(Yt, pCaseR, refR);
+            testTr(i, j, k) = Tt;
         end
     end
 end

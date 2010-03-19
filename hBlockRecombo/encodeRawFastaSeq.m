@@ -1,5 +1,5 @@
 function [hap01Seq, alleleMapping] = encodeRawFastaSeq(rawFastaSeq, alleleMapping)
-%convert raw fasta sequence to 01 encoding
+%convert raw fasta sequence to 01 encoding, 1 is major, 0 is minor
 hapIntSeq = seq2int(rawFastaSeq);
 hapSeqNoID = getSeqMatrix(hapIntSeq);
 if nargin == 1

@@ -58,7 +58,7 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
         signVector = MatrixToVec(signMatrix, maskIndex');
         nrow = length(signVector);
         z = ones(nrow, 1);
-        scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x');
+        scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x', 'LineWidth', 0.1);
     end
     colorbar;
 

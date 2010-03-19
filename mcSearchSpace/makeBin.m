@@ -1,0 +1,36 @@
+function [newBins, lowerBound] = makeBin(bins, nBins)
+%create new bins that will do estimation of old bins to save sapce
+%remove 
+
+if any(bins(:,1) > 0)
+    %all log probability should be less than 0
+    e = MException('makeBin:p', 'log(p) <= 0');
+    throw(e);
+end
+
+bins = bins(bins(:,1)~=-Inf, :);
+
+lowerBound = floor(min(bins(:,1)));
+
+binSize = abs(lowerBound/nBins);
+
+%newBins = [avg_p, count]
+newBins = zeros(nBins, 2);
+%create bins
+for i = 1:nBins
+    binBtn = -i*binSize;
+    binTop = binBtn + binSize;
+    ps = bins(bins(:,1)>binBtn & bins(:,1)<=binTop, :);
+    if size(ps, 1) == 0
+        newBins(i, :) = [binTop - binSize/2, 0];
+    else
+        counts = sum(ps(:,2));
+        if(counts == 0)
+            newBins(i,:) = [binTop - binSize/2, 0];
+        else
+            avg_p = sum(ps(:,1).*ps(:,2))/counts;
+            newBins(i,:) = [avg_p, counts];
+        end
+    end
+end
+end

@@ -14,7 +14,7 @@ function [StatS, StatR, StatT, Truth] = DrTest2(rev, replaceSign)
         rev = 1;
     end
     %% read the haplotype sequences
-    cd '/home/xzhou/research_linux/gnome/workspace/data/dist100x77'
+    cd '/home/xzhou/research_linux/gnome/bioWorkspace/data/dist100x77'
     if rev
         fastafile = '80SNP_CEU_sim_4000seq.fasta';
         fastafile_testgroup = '80SNP_CEU_sim_4000seq_control1000.fasta';
