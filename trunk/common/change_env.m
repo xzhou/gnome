@@ -1,4 +1,4 @@
-function [] = change_env()
+function [OS] = change_env()
 %CHANGE_ENV will handle all environmental problems
     path = pwd;
     if start_with(path, '/')
@@ -8,6 +8,7 @@ function [] = change_env()
         addpath '~/research_linux/gnome/bioWorkspace/genomeprj/readFiles';
         addpath '~/research_linux/gnome/bioWorkspace/genomeprj/common';
         addpath '~/research_linux/gnome/bioWorkspace/genomeprj/MyDrTest';
+        OS = 1;
     elseif start_with(path, 'D:')
         disp 'running on Windows, please update th path here :)';
         addpath 'D:\IUBResearch\Projects\Bioinfor\code\genotypeRecomb';
@@ -15,6 +16,7 @@ function [] = change_env()
         addpath 'D:\IUBResearch\Projects\Bioinfor\code\readFiles';
         addpath 'D:\IUBResearch\Projects\Bioinfor\code\common';
         addpath 'D:\IUBResearch\Projects\Bioinfor\code\MyDrTest';
+        OS = 0;
     end
 end
 

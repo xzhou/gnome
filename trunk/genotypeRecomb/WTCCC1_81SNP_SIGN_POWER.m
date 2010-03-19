@@ -21,8 +21,9 @@ end
 
 caseSize = 100;
 refSize = 100;
-trial = 1000;
-[caseTr, refTr] = sign_power(hap01Seq, caseSize, refSize, trial);
+nTest = 100;
+trial = 100;
+[caseTr, refTr, testTr] = sign_power(hap01Seq, caseSize, refSize, nTest, trial);
 
 save('sign_power.mat');
 load('sign_power.mat');
@@ -30,16 +31,16 @@ load('sign_power.mat');
 [nSeg, nTrial, nCase] = size(caseTr);
 [~, ~, nRef] = size(refTr);
 
-%0.95 identification rate
+%0.95 FPR, we use test to find the .95 FPR line
 result = zeros(nSeg, nTrial);
 for i = 1:nSeg
     %p = i * 0.1;
     for j = 1:nTrial
         caseTr_j = caseTr(i, j, :);
-        refTr_j = refTr(i, j, :);
-        id = floor((1-alpha)*nRef);
-        refTr_j_sort = sort(refTr_j);
-        T = refTr_j_sort(id);
+        testTr_j = testTr(i, j, :);
+        id = floor((1-alpha)*nTest);
+        testTr_j_sort = sort(testTr_j);
+        T = testTr_j_sort(id);
         result(i, j) = sum(caseTr_j > T);
     end
 end
@@ -48,11 +49,19 @@ maxIdentificationRate = max(result, [], 2);
 avgIdr = mean(result, 2);
 save('maxIdentificationRate.mat');
 
-plot(0.1:0.1:1, [maxIdentificationRate, avgIdr]);
-title(['signRate vs identification rate, nCase = ', num2str(nCase), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial)]);
+h = plot(0.1:0.1:1, [maxIdentificationRate, avgIdr]);
+title(['signRate vs identification rate, nCase = ', num2str(nCase), 'nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial)]);
 xlabel('signRate')
 ylabel('identification rate');
 legend('max', 'mean');
+%saveas(h, 'signRate.pdf');
+
+
+%plot 100% sign 
+oneCaseTr = caseTr(10, 1, :);
+oneTestTr = testTr(10, 1, :);
+y = [reshape(oneCaseTr, 1, length(oneCaseTr)), reshape(oneTestTr, 1, length(oneTestTr))];
+%scatter(1:length(y), y);
 
 %plot
 % for i = 1:trial

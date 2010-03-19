@@ -11,7 +11,6 @@ function [r] = calcR(int4seq, alleleMapping, zeroNan)
     
     int2seq = (int4seq == repmat(alleleMapping, length(int4seq(:,1)), 1)) + 0;
     r = corrcoef(int2seq);
-    
     if zeroNan == 0
         r(isnan(r)) = 0;
     end
