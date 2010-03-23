@@ -1,4 +1,4 @@
-function [caseTr, refTr, testTr] = sign_power(hapSeq, nCase, nRef, nTest, trial)
+function [caseTr, refTr, testTr] = sign_power(hapSeq, nCase, nRef, nTest, trial, useEstR)
 %explore the relationship between sign and power. Previously we though some
 %sign has larger power. And even 10% sign has significant power. I think
 %it's now stable since some pair has negative effects to the power,
@@ -24,8 +24,13 @@ caseSeq = uniqueHapSeq(idx(1:nCase), :);
 refSeq = uniqueHapSeq(idx(nCase+1:nCase+nRef), :);
 testSeq = uniqueHapSeq(idx(nCase+nRef+1:end), :);
 
-caseR = corrcoef(caseSeq);
-refR = corrcoef(refSeq);
+if useEstR == 0
+    caseR = corrcoef(caseSeq);
+    refR = corrcoef(refSeq);
+else
+    caseR = hapSeqEstR(caseSeq);
+    refR = hapSeqEstR(refSeq);
+end
 
 caseR(isnan(caseR)) = 0;%invariant sites
 refR(isnan(refR)) = 0;%invariant sites
