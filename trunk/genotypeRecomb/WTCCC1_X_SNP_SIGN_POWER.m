@@ -6,7 +6,6 @@ dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
 
 alpha = 0.05;
-
 cd(dataPath);
 
 %reading fasta data
@@ -26,22 +25,28 @@ end
 caseSize = 100;
 refSize = 100;
 nTest = 100;
-trial = 300;
+trial = 100;
 nSnps = 170;
-
+useEstR = 1;
 left = n - nSnps;
 ub = n - left/2;
 lb = left/2;
 
 cuttedHap01Seq = hap01Seq(:, lb:ub);
 
-[caseTr, refTr, testTr] = sign_power(cuttedHap01Seq, caseSize, refSize, nTest, trial, 1);
+[caseTr, refTr, testTr, caseTp, refTp, testTp] = sign_power(cuttedHap01Seq, caseSize, refSize, nTest, trial, 1);
 
 save('sign_power.mat');
 load('sign_power.mat');
 
 [nSeg, nTrial, nCase] = size(caseTr);
 [~, ~, nRef] = size(refTr);
+
+%alpha FPR, Homer's attack, average
+id = floor((1-alpha)*nTest);
+sortTestTp = sort(testTp);
+T = sortTestTp(id);
+p_result = sum(caseTp > T);%base line
 
 %0.95 FPR, we use test to find the .95 FPR line
 result = zeros(nSeg, nTrial);
@@ -50,7 +55,7 @@ for i = 1:nSeg
     for j = 1:nTrial
         caseTr_j = caseTr(i, j, :);
         testTr_j = testTr(i, j, :);
-        id = floor((1-alpha)*nTest);
+        id = floor((1-alpha)*2*nTest);
         testTr_j_sort = sort(testTr_j);
         T = testTr_j_sort(id);
         result(i, j) = sum(caseTr_j > T);
@@ -62,10 +67,13 @@ avgIdr = mean(result, 2);
 save('maxIdentificationRate.mat');
 
 h = plot(0.1:0.1:1, [maxIdentificationRate, avgIdr]);
-title(['signRate vs identification rate, nCase = ', num2str(nCase), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial)]);
+hold on;
+line([0, 1], [p_result, p_result]);
+title(['signRate vs identification rate, nCase = ', num2str(nCase), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)]);
 xlabel('signRate')
 ylabel('identification rate');
 legend('max', 'mean');
+hold off;
 %saveas(h, 'signRate.pdf');
 
 
