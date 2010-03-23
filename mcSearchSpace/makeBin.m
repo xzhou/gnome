@@ -20,7 +20,7 @@ newBins = zeros(nBins, 2);
 for i = 1:nBins
     binBtn = -i*binSize;
     binTop = binBtn + binSize;
-    ps = bins(bins(:,1)>binBtn & bins(:,1)<=binTop, :);
+    ps = bins(bins(:,1)>binBtn & bins(:,1)<=binTop, :);%HOT line
     if size(ps, 1) == 0
         newBins(i, :) = [binTop - binSize/2, 0];
     else

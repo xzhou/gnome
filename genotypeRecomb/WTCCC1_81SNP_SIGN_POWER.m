@@ -3,7 +3,6 @@ change_env();
 startParallel();
 dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
-alpha = 0.05;
 
 cd(dataPath);
 
@@ -23,6 +22,8 @@ caseSize = 300;
 refSize = 100;
 nTest = 100;
 trial = 300;
+alpha = 0.05;
+
 [caseTr, refTr, testTr] = sign_power(hap01Seq, caseSize, refSize, nTest, trial, 0);
 
 save('sign_power.mat');
