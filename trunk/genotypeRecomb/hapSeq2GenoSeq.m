@@ -20,7 +20,6 @@ genoSeq = zeros(nHapSeq/2, nSnps);
 %%Here we begin the random select
 RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));
 
-
 for i = 1: nHapSeq/2
     j = randi(nHapSeq, 1, 1);
     k = randi(nHapSeq, 1, 1);

@@ -1,12 +1,15 @@
-function [signPower]  = WTCCC1_81SNP_SIGN_POWER()
+function [signPower]  = WTCCC1_X_SNP_SIGN_POWER()
+%function used to estimate the sign agreement rate and power.
 change_env();
 startParallel();
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/TPED';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.fasta';
+dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
+fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+
 alpha = 0.05;
 
 cd(dataPath);
 
+%reading fasta data
 hapSeq = fastaread(fastaFile);
 hapIntSeq = seq2int(hapSeq);
 hapSeqNoID = getSeqMatrix(hapIntSeq);
@@ -16,14 +19,23 @@ alleleMapping = getMajorAllele(hapSeqNoID);
 [m n] = size(hapSeqNoID);
 hap01Seq = zeros(m, n);
 for i= 1:m
+    %1 major,  0 is minor
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
 
-caseSize = 300;
+caseSize = 100;
 refSize = 100;
 nTest = 100;
 trial = 300;
-[caseTr, refTr, testTr] = sign_power(hap01Seq, caseSize, refSize, nTest, trial, 0);
+nSnps = 170;
+
+left = n - nSnps;
+ub = n - left/2;
+lb = left/2;
+
+cuttedHap01Seq = hap01Seq(:, lb:ub);
+
+[caseTr, refTr, testTr] = sign_power(cuttedHap01Seq, caseSize, refSize, nTest, trial, 1);
 
 save('sign_power.mat');
 load('sign_power.mat');
