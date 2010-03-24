@@ -2,10 +2,9 @@ function [signPower]  = WTCCC1_X_SNP_SIGN_POWER()
 %function used to estimate the sign agreement rate and power.
 change_env();
 startParallel();
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
+fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 
-alpha = 0.05;
 cd(dataPath);
 
 %reading fasta data
@@ -23,11 +22,12 @@ for i= 1:m
 end
 
 %config
+alpha = 0.05;
 caseSize = 150;
 refSize = 150;
 nTest = 150;
-trial = 100;
-nSnps = 170;
+trial = 10;
+nSnps = 400;
 useEstR = 0;
 left = n - nSnps;
 ub = n - left/2;
@@ -74,15 +74,20 @@ h = figure;
 plot(0.1:0.1:1, maxIdentificationRate, 'ro-');
 hold on;
 plot(0.1:0.1:1, avgIdr, 'gx-');
+%Homer's base line
 line([0, 1], [p_result, p_result], 'Color', 'red', 'LineStyle', '-');
+%using reference sign
 line([0, 1], [refLevel, refLevel], 'Color', 'blue', 'LineStyle', '--');
-line([0, 1], repmat([caseSize*2*alpha], 1, 2), 'Color', 'black', 'LineStyle', '-.');
-title(['signRate vs identification rate, nCase = ', num2str(caseSize), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)]);
+%alpha level
+line([0, 1], repmat(caseSize*2*alpha, 1, 2), 'Color', 'black', 'LineStyle', '-.');
+stitle = ['nCase = ', num2str(caseSize), ' ncase ', num2str(refSize), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)];
+stitle = [stitle, 'nSnps ', num2str(nSnps)];
+title(stitle);
 xlabel('signRate')
 ylabel('identification rate');
-legend('max', 'mean', 'homer', 'copySign');
+legend('max', 'mean', 'homer', 'copySign', 'alpha', 2);
 hold off;
-saveas(h, ['case',num2str(caseSize), 'trial', num2str(trial), 'refSize', num2str(refSize),'signRate'], 'pdf');
+saveas(h, ['c',num2str(caseSize), 'r', num2str(refSize), 't', num2str(nTest), 'snp', num2str(nSnps), 'trial', num2str(trial), 'a', num2str(alpha), '.pdf'], 'pdf');
 
 
 %plot 100% sign 

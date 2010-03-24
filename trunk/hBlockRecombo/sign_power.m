@@ -59,7 +59,7 @@ caseTp = zeros(nCase, 1);
 refTp = zeros(nRef, 1);
 testTp = zeros(nTest, 1);
 
-%calculate Homer's attack
+%% calculate Homer's attack
 %case
 for k = 1:nCase
     Yk = caseGenoSeq(k, :);
@@ -81,7 +81,7 @@ end
 
 fprintf(1, 'Homer: avg case = %f, ref = %f, test = %f\n', mean(caseTp), mean(refTp), mean(testTp));
 
-%copy sign of reference r
+%% copy sign of reference r
 caseTrRefSign = zeros(2*nCase, 1);
 caseRRefSign = abs(caseR).*sign(refR);
 for k = 1:2*nCase
@@ -96,7 +96,7 @@ for k = 1:2*nTest
     testTrRefSign(k) = Tr;
 end
 
-%calculate power
+%% calculate power
 %for different recover rate
 for i = 1:nSeg
     %fprintf(1, '%d\n', i);
