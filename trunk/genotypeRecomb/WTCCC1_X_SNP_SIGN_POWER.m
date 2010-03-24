@@ -22,24 +22,24 @@ for i= 1:m
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
 
-caseSize = 100;
+caseSize = 300;
 refSize = 100;
 nTest = 100;
-trial = 100;
+trial = 50;
 nSnps = 170;
-useEstR = 1;
+useEstR = 0;
 left = n - nSnps;
 ub = n - left/2;
 lb = left/2;
 
 cuttedHap01Seq = hap01Seq(:, lb:ub);
 
-[caseTr, refTr, testTr, caseTp, refTp, testTp] = sign_power(cuttedHap01Seq, caseSize, refSize, nTest, trial, 1);
+[caseTr, refTr, testTr, caseTp, refTp, testTp, caseTrRefSign, testTrRefSign] = sign_power(cuttedHap01Seq, caseSize, refSize, nTest, trial, useEstR);
 
 save('sign_power.mat');
 load('sign_power.mat');
 
-[nSeg, nTrial, nCase] = size(caseTr);
+[nSeg, nTrial, ~] = size(caseTr);
 [~, ~, nRef] = size(refTr);
 
 %alpha FPR, Homer's attack, average
@@ -47,6 +47,9 @@ id = floor((1-alpha)*nTest);
 sortTestTp = sort(testTp);
 T = sortTestTp(id);
 p_result = sum(caseTp > T);%base line
+
+refT = getThreshold(testTrRefSign, alpha);
+refLevel = sum(caseTrRefSign>refT);
 
 %0.95 FPR, we use test to find the .95 FPR line
 result = zeros(nSeg, nTrial);
@@ -68,13 +71,14 @@ save('maxIdentificationRate.mat');
 
 h = plot(0.1:0.1:1, [maxIdentificationRate, avgIdr]);
 hold on;
-line([0, 1], [p_result, p_result]);
-title(['signRate vs identification rate, nCase = ', num2str(nCase), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)]);
+line([0, 1], [p_result, p_result], 'Color', 'red', 'LineStyle', '-');
+line([0, 1], [refLevel, refLevel], 'Color', 'blue', 'LineStyle', '--');
+title(['signRate vs identification rate, nCase = ', num2str(caseSize), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)]);
 xlabel('signRate')
 ylabel('identification rate');
-legend('max', 'mean');
+legend('max', 'mean', 'homer', 'copySign');
 hold off;
-%saveas(h, 'signRate.pdf');
+%saveas(h, 'signRate1.pdf');
 
 
 %plot 100% sign 

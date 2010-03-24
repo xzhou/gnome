@@ -1,4 +1,4 @@
-function [caseTr, refTr, testTr, caseTp, refTp, testTp] = sign_power(hapSeq, nCase, nRef, nTest, trial, useEstR)
+function [caseTr, refTr, testTr, caseTp, refTp, testTp, caseTrRefSign, testTrRefSign] = sign_power(hapSeq, nCase, nRef, nTest, trial, useEstR)
 %explore the relationship between sign and power. Previously we though some
 %sign has larger power. And even 10% sign has significant power. I think
 %it's now stable since some pair has negative effects to the power,
@@ -12,8 +12,10 @@ function [caseTr, refTr, testTr, caseTp, refTp, testTp] = sign_power(hapSeq, nCa
 
 [m, nSnps] = size(hapSeq);
 
+%total number of individuals, each individual has 2 sequence
 totalSample = nCase + nRef + nTest;
 
+%if total number of sequence exceed the total number of indivuals
 if 2*totalSample > m
     e = MException('signPower:notEnoughUniqueSeq', 'xzhou:not enough unique sequence');
     throw(e);
@@ -45,8 +47,8 @@ end
 caseR(isnan(caseR)) = 0;%invariant sites
 refR(isnan(refR)) = 0;%invariant sites
 
-caseP = sum(caseSeq)/nCase;
-refP = sum(refSeq)/nRef;
+caseP = sum(caseSeq)/nCase/2;
+refP = sum(refSeq)/nRef/2;
 
 nSeg = 10; %divide 1-100 into 10 segment
 caseTr = zeros(nSeg, trial, 2*nCase);
@@ -75,6 +77,23 @@ for k = 1:nTest
     Yk = testGenoSeq(k, :);
     Tp = getTp(Yk, caseP, refP);
     testTp(k) = Tp;
+end
+
+fprintf(1, 'Homer: avg case = %f, ref = %f, test = %f\n', mean(caseTp), mean(refTp), mean(testTp));
+
+%copy sign of reference r
+caseTrRefSign = zeros(2*nCase, 1);
+caseRRefSign = abs(caseR).*sign(refR);
+for k = 1:2*nCase
+    Yc = caseSeq(k, :);
+    Tr = getTr(Yc, caseRRefSign, refR);
+    caseTrRefSign(k) = Tr;
+end
+testTrRefSign = zeros(2*nTest, 1);
+for k = 1:2*nTest
+    Yc = testSeq(k, :);
+    Tr = getTr(Yc, caseRRefSign, refR);
+    testTrRefSign(k) = Tr;
 end
 
 %calculate power
