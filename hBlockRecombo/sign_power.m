@@ -22,6 +22,7 @@ if 2*totalSample > m
 end
 
 %idx of individuals
+RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));   %reset the random number generator
 idx = randsample(m/2, totalSample);
 idxCase = sort([idx(1:nCase)*2; idx(1:nCase)*2-1]);
 idxRef = sort([idx(nCase+1:nCase+nRef)*2; idx(nCase+1:nCase+nRef)*2-1]);
@@ -41,7 +42,8 @@ if useEstR == 0
     refR = corrcoef(refSeq);
 else
     caseR = estimateR(caseGenoSeq);
-    refR = estimateR(refGenoSeq);
+    %refR = estimateR(refGenoSeq);
+    refR = corrcoef(refSeq);
 end
 
 caseR(isnan(caseR)) = 0;%invariant sites

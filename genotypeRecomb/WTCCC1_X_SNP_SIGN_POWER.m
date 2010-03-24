@@ -2,8 +2,8 @@ function [signPower]  = WTCCC1_X_SNP_SIGN_POWER()
 %function used to estimate the sign agreement rate and power.
 change_env();
 startParallel();
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
+dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
+fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
 
 cd(dataPath);
 
@@ -22,16 +22,16 @@ for i= 1:m
 end
 
 %config
-alpha = 0.05;
-caseSize = 150;
-refSize = 150;
-nTest = 150;
-trial = 10;
-nSnps = 400;
-useEstR = 0;
+alpha = 0.01;
+caseSize = 100;
+refSize = 100;
+nTest = 100;
+trial = 100;
+nSnps = n;
+useEstR = 1;
 left = n - nSnps;
-ub = n - left/2;
-lb = left/2;
+ub = n - floor(left/2);
+lb = floor(left/2)+1;
 
 cuttedHap01Seq = hap01Seq(:, lb:ub);
 
@@ -78,14 +78,14 @@ plot(0.1:0.1:1, avgIdr, 'gx-');
 line([0, 1], [p_result, p_result], 'Color', 'red', 'LineStyle', '-');
 %using reference sign
 line([0, 1], [refLevel, refLevel], 'Color', 'blue', 'LineStyle', '--');
-%alpha level
-line([0, 1], repmat(caseSize*2*alpha, 1, 2), 'Color', 'black', 'LineStyle', '-.');
+%alpha level FDR
+line([0, 1], repmat(caseSize*2*alpha, 1, 2), 'Color', 'black', 'LineStyle', '-.', 'LineWidth', 2);
 stitle = ['nCase = ', num2str(caseSize), ' ncase ', num2str(refSize), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)];
 stitle = [stitle, 'nSnps ', num2str(nSnps)];
 title(stitle);
 xlabel('signRate')
 ylabel('identification rate');
-legend('max', 'mean', 'homer', 'copySign', 'alpha', 2);
+legend('max', 'mean', 'homer', 'copySign', 'FDR', 2);
 hold off;
 saveas(h, ['c',num2str(caseSize), 'r', num2str(refSize), 't', num2str(nTest), 'snp', num2str(nSnps), 'trial', num2str(trial), 'a', num2str(alpha), '.pdf'], 'pdf');
 
