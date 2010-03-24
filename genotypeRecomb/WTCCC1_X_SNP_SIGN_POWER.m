@@ -22,10 +22,11 @@ for i= 1:m
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
 
-caseSize = 300;
-refSize = 100;
-nTest = 100;
-trial = 50;
+%config
+caseSize = 150;
+refSize = 150;
+nTest = 150;
+trial = 100;
 nSnps = 170;
 useEstR = 0;
 left = n - nSnps;
@@ -69,16 +70,19 @@ maxIdentificationRate = max(result, [], 2);
 avgIdr = mean(result, 2);
 save('maxIdentificationRate.mat');
 
-h = plot(0.1:0.1:1, [maxIdentificationRate, avgIdr]);
+h = figure;
+plot(0.1:0.1:1, maxIdentificationRate, 'ro-');
 hold on;
+plot(0.1:0.1:1, avgIdr, 'gx-');
 line([0, 1], [p_result, p_result], 'Color', 'red', 'LineStyle', '-');
 line([0, 1], [refLevel, refLevel], 'Color', 'blue', 'LineStyle', '--');
+line([0, 1], repmat([caseSize*2*alpha], 1, 2), 'Color', 'black', 'LineStyle', '-.');
 title(['signRate vs identification rate, nCase = ', num2str(caseSize), ' nTest = ', num2str(nTest), ' alpha = ', num2str(alpha), ' tiral = ', num2str(trial), 'useEstR = ', num2str(useEstR)]);
 xlabel('signRate')
 ylabel('identification rate');
 legend('max', 'mean', 'homer', 'copySign');
 hold off;
-%saveas(h, 'signRate1.pdf');
+saveas(h, ['case',num2str(caseSize), 'trial', num2str(trial), 'refSize', num2str(refSize),'signRate'], 'pdf');
 
 
 %plot 100% sign 
