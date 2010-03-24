@@ -24,7 +24,7 @@ nTest = 100;
 trial = 300;
 alpha = 0.05;
 
-[caseTr, refTr, testTr] = sign_power(hap01Seq, caseSize, refSize, nTest, trial, 0);
+[caseTr, refTr, testTr, ~, ~, ~, ~, ~] = sign_power(hap01Seq, caseSize, refSize, nTest, trial, 0);
 
 save('sign_power.mat');
 load('sign_power.mat');

@@ -1,4 +1,5 @@
 function [tp] = getTp(Y, pM0, pM1)
 %calculate Tp value using Homer's attack
-tp = sum(abs(Y - pM0) - abs(Y - pM1));
+p = (-(Y-1)+1)/2;
+tp = sum(abs(p - pM1) - abs(p - pM0));
 end
