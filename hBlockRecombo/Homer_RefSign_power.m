@@ -27,14 +27,14 @@ for i= 1:m
 end
 
 %% begin configuration
-FDR = 0.05;
+FDR = 0.01;
 sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 100;
+trial = 20;
 nSnps = n;
-useEstR = 1;
+useEstR = 0;
 
 %% cut end snps
 if nSnps < n
@@ -113,6 +113,7 @@ parfor i = 1:trial
 end
 %profile viewer;
 fileName = ['compare_power', num2str(caseSize), '.mat'];
+fprintf(1, 'write to %s\n', fileName);
 save(fileName);
 
 %%
@@ -132,6 +133,7 @@ configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
 title(configStr);
 legend('Homer', 'All sign', 'Copy Sign', 2);
 hold off;
-saveas(h, [configStr, '.pdf']);
+mkdir(dataPath, 'powerAna');
+saveas(h, ['./powerAna/', configStr, '.fig']);
 
 
