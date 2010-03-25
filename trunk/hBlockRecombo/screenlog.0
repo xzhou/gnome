@@ -1,0 +1,1020 @@
+WWTCC
+[JNo matches for: `external command', `builtin command', `shell function', `alias', `suffix alias', `reserved word', `job', `parameter', `local directory', `directory in cdpath', `user', `named directory', or ` corrections'[KMM[m[23m[24m[15CWTCC[K[128C ~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo[188D  W  mmatlab
+[J[1m[3m%[23m[1m[m                                                                                                                                                                                                               [m[23m[24m[Jxzhou-desktop% [K[132C ~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo[192Dmmatlab no  no desktop         -nondesktop
+Warning: Unrecognized MATLAB option "nondesktop".
+^C[1m[3m%[23m[1m[m                                                                                                                                                                                                               [m[23m[24m[Jxzhou-desktop% [K[132C ~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo[192Dmmatlab -nodesko top
+[?1h=
+                                                                                            < M A T L A B (R) >
+                                                                                  Copyright 1984-2009 The MathWorks, Inc.
+                                                                                Version 7.9.0.529 (R2009b) 64-bit (glnxa64)
+                                                                                              August 12, 2009
+
+{Warning: Name is nonexistent or not a directory: /home/xzhou/research_linux/gnome/workspace/genotypeRecomb.} 
+{Warning: Name is nonexistent or not a directory: /home/xzhou/research_linux/gnome/workspace/hBlockRecombo.} 
+{Warning: Name is nonexistent or not a directory: /home/xzhou/research_linux/gnome/workspace/MyDrTest.} 
+ 
+  To get started, type one of these: helpwin, helpdesk, or demo.
+  For product information, visit www.mathworks.com.
+ 
+>> ls  ls
+[?1h=4247.mat	    compare.m		    getHaplotype.m	       hbRecomb.m		   newMutate.m		     realDataRelaxedHBRecombo.m    simHyplotypeRecombo.m  try2.m
+adjustStartPoint.m  encodeSequence.m	    getLearnedBlocks.m	       innerBlockDriver.m	   plotResult.m		     recursiveLearning.m	   simPartition.m	  viewMatrix.m
+blockCheck.m	    evaluateSeqAbs.m	    getNextBlock.m	       InnerBlockHelp.m		   plotScatter.m	     recursiveLearningSIM200x77.m  snp174.m		  #WTCCC1_CH7_HBRECOMB.m#
+blockEvaluateSeq.m  evaluateSeq.m	    getNextSeq.m	       InnerBlockLearner.m	   powerAnalysisSIM100x77.m  relaxedRecombo.m		   snp77.m		  WTCCC1_CH7_HBRECOMB.m
+blockNaiveMutate.m  evaluationR.m	    getQuality.m	       innerBlockLearning.m	   powerCurve.m		     SARecombo.m		   startParallel.m	  xxxx.m
+blockReconstruct.m  findMultipleSolution.m  getTarget.m		       InnerBlockLearningResult.m  powerTest.m		     screenlog.0		   strongWeakRecombo.m
+blockSignRate.m     f.m			    getTr.m		       matchedCase.m		   problem.fig		     shuffleNewBlock.m		   T01Tr_vs_Tp.m
+calcBlockR.m	    ftest.m		    GnomeCalculator.m	       Multiple solution.m	   randomSelect.asv	     SignRate.m			   tempfunc.m
+calcPairwiseFreq.m  getBlockFreq.m	    HAPMAP77Recomb.m	       mutate.asv		   randomSelect.m	     signTestPostInnerRecom.m	   test3.mat
+calcRfrom01seq.m    getBlockMaskForEval.m   hbOneBlockRecombination.m  mutate.m			   readSeq4.m		     SIM200x77Recombo.asv	   testf.m
+calcR.m		    getBlockMask.m	    hbPartition.m	       newHBRecombo.m		   realData80SNPAnalysis.m   SIM200x77Recombo.m		   test.m
+
+>> WTCCC1_CH7_HBRECOMB
+running on xzhou.info
+Destroying 1 pre-existing parallel job(s) created by matlabpool that were in the 
+finished or failed state.
+
+Starting matlabpool using the 'local' configuration ... connected to 2 labs.
+LINUX
+
+*** trial 1 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.636364 initSR = 1.000000, finalSR = 1.000000
+block = 1 repeat = 7 a = 0.757576 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 3 a = 0.636364 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 6 a = 0.636364 initSR = 1.000000, finalSR = 1.000000
+block = 1 repeat = 2 a = 0.636364 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 5 a = 0.787879 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 1 a = 0.939394 initSR = 1.000000, finalSR = 0.992754
+block = 1 repeat = 9 a = 0.696970 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 10 a = 0.666667 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 8 a = 0.606061 initSR = 1.000000, finalSR = 0.996377
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.873239 initSR = 0.991463, finalSR = 0.986585
+block = 2 repeat = 7 a = 0.845070 initSR = 0.991463, finalSR = 0.985366
+block = 2 repeat = 3 a = 0.887324 initSR = 0.991463, finalSR = 0.986585
+block = 2 repeat = 6 a = 0.760563 initSR = 0.991463, finalSR = 0.982927
+block = 2 repeat = 2 a = 0.859155 initSR = 0.991463, finalSR = 0.985366
+block = 2 repeat = 5 a = 0.746479 initSR = 0.991463, finalSR = 0.984146
+block = 2 repeat = 1 a = 0.746479 initSR = 0.991463, finalSR = 0.985366
+block = 2 repeat = 9 a = 0.887324 initSR = 0.991463, finalSR = 0.985366
+block = 2 repeat = 10 a = 0.830986 initSR = 0.991463, finalSR = 0.984146
+block = 2 repeat = 8 a = 0.788732 initSR = 0.991463, finalSR = 0.986585
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.779528 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 7 a = 0.685039 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 3 a = 0.921260 initSR = 1.000000, finalSR = 0.941667
+block = 3 repeat = 6 a = 0.748031 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 2 a = 0.795276 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.716535 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.527559 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 9 a = 0.700787 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 8 a = 0.826772 initSR = 1.000000, finalSR = 0.983333
+block = 3 repeat = 10 a = 0.653543 initSR = 1.000000, finalSR = 1.000000
+
+Saving to: matlab.mat
+
+initQ = 2.48881902001842458816 	finalQ = 0.26865709782387570126 initSR = 0.839523 	finalSR = 0.828912
+initQ = 2.48881902001842458816 	finalQ = 0.41576598620732496681 initSR = 0.839523 	finalSR = 0.828912
+initQ = 2.48881902001842458816 	finalQ = 0.39217950743781998524 initSR = 0.839523 	finalSR = 0.847480
+initQ = 2.48881902001842458816 	finalQ = 0.46996597282660235173 initSR = 0.839523 	finalSR = 0.840849
+initQ = 2.48881902001842458816 	finalQ = 0.33358754424310232967 initSR = 0.839523 	finalSR = 0.854111
+initQ = 2.48881902001842458816 	finalQ = 0.33534929104172667147 initSR = 0.839523 	finalSR = 0.842175
+initQ = 2.48881902001842458816 	finalQ = 0.29531171614163997940 initSR = 0.839523 	finalSR = 0.832891
+initQ = 2.48881902001842458816 	finalQ = 0.44784800739584956775 initSR = 0.839523 	finalSR = 0.846154
+initQ = 2.48881902001842458816 	finalQ = 0.31722076165066492859 initSR = 0.839523 	finalSR = 0.895225
+initQ = 2.48881902001842458816 	finalQ = 0.45964545612463619806 initSR = 0.839523 	finalSR = 0.809019
+initQ = 2.48881902001842458816 	finalQ = 0.36596304085330938483 initSR = 0.839523 	finalSR = 0.842175
+initQ = 2.48881902001842458816 	finalQ = 0.33920354273195985062 initSR = 0.839523 	finalSR = 0.858090
+initQ = 2.48881902001842458816 	finalQ = 0.35056843250109592791 initSR = 0.839523 	finalSR = 0.834218
+initQ = 2.48881902001842458816 	finalQ = 0.37126971920770140967 initSR = 0.839523 	finalSR = 0.838196
+initQ = 2.48881902001842458816 	finalQ = 0.38298060130613204022 initSR = 0.839523 	finalSR = 0.834218
+optimal r dist = 0.268657, signRate = 0.828912
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807371715 initSR = 0.605442 	finalSR = 0.663265
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807422715 initSR = 0.605442 	finalSR = 0.636054
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807371021 initSR = 0.605442 	finalSR = 0.670068
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807405195 initSR = 0.605442 	finalSR = 0.625850
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807399991 initSR = 0.605442 	finalSR = 0.540816
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807370153 initSR = 0.605442 	finalSR = 0.656463
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807376398 initSR = 0.605442 	finalSR = 0.537415
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807362694 initSR = 0.605442 	finalSR = 0.581633
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807401031 initSR = 0.605442 	finalSR = 0.568027
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807388541 initSR = 0.605442 	finalSR = 0.632653
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807389582 initSR = 0.605442 	finalSR = 0.646259
+initQ = 0.31560280883352936909 	finalQ = 0.01260887055988699906 initSR = 0.605442 	finalSR = 0.693878
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807371715 initSR = 0.605442 	finalSR = 0.625850
+initQ = 0.31560280883352936909 	finalQ = 0.01260887055988717080 initSR = 0.605442 	finalSR = 0.653061
+initQ = 0.31560280883352936909 	finalQ = 0.01038748978807388541 initSR = 0.605442 	finalSR = 0.666667
+optimal r dist = 0.010387, signRate = 0.581633
+initQ = 2.26951791957203674599 	finalQ = 0.28979973974963346706 initSR = 0.775794 	finalSR = 0.924603
+initQ = 2.26951791957203674599 	finalQ = 0.31273459779875556475 initSR = 0.775794 	finalSR = 0.910714
+initQ = 2.26951791957203674599 	finalQ = 0.27028999212920595818 initSR = 0.775794 	finalSR = 0.900794
+initQ = 2.26951791957203674599 	finalQ = 0.33644994742048656144 initSR = 0.775794 	finalSR = 0.898810
+initQ = 2.26951791957203674599 	finalQ = 0.27158992067288462158 initSR = 0.775794 	finalSR = 0.906746
+initQ = 2.26951791957203674599 	finalQ = 0.21332170105875125632 initSR = 0.775794 	finalSR = 0.934524
+initQ = 2.26951791957203674599 	finalQ = 0.28009186294622612223 initSR = 0.775794 	finalSR = 0.896825
+initQ = 2.26951791957203674599 	finalQ = 0.25801882132235165468 initSR = 0.775794 	finalSR = 0.952381
+initQ = 2.26951791957203674599 	finalQ = 0.18694759608557270925 initSR = 0.775794 	finalSR = 0.930556
+initQ = 2.26951791957203674599 	finalQ = 0.23599382063921170438 initSR = 0.775794 	finalSR = 0.904762
+initQ = 2.26951791957203674599 	finalQ = 0.24648331661014510896 initSR = 0.775794 	finalSR = 0.934524
+initQ = 2.26951791957203674599 	finalQ = 0.29578189119113695860 initSR = 0.775794 	finalSR = 0.912698
+initQ = 2.26951791957203674599 	finalQ = 0.23309290782838948397 initSR = 0.775794 	finalSR = 0.914683
+initQ = 2.26951791957203674599 	finalQ = 0.24979190425289141131 initSR = 0.775794 	finalSR = 0.938492
+initQ = 2.26951791957203674599 	finalQ = 0.23165440693648267634 initSR = 0.775794 	finalSR = 0.938492
+optimal r dist = 0.186948, signRate = 0.930556
+ PreSignRate = 0.841975
+ PostSignRate = 0.896605
+ PreCaseTr>0         190
+ PostCaseTr>0        257
+ PreReferenceTr<0    392
+ PostReferenceTr<0   264
+ CorrectCaseTr>0     210
+ CorrectReference<0  369
+ 
+*** trial 2 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.555556 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 7 a = 0.428571 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 3 a = 0.428571 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 6 a = 0.365079 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 5 a = 0.396825 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 2 a = 0.460317 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 1 a = 0.460317 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 9 a = 0.365079 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 8 a = 0.396825 initSR = 0.996377, finalSR = 1.000000
+block = 1 repeat = 10 a = 0.428571 initSR = 0.996377, finalSR = 1.000000
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.684783 initSR = 0.978049, finalSR = 0.992683
+block = 2 repeat = 7 a = 0.728261 initSR = 0.978049, finalSR = 0.991463
+block = 2 repeat = 3 a = 0.673913 initSR = 0.978049, finalSR = 0.996341
+block = 2 repeat = 6 a = 0.782609 initSR = 0.978049, finalSR = 0.992683
+block = 2 repeat = 2 a = 0.663043 initSR = 0.978049, finalSR = 0.990244
+block = 2 repeat = 5 a = 0.739130 initSR = 0.978049, finalSR = 0.993902
+block = 2 repeat = 1 a = 0.673913 initSR = 0.978049, finalSR = 0.991463
+block = 2 repeat = 9 a = 0.847826 initSR = 0.978049, finalSR = 0.993902
+block = 2 repeat = 10 a = 0.913043 initSR = 0.978049, finalSR = 0.993902
+block = 2 repeat = 8 a = 0.782609 initSR = 0.978049, finalSR = 0.992683
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.751938 initSR = 1.000000, finalSR = 0.983333
+block = 3 repeat = 7 a = 0.627907 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 3 a = 0.798450 initSR = 1.000000, finalSR = 0.975000
+block = 3 repeat = 6 a = 0.612403 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 2 a = 0.534884 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.534884 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 1 a = 0.705426 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 9 a = 0.596899 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 8 a = 0.565891 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 10 a = 0.519380 initSR = 1.000000, finalSR = 0.991667
+
+Saving to: matlab.mat
+
+initQ = 2.68269221002260138675 	finalQ = 0.49193479601417561264 initSR = 0.870199 	finalSR = 0.873838
+initQ = 2.68269221002260138675 	finalQ = 0.46906957264200094260 initSR = 0.870199 	finalSR = 0.891391
+initQ = 2.68269221002260138675 	finalQ = 0.46255469293629197791 initSR = 0.870199 	finalSR = 0.895364
+initQ = 2.68269221002260138675 	finalQ = 0.50078943400303810307 initSR = 0.870199 	finalSR = 0.928477
+initQ = 2.68269221002260138675 	finalQ = 0.50436904697829287869 initSR = 0.870199 	finalSR = 0.900662
+initQ = 2.68269221002260138675 	finalQ = 0.51352690614792406709 initSR = 0.870199 	finalSR = 0.882119
+initQ = 2.68269221002260138675 	finalQ = 0.46192883830732350825 initSR = 0.870199 	finalSR = 0.915007
+initQ = 2.68269221002260138675 	finalQ = 0.47614682955168419198 initSR = 0.870199 	finalSR = 0.878146
+initQ = 2.68269221002260138675 	finalQ = 0.43093054176347123096 initSR = 0.870199 	finalSR = 0.883444
+initQ = 2.68269221002260138675 	finalQ = 0.46540700436560844544 initSR = 0.870199 	finalSR = 0.904636
+initQ = 2.68269221002260138675 	finalQ = 0.49021604962270126649 initSR = 0.870199 	finalSR = 0.882119
+initQ = 2.68269221002260138675 	finalQ = 0.47336804718296715544 initSR = 0.870199 	finalSR = 0.872848
+initQ = 2.68269221002260138675 	finalQ = 0.49859918387790669314 initSR = 0.870199 	finalSR = 0.883444
+initQ = 2.68269221002260138675 	finalQ = 0.44443245813998022431 initSR = 0.870199 	finalSR = 0.936424
+initQ = 2.68269221002260138675 	finalQ = 0.48528979619705364668 initSR = 0.870199 	finalSR = 0.901987
+optimal r dist = 0.430931, signRate = 0.883444
+initQ = 0.26353184860927419964 	finalQ = 0.02861737780014229557 initSR = 0.630037 	finalSR = 0.758242
+initQ = 0.26353184860927419964 	finalQ = 0.02386300315757782647 initSR = 0.630037 	finalSR = 0.805861
+initQ = 0.26353184860927419964 	finalQ = 0.02386300315757795137 initSR = 0.630037 	finalSR = 0.849817
+initQ = 0.26353184860927419964 	finalQ = 0.02698656597069596166 initSR = 0.630037 	finalSR = 0.783883
+initQ = 0.26353184860927419964 	finalQ = 0.03557117307916133481 initSR = 0.630037 	finalSR = 0.721612
+initQ = 0.26353184860927419964 	finalQ = 0.02698656597069529206 initSR = 0.630037 	finalSR = 0.772894
+initQ = 0.26353184860927419964 	finalQ = 0.03081679843659739654 initSR = 0.630037 	finalSR = 0.824176
+initQ = 0.26353184860927419964 	finalQ = 0.02698656597069654800 initSR = 0.630037 	finalSR = 0.758242
+initQ = 0.26353184860927419964 	finalQ = 0.02698656597069659657 initSR = 0.630037 	finalSR = 0.857143
+initQ = 0.26353184860927419964 	finalQ = 0.02386300315757902690 initSR = 0.630037 	finalSR = 0.758242
+initQ = 0.26353184860927419964 	finalQ = 0.03434341082484799329 initSR = 0.630037 	finalSR = 0.893773
+initQ = 0.26353184860927419964 	finalQ = 0.02698656597069654106 initSR = 0.630037 	finalSR = 0.725275
+initQ = 0.26353184860927419964 	finalQ = 0.02386300315757873547 initSR = 0.630037 	finalSR = 0.747253
+initQ = 0.26353184860927419964 	finalQ = 0.02698656597069603799 initSR = 0.630037 	finalSR = 0.758242
+initQ = 0.26353184860927419964 	finalQ = 0.02739777149057980032 initSR = 0.630037 	finalSR = 0.630037
+optimal r dist = 0.023863, signRate = 0.805861
+initQ = 4.08627320297217355716 	finalQ = 1.47682720725832705710 initSR = 0.824034 	finalSR = 0.864807
+initQ = 4.08627320297217355716 	finalQ = 1.47034616838996656796 initSR = 0.824034 	finalSR = 0.907725
+initQ = 4.08627320297217355716 	finalQ = 1.49473884060525330497 initSR = 0.824034 	finalSR = 0.841202
+initQ = 4.08627320297217355716 	finalQ = 1.52777093084439852255 initSR = 0.824034 	finalSR = 0.854077
+initQ = 4.08627320297217355716 	finalQ = 1.55319584990140202585 initSR = 0.824034 	finalSR = 0.864807
+initQ = 4.08627320297217355716 	finalQ = 1.43187435959025721743 initSR = 0.824034 	finalSR = 0.886266
+initQ = 4.08627320297217355716 	finalQ = 1.53998060543721670967 initSR = 0.824034 	finalSR = 0.903226
+initQ = 4.08627320297217355716 	finalQ = 1.61757224902022378465 initSR = 0.824034 	finalSR = 0.873391
+initQ = 4.08627320297217355716 	finalQ = 1.47753488827068801825 initSR = 0.824034 	finalSR = 0.901288
+initQ = 4.08627320297217355716 	finalQ = 1.64757422990902036020 initSR = 0.824034 	finalSR = 0.907725
+initQ = 4.08627320297217355716 	finalQ = 1.58376176445471483767 initSR = 0.824034 	finalSR = 0.890558
+initQ = 4.08627320297217355716 	finalQ = 1.42551998673027568998 initSR = 0.824034 	finalSR = 0.901288
+initQ = 4.08627320297217355716 	finalQ = 1.58973730878924812693 initSR = 0.824034 	finalSR = 0.879828
+initQ = 4.08627320297217355716 	finalQ = 1.48565533854349007825 initSR = 0.824034 	finalSR = 0.892704
+initQ = 4.08627320297217355716 	finalQ = 1.59486199935490291502 initSR = 0.824034 	finalSR = 0.886266
+optimal r dist = 1.425520, signRate = 0.901288
+ PreSignRate = 0.773302
+ PostSignRate = 0.841049
+ PreCaseTr>0         239
+ PostCaseTr>0        324
+ PreReferenceTr<0    327
+ PostReferenceTr<0   212
+ CorrectCaseTr>0     352
+ CorrectReference<0  215
+ 
+*** trial 3 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.544304 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 7 a = 0.544304 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 3 a = 0.493671 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 6 a = 0.493671 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 2 a = 0.569620 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 5 a = 0.620253 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 1 a = 0.518987 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 9 a = 0.518987 initSR = 0.992754, finalSR = 1.000000
+block = 1 repeat = 10 a = 0.670886 initSR = 0.992754, finalSR = 0.992754
+block = 1 repeat = 8 a = 0.645570 initSR = 0.992754, finalSR = 1.000000
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.723270 initSR = 0.951220, finalSR = 0.970732
+block = 2 repeat = 7 a = 0.761006 initSR = 0.951220, finalSR = 0.968293
+block = 2 repeat = 3 a = 0.798742 initSR = 0.951220, finalSR = 0.968293
+block = 2 repeat = 6 a = 0.635220 initSR = 0.951220, finalSR = 0.973171
+block = 2 repeat = 2 a = 0.811321 initSR = 0.951220, finalSR = 0.969512
+block = 2 repeat = 5 a = 0.660377 initSR = 0.951220, finalSR = 0.970732
+block = 2 repeat = 1 a = 0.698113 initSR = 0.951220, finalSR = 0.970732
+block = 2 repeat = 9 a = 0.761006 initSR = 0.951220, finalSR = 0.960976
+block = 2 repeat = 10 a = 0.735849 initSR = 0.951220, finalSR = 0.960976
+block = 2 repeat = 8 a = 0.698113 initSR = 0.951220, finalSR = 0.970732
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.518519 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 7 a = 0.722222 initSR = 0.991667, finalSR = 0.983333
+block = 3 repeat = 3 a = 0.648148 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.648148 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.518519 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 2 a = 0.592593 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.740741 initSR = 0.991667, finalSR = 0.983333
+block = 3 repeat = 9 a = 0.759259 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 8 a = 0.592593 initSR = 0.991667, finalSR = 1.000000
+block = 3 repeat = 10 a = 0.537037 initSR = 0.991667, finalSR = 1.000000
+
+Saving to: matlab.mat
+
+initQ = 2.14091598008400474384 	finalQ = 0.27507924212428003230 initSR = 0.803089 	finalSR = 0.814672
+initQ = 2.14091598008400474384 	finalQ = 0.21107676742863046293 initSR = 0.803089 	finalSR = 0.844273
+initQ = 2.14091598008400474384 	finalQ = 0.22996463110840018040 initSR = 0.803089 	finalSR = 0.827542
+initQ = 2.14091598008400474384 	finalQ = 0.29071057796348664937 initSR = 0.803089 	finalSR = 0.872587
+initQ = 2.14091598008400474384 	finalQ = 0.27662439028099222726 initSR = 0.803089 	finalSR = 0.840412
+initQ = 2.14091598008400474384 	finalQ = 0.25971366935001921616 initSR = 0.803089 	finalSR = 0.858430
+initQ = 2.14091598008400474384 	finalQ = 0.27746351156609039279 initSR = 0.803089 	finalSR = 0.824968
+initQ = 2.14091598008400474384 	finalQ = 0.28770678980374786438 initSR = 0.803089 	finalSR = 0.835264
+initQ = 2.14091598008400474384 	finalQ = 0.18596360624699903585 initSR = 0.803089 	finalSR = 0.859717
+initQ = 2.14091598008400474384 	finalQ = 0.21699763664322893608 initSR = 0.803089 	finalSR = 0.826255
+initQ = 2.14091598008400474384 	finalQ = 0.23595582804996531601 initSR = 0.803089 	finalSR = 0.851995
+initQ = 2.14091598008400474384 	finalQ = 0.21177779943566718557 initSR = 0.803089 	finalSR = 0.824968
+initQ = 2.14091598008400474384 	finalQ = 0.25557762926296523354 initSR = 0.803089 	finalSR = 0.857143
+initQ = 2.14091598008400474384 	finalQ = 0.27293969732800027472 initSR = 0.803089 	finalSR = 0.841699
+initQ = 2.14091598008400474384 	finalQ = 0.19237281617307153136 initSR = 0.803089 	finalSR = 0.853282
+optimal r dist = 0.185964, signRate = 0.859717
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851953664 initSR = 0.629252 	finalSR = 0.568027
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851955398 initSR = 0.629252 	finalSR = 0.697279
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851967194 initSR = 0.629252 	finalSR = 0.666667
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851944990 initSR = 0.629252 	finalSR = 0.738095
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851958521 initSR = 0.629252 	finalSR = 0.561224
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851916540 initSR = 0.629252 	finalSR = 0.448980
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851951235 initSR = 0.629252 	finalSR = 0.510204
+initQ = 0.13627506906703248934 	finalQ = 0.01210007893950621263 initSR = 0.629252 	finalSR = 0.591837
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851937704 initSR = 0.629252 	finalSR = 0.670068
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851956092 initSR = 0.629252 	finalSR = 0.608844
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586852008134 initSR = 0.629252 	finalSR = 0.646259
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851965113 initSR = 0.629252 	finalSR = 0.571429
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851941867 initSR = 0.629252 	finalSR = 0.591837
+initQ = 0.13627506906703248934 	finalQ = 0.00857050586851982807 initSR = 0.629252 	finalSR = 0.581633
+initQ = 0.13627506906703248934 	finalQ = 0.01210007893950604610 initSR = 0.629252 	finalSR = 0.602041
+optimal r dist = 0.008571, signRate = 0.448980
+initQ = 2.62802879483750251310 	finalQ = 0.87076450184429676771 initSR = 0.805019 	finalSR = 0.851351
+initQ = 2.62802879483750251310 	finalQ = 0.90217823241679873103 initSR = 0.805019 	finalSR = 0.853282
+initQ = 2.62802879483750251310 	finalQ = 0.76661275358466973717 initSR = 0.805019 	finalSR = 0.889961
+initQ = 2.62802879483750251310 	finalQ = 0.80425766782092134033 initSR = 0.805019 	finalSR = 0.895753
+initQ = 2.62802879483750251310 	finalQ = 0.87564848060349464998 initSR = 0.805019 	finalSR = 0.882239
+initQ = 2.62802879483750251310 	finalQ = 0.83096309940584622833 initSR = 0.805019 	finalSR = 0.837838
+initQ = 2.62802879483750251310 	finalQ = 0.67911444556384559235 initSR = 0.805019 	finalSR = 0.891892
+initQ = 2.62802879483750251310 	finalQ = 0.81316103301005915327 initSR = 0.805019 	finalSR = 0.888031
+initQ = 2.62802879483750251310 	finalQ = 0.68746670154648836792 initSR = 0.805019 	finalSR = 0.916988
+initQ = 2.62802879483750251310 	finalQ = 0.70359811322659404631 initSR = 0.805019 	finalSR = 0.886100
+initQ = 2.62802879483750251310 	finalQ = 0.79481144458025243527 initSR = 0.805019 	finalSR = 0.907336
+initQ = 2.62802879483750251310 	finalQ = 0.84976191426822045294 initSR = 0.805019 	finalSR = 0.864865
+initQ = 2.62802879483750251310 	finalQ = 0.89285787471909217050 initSR = 0.805019 	finalSR = 0.851351
+initQ = 2.62802879483750251310 	finalQ = 0.68534014126615128149 initSR = 0.805019 	finalSR = 0.882239
+initQ = 2.62802879483750251310 	finalQ = 0.88868402497341036916 initSR = 0.805019 	finalSR = 0.889961
+optimal r dist = 0.679114, signRate = 0.891892
+ PreSignRate = 0.818827
+ PostSignRate = 0.881790
+ PreCaseTr>0         168
+ PostCaseTr>0        139
+ PreReferenceTr<0    387
+ PostReferenceTr<0   358
+ CorrectCaseTr>0     233
+ CorrectReference<0  335
+ 
+*** trial 4 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.377778 initSR = 0.971014, finalSR = 0.992754
+block = 1 repeat = 7 a = 0.392593 initSR = 0.971014, finalSR = 0.978261
+block = 1 repeat = 3 a = 0.407407 initSR = 0.971014, finalSR = 0.960145
+block = 1 repeat = 6 a = 0.437037 initSR = 0.971014, finalSR = 0.996377
+block = 1 repeat = 5 a = 0.525926 initSR = 0.971014, finalSR = 1.000000
+block = 1 repeat = 2 a = 0.718519 initSR = 0.971014, finalSR = 0.942029
+block = 1 repeat = 1 a = 0.422222 initSR = 0.971014, finalSR = 0.989130
+block = 1 repeat = 9 a = 0.451852 initSR = 0.971014, finalSR = 0.956522
+block = 1 repeat = 8 a = 0.451852 initSR = 0.971014, finalSR = 0.960145
+block = 1 repeat = 10 a = 0.422222 initSR = 0.971014, finalSR = 0.963768
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.696629 initSR = 0.962195, finalSR = 0.964634
+block = 2 repeat = 7 a = 0.932584 initSR = 0.962195, finalSR = 0.960976
+block = 2 repeat = 3 a = 0.764045 initSR = 0.962195, finalSR = 0.967073
+block = 2 repeat = 6 a = 0.842697 initSR = 0.962195, finalSR = 0.962195
+block = 2 repeat = 2 a = 0.752809 initSR = 0.962195, finalSR = 0.964634
+block = 2 repeat = 5 a = 0.853933 initSR = 0.962195, finalSR = 0.958537
+block = 2 repeat = 1 a = 0.820225 initSR = 0.962195, finalSR = 0.975610
+block = 2 repeat = 9 a = 0.797753 initSR = 0.962195, finalSR = 0.965854
+block = 2 repeat = 10 a = 0.730337 initSR = 0.962195, finalSR = 0.965854
+block = 2 repeat = 8 a = 0.943820 initSR = 0.962195, finalSR = 0.965854
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.535354 initSR = 0.983333, finalSR = 0.991667
+block = 3 repeat = 7 a = 0.636364 initSR = 0.983333, finalSR = 0.991667
+block = 3 repeat = 3 a = 0.616162 initSR = 0.983333, finalSR = 0.991667
+block = 3 repeat = 6 a = 0.474747 initSR = 0.983333, finalSR = 0.991667
+block = 3 repeat = 2 a = 0.494949 initSR = 0.983333, finalSR = 0.983333
+block = 3 repeat = 5 a = 0.595960 initSR = 0.983333, finalSR = 0.983333
+block = 3 repeat = 1 a = 1.020202 initSR = 0.983333, finalSR = 0.983333
+block = 3 repeat = 9 a = 0.676768 initSR = 0.983333, finalSR = 0.991667
+block = 3 repeat = 10 a = 0.474747 initSR = 0.983333, finalSR = 0.983333
+block = 3 repeat = 8 a = 0.656566 initSR = 0.983333, finalSR = 0.983333
+
+Saving to: matlab.mat
+
+initQ = 4.46670460170491789853 	finalQ = 0.37599295685727757155 initSR = 0.768340 	finalSR = 0.828829
+initQ = 4.46670460170491789853 	finalQ = 0.36170435066367029320 initSR = 0.768340 	finalSR = 0.823681
+initQ = 4.46670460170491789853 	finalQ = 0.59354592475197809343 initSR = 0.768340 	finalSR = 0.839125
+initQ = 4.46670460170491789853 	finalQ = 0.34984473966762652530 initSR = 0.768340 	finalSR = 0.859717
+initQ = 4.46670460170491789853 	finalQ = 0.48495690967011539918 initSR = 0.768340 	finalSR = 0.867439
+initQ = 4.46670460170491789853 	finalQ = 0.46803996186924917700 initSR = 0.768340 	finalSR = 0.854569
+initQ = 4.46670460170491789853 	finalQ = 0.46053573233458278136 initSR = 0.768340 	finalSR = 0.888031
+initQ = 4.46670460170491789853 	finalQ = 0.38006616236591284075 initSR = 0.768340 	finalSR = 0.849421
+initQ = 4.46670460170491789853 	finalQ = 0.37835957449678703224 initSR = 0.768340 	finalSR = 0.927928
+initQ = 4.46670460170491789853 	finalQ = 0.45227246083399286203 initSR = 0.768340 	finalSR = 0.855856
+initQ = 4.46670460170491789853 	finalQ = 0.47854511685246275965 initSR = 0.768340 	finalSR = 0.894466
+initQ = 4.46670460170491789853 	finalQ = 0.45090186722006481146 initSR = 0.768340 	finalSR = 0.864865
+initQ = 4.46670460170491789853 	finalQ = 0.31118313423397636619 initSR = 0.768340 	finalSR = 0.879022
+initQ = 4.46670460170491789853 	finalQ = 0.48903064042541571910 initSR = 0.768340 	finalSR = 0.915058
+initQ = 4.46670460170491789853 	finalQ = 0.67153257663211041173 initSR = 0.768340 	finalSR = 0.796654
+optimal r dist = 0.311183, signRate = 0.879022
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356097120539 initSR = 0.710884 	finalSR = 0.707483
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356097136065 initSR = 0.710884 	finalSR = 0.666667
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356096986185 initSR = 0.710884 	finalSR = 0.714286
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356097053059 initSR = 0.710884 	finalSR = 0.778912
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356097056355 initSR = 0.710884 	finalSR = 0.734694
+initQ = 0.46287936667260948242 	finalQ = 0.00970963593839580148 initSR = 0.710884 	finalSR = 0.540816
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356096800309 initSR = 0.710884 	finalSR = 0.704082
+initQ = 0.46287936667260948242 	finalQ = 0.00932948120653450362 initSR = 0.710884 	finalSR = 0.659864
+initQ = 0.46287936667260948242 	finalQ = 0.01406633970802728326 initSR = 0.710884 	finalSR = 0.717687
+initQ = 0.46287936667260948242 	finalQ = 0.01444649443988658272 initSR = 0.710884 	finalSR = 0.646259
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356096985318 initSR = 0.710884 	finalSR = 0.666667
+initQ = 0.46287936667260948242 	finalQ = 0.00473713356096962159 initSR = 0.710884 	finalSR = 0.666667
+initQ = 0.46287936667260948242 	finalQ = 0.00970963593839518219 initSR = 0.710884 	finalSR = 0.724490
+initQ = 0.46287936667260948242 	finalQ = 0.00910875970474686776 initSR = 0.710884 	finalSR = 0.649660
+initQ = 0.46287936667260948242 	finalQ = 0.00672092768291109120 initSR = 0.710884 	finalSR = 0.748299
+optimal r dist = 0.004737, signRate = 0.704082
+initQ = 3.57476199921236803547 	finalQ = 0.60013891220585913189 initSR = 0.787645 	finalSR = 0.874517
+initQ = 3.57476199921236803547 	finalQ = 0.67933301730201689494 initSR = 0.787645 	finalSR = 0.891892
+initQ = 3.57476199921236803547 	finalQ = 0.68878606892078930723 initSR = 0.787645 	finalSR = 0.805019
+initQ = 3.57476199921236803547 	finalQ = 0.71054510685164606887 initSR = 0.787645 	finalSR = 0.924710
+initQ = 3.57476199921236803547 	finalQ = 0.68223245594556980453 initSR = 0.787645 	finalSR = 0.911197
+initQ = 3.57476199921236803547 	finalQ = 0.61871923684537777355 initSR = 0.787645 	finalSR = 0.870656
+initQ = 3.57476199921236803547 	finalQ = 0.61685298674720046019 initSR = 0.787645 	finalSR = 0.913127
+initQ = 3.57476199921236803547 	finalQ = 0.64234968685400561927 initSR = 0.787645 	finalSR = 0.880309
+initQ = 3.57476199921236803547 	finalQ = 0.53672694799540454635 initSR = 0.787645 	finalSR = 0.924710
+initQ = 3.57476199921236803547 	finalQ = 0.53463381856890712651 initSR = 0.787645 	finalSR = 0.936293
+initQ = 3.57476199921236803547 	finalQ = 0.71857355390574106924 initSR = 0.787645 	finalSR = 0.882239
+initQ = 3.57476199921236803547 	finalQ = 0.57063163712408571104 initSR = 0.787645 	finalSR = 0.874517
+initQ = 3.57476199921236803547 	finalQ = 0.64716831560757481778 initSR = 0.787645 	finalSR = 0.855212
+initQ = 3.57476199921236803547 	finalQ = 0.58940492911424757771 initSR = 0.787645 	finalSR = 0.901544
+initQ = 3.57476199921236803547 	finalQ = 0.64951630481928834815 initSR = 0.787645 	finalSR = 0.915058
+optimal r dist = 0.534634, signRate = 0.936293
+ PreSignRate = 0.856636
+ PostSignRate = 0.933796
+ PreCaseTr>0         171
+ PostCaseTr>0        162
+ PreReferenceTr<0    385
+ PostReferenceTr<0   386
+ CorrectCaseTr>0     193
+ CorrectReference<0  380
+ 
+*** trial 5 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.774194 initSR = 0.981884, finalSR = 0.931159
+block = 1 repeat = 7 a = 0.870968 initSR = 0.981884, finalSR = 0.920290
+block = 1 repeat = 3 a = 0.548387 initSR = 0.981884, finalSR = 0.967391
+block = 1 repeat = 6 a = 0.822581 initSR = 0.981884, finalSR = 0.923913
+block = 1 repeat = 2 a = 0.725806 initSR = 0.981884, finalSR = 0.938406
+block = 1 repeat = 5 a = 0.564516 initSR = 0.981884, finalSR = 0.978261
+block = 1 repeat = 1 a = 0.741935 initSR = 0.981884, finalSR = 0.945652
+block = 1 repeat = 9 a = 0.774194 initSR = 0.981884, finalSR = 0.960145
+block = 1 repeat = 10 a = 0.709677 initSR = 0.981884, finalSR = 0.963768
+block = 1 repeat = 8 a = 0.790323 initSR = 0.981884, finalSR = 0.945652
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.705521 initSR = 0.973171, finalSR = 0.987805
+block = 2 repeat = 7 a = 0.803681 initSR = 0.973171, finalSR = 0.984146
+block = 2 repeat = 3 a = 0.828221 initSR = 0.973171, finalSR = 0.984146
+block = 2 repeat = 6 a = 0.717791 initSR = 0.973171, finalSR = 0.979268
+block = 2 repeat = 2 a = 0.705521 initSR = 0.973171, finalSR = 0.990244
+block = 2 repeat = 5 a = 0.815951 initSR = 0.973171, finalSR = 0.991463
+block = 2 repeat = 1 a = 0.766871 initSR = 0.973171, finalSR = 0.981707
+block = 2 repeat = 9 a = 0.766871 initSR = 0.973171, finalSR = 0.974390
+block = 2 repeat = 8 a = 0.889571 initSR = 0.973171, finalSR = 0.963415
+block = 2 repeat = 10 a = 0.852761 initSR = 0.973171, finalSR = 0.984146
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.553571 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 7 a = 0.410714 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 3 a = 0.714286 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.785714 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.642857 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 2 a = 0.607143 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 9 a = 0.696429 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.571429 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 8 a = 0.625000 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 10 a = 0.535714 initSR = 1.000000, finalSR = 1.000000
+
+Saving to: matlab.mat
+
+initQ = 3.97688520709706150313 	finalQ = 0.40396513500759534399 initSR = 0.815959 	finalSR = 0.783784
+initQ = 3.97688520709706150313 	finalQ = 0.36529080112674838787 initSR = 0.815959 	finalSR = 0.827542
+initQ = 3.97688520709706150313 	finalQ = 0.44244380215287781866 initSR = 0.815959 	finalSR = 0.870013
+initQ = 3.97688520709706150313 	finalQ = 0.37964334522062620492 initSR = 0.815959 	finalSR = 0.794080
+initQ = 3.97688520709706150313 	finalQ = 0.35729385608605651603 initSR = 0.815959 	finalSR = 0.864865
+initQ = 3.97688520709706150313 	finalQ = 0.34149448572637414179 initSR = 0.815959 	finalSR = 0.835264
+initQ = 3.97688520709706150313 	finalQ = 0.31774701362866952792 initSR = 0.815959 	finalSR = 0.841699
+initQ = 3.97688520709706150313 	finalQ = 0.40317517615262221664 initSR = 0.815959 	finalSR = 0.872587
+initQ = 3.97688520709706150313 	finalQ = 0.37336933234469110721 initSR = 0.815959 	finalSR = 0.862291
+initQ = 3.97688520709706150313 	finalQ = 0.40609910532965293184 initSR = 0.815959 	finalSR = 0.830116
+initQ = 3.97688520709706150313 	finalQ = 0.41827838046814480588 initSR = 0.815959 	finalSR = 0.814672
+initQ = 3.97688520709706150313 	finalQ = 0.32083825568763901792 initSR = 0.815959 	finalSR = 0.823681
+initQ = 3.97688520709706150313 	finalQ = 0.33677647377033403941 initSR = 0.815959 	finalSR = 0.851995
+initQ = 3.97688520709706150313 	finalQ = 0.41201417993646810567 initSR = 0.815959 	finalSR = 0.806950
+initQ = 3.97688520709706150313 	finalQ = 0.41475125488563613363 initSR = 0.815959 	finalSR = 0.828829
+optimal r dist = 0.317747, signRate = 0.841699
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553892616 initSR = 0.605442 	finalSR = 0.622449
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553973107 initSR = 0.605442 	finalSR = 0.704082
+initQ = 0.28432562851194786990 	finalQ = 0.06447484793494198674 initSR = 0.605442 	finalSR = 0.690476
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553913433 initSR = 0.605442 	finalSR = 0.581633
+initQ = 0.28432562851194786990 	finalQ = 0.05636694676660950615 initSR = 0.605442 	finalSR = 0.602041
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553945351 initSR = 0.605442 	finalSR = 0.653061
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553913433 initSR = 0.605442 	finalSR = 0.578231
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553899555 initSR = 0.605442 	finalSR = 0.622449
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553948127 initSR = 0.605442 	finalSR = 0.697279
+initQ = 0.28432562851194786990 	finalQ = 0.05991775649102447365 initSR = 0.605442 	finalSR = 0.629252
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553888453 initSR = 0.605442 	finalSR = 0.595238
+initQ = 0.28432562851194786990 	finalQ = 0.07522514063643291615 initSR = 0.605442 	finalSR = 0.653061
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553930086 initSR = 0.605442 	finalSR = 0.670068
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553927310 initSR = 0.605442 	finalSR = 0.605442
+initQ = 0.28432562851194786990 	finalQ = 0.06287101274553923147 initSR = 0.605442 	finalSR = 0.476190
+optimal r dist = 0.056367, signRate = 0.602041
+initQ = 3.22987781295483067368 	finalQ = 0.60515827087705265086 initSR = 0.803089 	finalSR = 0.874517
+initQ = 3.22987781295483067368 	finalQ = 0.46985491420565056453 initSR = 0.803089 	finalSR = 0.922780
+initQ = 3.22987781295483067368 	finalQ = 0.61236646783262538296 initSR = 0.803089 	finalSR = 0.882239
+initQ = 3.22987781295483067368 	finalQ = 0.44312448036454016309 initSR = 0.803089 	finalSR = 0.893822
+initQ = 3.22987781295483067368 	finalQ = 0.61357170050312004328 initSR = 0.803089 	finalSR = 0.864865
+initQ = 3.22987781295483067368 	finalQ = 0.58086594513687350716 initSR = 0.803089 	finalSR = 0.888031
+initQ = 3.22987781295483067368 	finalQ = 0.44011041760004548928 initSR = 0.803089 	finalSR = 0.903475
+initQ = 3.22987781295483067368 	finalQ = 0.64202214667033841167 initSR = 0.803089 	finalSR = 0.909266
+initQ = 3.22987781295483067368 	finalQ = 0.43640110697318384991 initSR = 0.803089 	finalSR = 0.880309
+initQ = 3.22987781295483067368 	finalQ = 0.63186071750891026344 initSR = 0.803089 	finalSR = 0.897683
+initQ = 3.22987781295483067368 	finalQ = 0.55989536142532725371 initSR = 0.803089 	finalSR = 0.888031
+initQ = 3.22987781295483067368 	finalQ = 0.47731151476273703249 initSR = 0.803089 	finalSR = 0.884170
+initQ = 3.22987781295483067368 	finalQ = 0.56662017820721766181 initSR = 0.803089 	finalSR = 0.907336
+initQ = 3.22987781295483067368 	finalQ = 0.54689061785328574317 initSR = 0.803089 	finalSR = 0.857143
+initQ = 3.22987781295483067368 	finalQ = 0.56010492787492027755 initSR = 0.803089 	finalSR = 0.905405
+optimal r dist = 0.436401, signRate = 0.880309
+ PreSignRate = 0.859105
+ PostSignRate = 0.891975
+ PreCaseTr>0         208
+ PostCaseTr>0        235
+ PreReferenceTr<0    362
+ PostReferenceTr<0   309
+ CorrectCaseTr>0     236
+ CorrectReference<0  348
+ 
+*** trial 6 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.391304 initSR = 0.949275, finalSR = 0.938406
+block = 1 repeat = 7 a = 0.449275 initSR = 0.949275, finalSR = 0.945652
+block = 1 repeat = 3 a = 0.449275 initSR = 0.949275, finalSR = 0.960145
+block = 1 repeat = 6 a = 0.507246 initSR = 0.949275, finalSR = 0.960145
+block = 1 repeat = 2 a = 0.420290 initSR = 0.949275, finalSR = 0.960145
+block = 1 repeat = 5 a = 0.449275 initSR = 0.949275, finalSR = 0.960145
+block = 1 repeat = 1 a = 0.478261 initSR = 0.949275, finalSR = 0.960145
+block = 1 repeat = 9 a = 0.449275 initSR = 0.949275, finalSR = 0.938406
+block = 1 repeat = 10 a = 0.449275 initSR = 0.949275, finalSR = 0.938406
+block = 1 repeat = 8 a = 0.333333 initSR = 0.949275, finalSR = 0.960145
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.835294 initSR = 0.945122, finalSR = 0.965854
+block = 2 repeat = 7 a = 0.894118 initSR = 0.945122, finalSR = 0.960976
+block = 2 repeat = 3 a = 0.882353 initSR = 0.945122, finalSR = 0.958537
+block = 2 repeat = 6 a = 0.929412 initSR = 0.945122, finalSR = 0.967073
+block = 2 repeat = 2 a = 0.788235 initSR = 0.945122, finalSR = 1.000000
+block = 2 repeat = 5 a = 0.788235 initSR = 0.945122, finalSR = 0.993902
+block = 2 repeat = 1 a = 0.905882 initSR = 0.945122, finalSR = 0.991463
+block = 2 repeat = 9 a = 0.870588 initSR = 0.945122, finalSR = 1.000000
+block = 2 repeat = 10 a = 0.882353 initSR = 0.945122, finalSR = 0.967073
+block = 2 repeat = 8 a = 0.929412 initSR = 0.945122, finalSR = 1.000000
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.670103 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 7 a = 0.649485 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 3 a = 0.505155 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.422680 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 2 a = 0.628866 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 5 a = 0.608247 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.670103 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 9 a = 0.608247 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 10 a = 0.731959 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 8 a = 0.587629 initSR = 1.000000, finalSR = 0.991667
+
+Saving to: matlab.mat
+
+initQ = 2.80811929668257187487 	finalQ = 0.34543312971125028632 initSR = 0.803030 	finalSR = 0.880051
+initQ = 2.80811929668257187487 	finalQ = 0.32636483493370144204 initSR = 0.803030 	finalSR = 0.849747
+initQ = 2.80811929668257187487 	finalQ = 0.42019292722783690985 initSR = 0.803030 	finalSR = 0.848485
+initQ = 2.80811929668257187487 	finalQ = 0.43722975033548128199 initSR = 0.803030 	finalSR = 0.881313
+initQ = 2.80811929668257187487 	finalQ = 0.43760190630308076765 initSR = 0.803030 	finalSR = 0.911616
+initQ = 2.80811929668257187487 	finalQ = 0.28860304739826342368 initSR = 0.803030 	finalSR = 0.851010
+initQ = 2.80811929668257187487 	finalQ = 0.36812685987449261793 initSR = 0.803030 	finalSR = 0.876263
+initQ = 2.80811929668257187487 	finalQ = 0.33528512484236594471 initSR = 0.803030 	finalSR = 0.858586
+initQ = 2.80811929668257187487 	finalQ = 0.40585330659460200353 initSR = 0.803030 	finalSR = 0.863636
+initQ = 2.80811929668257187487 	finalQ = 0.29728393221698129478 initSR = 0.803030 	finalSR = 0.877525
+initQ = 2.80811929668257187487 	finalQ = 0.36379691676594927419 initSR = 0.803030 	finalSR = 0.882576
+initQ = 2.80811929668257187487 	finalQ = 0.31983266392668791012 initSR = 0.803030 	finalSR = 0.856061
+initQ = 2.80811929668257187487 	finalQ = 0.34432207060540170884 initSR = 0.803030 	finalSR = 0.839646
+initQ = 2.80811929668257187487 	finalQ = 0.34762210782368169193 initSR = 0.803030 	finalSR = 0.888889
+initQ = 2.80811929668257187487 	finalQ = 0.36569803849012516572 initSR = 0.803030 	finalSR = 0.886364
+optimal r dist = 0.288603, signRate = 0.851010
+initQ = 0.10961199945832399150 	finalQ = 0.00563551312053029232 initSR = 0.644951 	finalSR = 0.517915
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009217233 initSR = 0.644951 	finalSR = 0.579805
+initQ = 0.10961199945832399150 	finalQ = 0.00563551312052917430 initSR = 0.644951 	finalSR = 0.514658
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009225906 initSR = 0.644951 	finalSR = 0.521173
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009314030 initSR = 0.644951 	finalSR = 0.596091
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009229376 initSR = 0.644951 	finalSR = 0.459283
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009191212 initSR = 0.644951 	finalSR = 0.674267
+initQ = 0.10961199945832399150 	finalQ = 0.00563551312053041549 initSR = 0.644951 	finalSR = 0.596091
+initQ = 0.10961199945832399150 	finalQ = 0.00563551312053036345 initSR = 0.644951 	finalSR = 0.511401
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009257825 initSR = 0.644951 	finalSR = 0.530945
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009179069 initSR = 0.644951 	finalSR = 0.540717
+initQ = 0.10961199945832399150 	finalQ = 0.00934821249122927932 initSR = 0.644951 	finalSR = 0.504886
+initQ = 0.10961199945832399150 	finalQ = 0.00811353204009242560 initSR = 0.644951 	finalSR = 0.508143
+initQ = 0.10961199945832399150 	finalQ = 0.00563551312053028278 initSR = 0.644951 	finalSR = 0.514658
+initQ = 0.10961199945832399150 	finalQ = 0.00563551312052939461 initSR = 0.644951 	finalSR = 0.452769
+optimal r dist = 0.005636, signRate = 0.514658
+initQ = 3.50879904419875732202 	finalQ = 0.52458662426951352398 initSR = 0.760956 	finalSR = 0.934263
+initQ = 3.50879904419875732202 	finalQ = 0.48602068124112107750 initSR = 0.760956 	finalSR = 0.952191
+initQ = 3.50879904419875732202 	finalQ = 0.57091554678791900379 initSR = 0.760956 	finalSR = 0.928287
+initQ = 3.50879904419875732202 	finalQ = 0.55493694845321683840 initSR = 0.760956 	finalSR = 0.922311
+initQ = 3.50879904419875732202 	finalQ = 0.54286532956041000375 initSR = 0.760956 	finalSR = 0.928287
+initQ = 3.50879904419875732202 	finalQ = 0.53634248279406837590 initSR = 0.760956 	finalSR = 0.926295
+initQ = 3.50879904419875732202 	finalQ = 0.58718886503689682321 initSR = 0.760956 	finalSR = 0.916335
+initQ = 3.50879904419875732202 	finalQ = 0.50259351344574154652 initSR = 0.760956 	finalSR = 0.916335
+initQ = 3.50879904419875732202 	finalQ = 0.52361083132803654117 initSR = 0.760956 	finalSR = 0.938247
+initQ = 3.50879904419875732202 	finalQ = 0.60909370531887463418 initSR = 0.760956 	finalSR = 0.944223
+initQ = 3.50879904419875732202 	finalQ = 0.57331865332433618043 initSR = 0.760956 	finalSR = 0.920319
+initQ = 3.50879904419875732202 	finalQ = 0.53961430553713385372 initSR = 0.760956 	finalSR = 0.936255
+initQ = 3.50879904419875732202 	finalQ = 0.51807011874427366660 initSR = 0.760956 	finalSR = 0.894422
+initQ = 3.50879904419875732202 	finalQ = 0.56309984930910217393 initSR = 0.760956 	finalSR = 0.916335
+initQ = 3.50879904419875732202 	finalQ = 0.56136322995370202538 initSR = 0.760956 	finalSR = 0.932271
+optimal r dist = 0.486021, signRate = 0.952191
+ PreSignRate = 0.851852
+ PostSignRate = 0.895988
+ PreCaseTr>0         234
+ PostCaseTr>0        271
+ PreReferenceTr<0    344
+ PostReferenceTr<0   260
+ CorrectCaseTr>0     301
+ CorrectReference<0  273
+ 
+*** trial 7 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.390476 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 7 a = 0.371429 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 3 a = 0.390476 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 6 a = 0.409524 initSR = 0.949275, finalSR = 0.996377
+block = 1 repeat = 5 a = 0.371429 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 2 a = 0.314286 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 1 a = 0.371429 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 9 a = 0.409524 initSR = 0.949275, finalSR = 1.000000
+block = 1 repeat = 8 a = 0.447619 initSR = 0.949275, finalSR = 0.985507
+block = 1 repeat = 10 a = 0.352381 initSR = 0.949275, finalSR = 1.000000
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.783505 initSR = 0.958537, finalSR = 0.965854
+block = 2 repeat = 7 a = 0.742268 initSR = 0.958537, finalSR = 0.965854
+block = 2 repeat = 3 a = 0.773196 initSR = 0.958537, finalSR = 0.996341
+block = 2 repeat = 6 a = 0.927835 initSR = 0.958537, finalSR = 0.990244
+block = 2 repeat = 5 a = 0.721649 initSR = 0.958537, finalSR = 0.963415
+block = 2 repeat = 2 a = 0.917526 initSR = 0.958537, finalSR = 0.990244
+block = 2 repeat = 1 a = 0.865979 initSR = 0.958537, finalSR = 0.963415
+block = 2 repeat = 9 a = 0.948454 initSR = 0.958537, finalSR = 0.965854
+block = 2 repeat = 8 a = 0.979381 initSR = 0.958537, finalSR = 0.971951
+block = 2 repeat = 10 a = 0.886598 initSR = 0.958537, finalSR = 0.963415
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.610169 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 7 a = 0.389831 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 3 a = 0.508475 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.491525 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.491525 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 2 a = 0.406780 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.406780 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 9 a = 0.711864 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 8 a = 0.627119 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 10 a = 0.830508 initSR = 1.000000, finalSR = 1.000000
+
+Saving to: matlab.mat
+
+initQ = 4.48247185296971828450 	finalQ = 0.60830136626952302503 initSR = 0.772201 	finalSR = 0.855856
+initQ = 4.48247185296971828450 	finalQ = 0.60878995270661873107 initSR = 0.772201 	finalSR = 0.877735
+initQ = 4.48247185296971828450 	finalQ = 0.70349627542392889623 initSR = 0.772201 	finalSR = 0.879022
+initQ = 4.48247185296971828450 	finalQ = 0.56900422484954726876 initSR = 0.772201 	finalSR = 0.894466
+initQ = 4.48247185296971828450 	finalQ = 0.62600191579148900534 initSR = 0.772201 	finalSR = 0.900901
+initQ = 4.48247185296971828450 	finalQ = 0.61881938697688387840 initSR = 0.772201 	finalSR = 0.881596
+initQ = 4.48247185296971828450 	finalQ = 0.53166019343625270377 initSR = 0.772201 	finalSR = 0.893179
+initQ = 4.48247185296971828450 	finalQ = 0.59915962754485874164 initSR = 0.772201 	finalSR = 0.889318
+initQ = 4.48247185296971828450 	finalQ = 0.63785509947511020989 initSR = 0.772201 	finalSR = 0.871300
+initQ = 4.48247185296971828450 	finalQ = 0.59468785190459094725 initSR = 0.772201 	finalSR = 0.857143
+initQ = 4.48247185296971828450 	finalQ = 0.64269233370207623501 initSR = 0.772201 	finalSR = 0.867439
+initQ = 4.48247185296971828450 	finalQ = 0.63193182592600849468 initSR = 0.772201 	finalSR = 0.851995
+initQ = 4.48247185296971828450 	finalQ = 0.63585050855120073265 initSR = 0.772201 	finalSR = 0.871300
+initQ = 4.48247185296971828450 	finalQ = 0.63140334436873379875 initSR = 0.772201 	finalSR = 0.875161
+initQ = 4.48247185296971828450 	finalQ = 0.62198619970313639982 initSR = 0.772201 	finalSR = 0.870013
+optimal r dist = 0.531660, signRate = 0.893179
+initQ = 0.37348126927035418809 	finalQ = 0.02132745465847343119 initSR = 0.629252 	finalSR = 0.476190
+initQ = 0.37348126927035418809 	finalQ = 0.02949075860251377038 initSR = 0.629252 	finalSR = 0.551020
+initQ = 0.37348126927035418809 	finalQ = 0.02949075860251354486 initSR = 0.629252 	finalSR = 0.642857
+initQ = 0.37348126927035418809 	finalQ = 0.02247670372793857813 initSR = 0.629252 	finalSR = 0.581633
+initQ = 0.37348126927035418809 	finalQ = 0.03064000767197911854 initSR = 0.629252 	finalSR = 0.462585
+initQ = 0.37348126927035418809 	finalQ = 0.02908157154882645007 initSR = 0.629252 	finalSR = 0.397959
+initQ = 0.37348126927035418809 	finalQ = 0.02675815410773855346 initSR = 0.629252 	finalSR = 0.534014
+initQ = 0.37348126927035418809 	finalQ = 0.02132745465847371916 initSR = 0.629252 	finalSR = 0.544218
+initQ = 0.37348126927035418809 	finalQ = 0.03064000767197857730 initSR = 0.629252 	finalSR = 0.598639
+initQ = 0.37348126927035418809 	finalQ = 0.02290207634907303128 initSR = 0.629252 	finalSR = 0.506803
+initQ = 0.37348126927035418809 	finalQ = 0.02132745465847213709 initSR = 0.629252 	finalSR = 0.561224
+initQ = 0.37348126927035418809 	finalQ = 0.02149069402397285611 initSR = 0.629252 	finalSR = 0.537415
+initQ = 0.37348126927035418809 	finalQ = 0.03047676830647951321 initSR = 0.629252 	finalSR = 0.448980
+initQ = 0.37348126927035418809 	finalQ = 0.02825880121035919540 initSR = 0.629252 	finalSR = 0.585034
+initQ = 0.37348126927035418809 	finalQ = 0.02825880121036017725 initSR = 0.629252 	finalSR = 0.500000
+optimal r dist = 0.021327, signRate = 0.561224
+initQ = 2.13094764672543979245 	finalQ = 0.32496015806662092995 initSR = 0.671815 	finalSR = 0.915058
+initQ = 2.13094764672543979245 	finalQ = 0.48338220142713073102 initSR = 0.671815 	finalSR = 0.882239
+initQ = 2.13094764672543979245 	finalQ = 0.31262173087013078732 initSR = 0.671815 	finalSR = 0.835907
+initQ = 2.13094764672543979245 	finalQ = 0.47727613906584198666 initSR = 0.671815 	finalSR = 0.884170
+initQ = 2.13094764672543979245 	finalQ = 0.41587963965352137130 initSR = 0.671815 	finalSR = 0.872587
+initQ = 2.13094764672543979245 	finalQ = 0.29610985892518659757 initSR = 0.671815 	finalSR = 0.886100
+initQ = 2.13094764672543979245 	finalQ = 0.38009863718869951743 initSR = 0.671815 	finalSR = 0.874517
+initQ = 2.13094764672543979245 	finalQ = 0.34083002627910341520 initSR = 0.671815 	finalSR = 0.857143
+initQ = 2.13094764672543979245 	finalQ = 0.41738113756814770872 initSR = 0.671815 	finalSR = 0.874517
+initQ = 2.13094764672543979245 	finalQ = 0.40693764570163754035 initSR = 0.671815 	finalSR = 0.903475
+initQ = 2.13094764672543979245 	finalQ = 0.32509762730541647002 initSR = 0.671815 	finalSR = 0.878378
+initQ = 2.13094764672543979245 	finalQ = 0.34846460252950656189 initSR = 0.671815 	finalSR = 0.870656
+initQ = 2.13094764672543979245 	finalQ = 0.31733986302212535691 initSR = 0.671815 	finalSR = 0.888031
+initQ = 2.13094764672543979245 	finalQ = 0.29974921761725309421 initSR = 0.671815 	finalSR = 0.862934
+initQ = 2.13094764672543979245 	finalQ = 0.44242125277115934567 initSR = 0.671815 	finalSR = 0.909266
+optimal r dist = 0.296110, signRate = 0.886100
+ PreSignRate = 0.766512
+ PostSignRate = 0.875154
+ PreCaseTr>0         147
+ PostCaseTr>0        221
+ PreReferenceTr<0    422
+ PostReferenceTr<0   310
+ CorrectCaseTr>0     222
+ CorrectReference<0  363
+ 
+*** trial 8 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.463415 initSR = 0.996377, finalSR = 0.996377
+block = 1 repeat = 7 a = 0.487805 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 3 a = 0.536585 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 6 a = 0.560976 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 2 a = 0.512195 initSR = 0.996377, finalSR = 0.981884
+block = 1 repeat = 5 a = 0.487805 initSR = 0.996377, finalSR = 0.978261
+block = 1 repeat = 1 a = 0.512195 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 9 a = 0.390244 initSR = 0.996377, finalSR = 0.992754
+block = 1 repeat = 10 a = 0.658537 initSR = 0.996377, finalSR = 0.978261
+block = 1 repeat = 8 a = 0.365854 initSR = 0.996377, finalSR = 0.996377
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.820225 initSR = 0.976829, finalSR = 0.996341
+block = 2 repeat = 7 a = 0.696629 initSR = 0.976829, finalSR = 0.995122
+block = 2 repeat = 3 a = 0.820225 initSR = 0.976829, finalSR = 0.996341
+block = 2 repeat = 6 a = 0.966292 initSR = 0.976829, finalSR = 0.991463
+block = 2 repeat = 5 a = 0.831461 initSR = 0.976829, finalSR = 0.996341
+block = 2 repeat = 2 a = 0.741573 initSR = 0.976829, finalSR = 0.996341
+block = 2 repeat = 1 a = 0.786517 initSR = 0.976829, finalSR = 0.996341
+block = 2 repeat = 9 a = 0.853933 initSR = 0.976829, finalSR = 0.996341
+block = 2 repeat = 8 a = 0.842697 initSR = 0.976829, finalSR = 0.992683
+block = 2 repeat = 10 a = 0.831461 initSR = 0.976829, finalSR = 0.996341
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.855072 initSR = 1.000000, finalSR = 0.950000
+block = 3 repeat = 7 a = 0.884058 initSR = 1.000000, finalSR = 0.983333
+block = 3 repeat = 3 a = 0.565217 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.971014 initSR = 1.000000, finalSR = 0.950000
+block = 3 repeat = 2 a = 0.797101 initSR = 1.000000, finalSR = 0.983333
+block = 3 repeat = 5 a = 0.681159 initSR = 1.000000, finalSR = 0.950000
+block = 3 repeat = 1 a = 0.565217 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 9 a = 0.710145 initSR = 1.000000, finalSR = 0.958333
+block = 3 repeat = 8 a = 0.840580 initSR = 1.000000, finalSR = 0.950000
+block = 3 repeat = 10 a = 0.782609 initSR = 1.000000, finalSR = 0.983333
+
+Saving to: matlab.mat
+
+initQ = 2.93104383614436159178 	finalQ = 0.34680159808611282779 initSR = 0.852590 	finalSR = 0.887118
+initQ = 2.93104383614436159178 	finalQ = 0.40655176262748232707 initSR = 0.852590 	finalSR = 0.907039
+initQ = 2.93104383614436159178 	finalQ = 0.37436663419006610543 initSR = 0.852590 	finalSR = 0.877822
+initQ = 2.93104383614436159178 	finalQ = 0.46734904878803856798 initSR = 0.852590 	finalSR = 0.876494
+initQ = 2.93104383614436159178 	finalQ = 0.47923220133426430722 initSR = 0.852590 	finalSR = 0.880478
+initQ = 2.93104383614436159178 	finalQ = 0.50267002262794779899 initSR = 0.852590 	finalSR = 0.905710
+initQ = 2.93104383614436159178 	finalQ = 0.45581700705496214221 initSR = 0.852590 	finalSR = 0.845950
+initQ = 2.93104383614436159178 	finalQ = 0.40732691151442795841 initSR = 0.852590 	finalSR = 0.880478
+initQ = 2.93104383614436159178 	finalQ = 0.40107961051827806243 initSR = 0.852590 	finalSR = 0.900398
+initQ = 2.93104383614436159178 	finalQ = 0.43646732790275755143 initSR = 0.852590 	finalSR = 0.893758
+initQ = 2.93104383614436159178 	finalQ = 0.37775416164006964115 initSR = 0.852590 	finalSR = 0.904382
+initQ = 2.93104383614436159178 	finalQ = 0.47520140679988409627 initSR = 0.852590 	finalSR = 0.876494
+initQ = 2.93104383614436159178 	finalQ = 0.43634007596742596657 initSR = 0.852590 	finalSR = 0.885790
+initQ = 2.93104383614436159178 	finalQ = 0.41977201035791666950 initSR = 0.852590 	finalSR = 0.881806
+initQ = 2.93104383614436159178 	finalQ = 0.43976582384695855898 initSR = 0.852590 	finalSR = 0.905710
+optimal r dist = 0.346802, signRate = 0.887118
+initQ = 0.41377254330472645893 	finalQ = 0.01887800241377392274 initSR = 0.659864 	finalSR = 0.462585
+initQ = 0.41377254330472645893 	finalQ = 0.00970533654159393827 initSR = 0.659864 	finalSR = 0.500000
+initQ = 0.41377254330472645893 	finalQ = 0.01390137462533919122 initSR = 0.659864 	finalSR = 0.659864
+initQ = 0.41377254330472645893 	finalQ = 0.02040636476072033717 initSR = 0.659864 	finalSR = 0.676871
+initQ = 0.41377254330472645893 	finalQ = 0.01294083362982646063 initSR = 0.659864 	finalSR = 0.520408
+initQ = 0.41377254330472645893 	finalQ = 0.00874479554608079655 initSR = 0.659864 	finalSR = 0.527211
+initQ = 0.41377254330472645893 	finalQ = 0.01903643384610881339 initSR = 0.659864 	finalSR = 0.571429
+initQ = 0.41377254330472645893 	finalQ = 0.01294083362982641379 initSR = 0.659864 	finalSR = 0.510204
+initQ = 0.41377254330472645893 	finalQ = 0.01294083362982636695 initSR = 0.659864 	finalSR = 0.561224
+initQ = 0.41377254330472645893 	finalQ = 0.01540500969139419613 initSR = 0.659864 	finalSR = 0.690476
+initQ = 0.41377254330472645893 	finalQ = 0.01493417988942796759 initSR = 0.659864 	finalSR = 0.510204
+initQ = 0.41377254330472645893 	finalQ = 0.01143719856377204205 initSR = 0.659864 	finalSR = 0.636054
+initQ = 0.41377254330472645893 	finalQ = 0.01844734065454340516 initSR = 0.659864 	finalSR = 0.605442
+initQ = 0.41377254330472645893 	finalQ = 0.01294083362982640859 initSR = 0.659864 	finalSR = 0.557823
+initQ = 0.41377254330472645893 	finalQ = 0.01120897160764845052 initSR = 0.659864 	finalSR = 0.619048
+optimal r dist = 0.008745, signRate = 0.527211
+initQ = 3.41180854260523869215 	finalQ = 0.70122170459203181370 initSR = 0.672619 	finalSR = 0.839286
+initQ = 3.41180854260523869215 	finalQ = 0.48269210161175774010 initSR = 0.672619 	finalSR = 0.920635
+initQ = 3.41180854260523869215 	finalQ = 0.65302396981602162107 initSR = 0.672619 	finalSR = 0.930556
+initQ = 3.41180854260523869215 	finalQ = 0.75739898051230514220 initSR = 0.672619 	finalSR = 0.849206
+initQ = 3.41180854260523869215 	finalQ = 0.64942952245959295610 initSR = 0.672619 	finalSR = 0.948413
+initQ = 3.41180854260523869215 	finalQ = 0.61589591053501568929 initSR = 0.672619 	finalSR = 0.867063
+initQ = 3.41180854260523869215 	finalQ = 0.52803769103208597624 initSR = 0.672619 	finalSR = 0.900794
+initQ = 3.41180854260523869215 	finalQ = 0.62793167844527708610 initSR = 0.672619 	finalSR = 0.878968
+initQ = 3.41180854260523869215 	finalQ = 0.43485715892369231073 initSR = 0.672619 	finalSR = 0.938492
+initQ = 3.41180854260523869215 	finalQ = 0.66927905679989418974 initSR = 0.672619 	finalSR = 0.873016
+initQ = 3.41180854260523869215 	finalQ = 0.60376543000312898890 initSR = 0.672619 	finalSR = 0.865079
+initQ = 3.41180854260523869215 	finalQ = 0.43128059353360187478 initSR = 0.672619 	finalSR = 0.865079
+initQ = 3.41180854260523869215 	finalQ = 0.68219790071565022949 initSR = 0.672619 	finalSR = 0.863095
+initQ = 3.41180854260523869215 	finalQ = 0.58412593654232469742 initSR = 0.672619 	finalSR = 0.869048
+initQ = 3.41180854260523869215 	finalQ = 0.66615960748665070668 initSR = 0.672619 	finalSR = 0.835317
+optimal r dist = 0.431281, signRate = 0.865079
+ PreSignRate = 0.851080
+ PostSignRate = 0.897840
+ PreCaseTr>0         144
+ PostCaseTr>0        203
+ PreReferenceTr<0    420
+ PostReferenceTr<0   331
+ CorrectCaseTr>0     188
+ CorrectReference<0  378
+ 
+*** trial 9 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.510204 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 7 a = 0.428571 initSR = 1.000000, finalSR = 0.989130
+block = 1 repeat = 3 a = 0.306122 initSR = 1.000000, finalSR = 0.989130
+block = 1 repeat = 6 a = 0.408163 initSR = 1.000000, finalSR = 0.985507
+block = 1 repeat = 5 a = 0.306122 initSR = 1.000000, finalSR = 0.992754
+block = 1 repeat = 2 a = 0.408163 initSR = 1.000000, finalSR = 0.985507
+block = 1 repeat = 1 a = 0.408163 initSR = 1.000000, finalSR = 0.963768
+block = 1 repeat = 9 a = 0.367347 initSR = 1.000000, finalSR = 0.996377
+block = 1 repeat = 8 a = 0.367347 initSR = 1.000000, finalSR = 0.989130
+block = 1 repeat = 10 a = 0.367347 initSR = 1.000000, finalSR = 0.996377
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.884615 initSR = 0.980488, finalSR = 0.996341
+block = 2 repeat = 7 a = 0.794872 initSR = 0.980488, finalSR = 0.997561
+block = 2 repeat = 3 a = 0.846154 initSR = 0.980488, finalSR = 0.997561
+block = 2 repeat = 6 a = 0.833333 initSR = 0.980488, finalSR = 0.993902
+block = 2 repeat = 5 a = 0.884615 initSR = 0.980488, finalSR = 0.996341
+block = 2 repeat = 2 a = 0.756410 initSR = 0.980488, finalSR = 0.997561
+block = 2 repeat = 1 a = 0.833333 initSR = 0.980488, finalSR = 0.993902
+block = 2 repeat = 9 a = 1.025641 initSR = 0.980488, finalSR = 0.995122
+block = 2 repeat = 8 a = 0.884615 initSR = 0.980488, finalSR = 0.992683
+block = 2 repeat = 10 a = 0.871795 initSR = 0.980488, finalSR = 0.997561
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.657895 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 7 a = 0.631579 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.605263 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 3 a = 0.763158 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.631579 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 2 a = 0.657895 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.657895 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 9 a = 0.500000 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 8 a = 0.736842 initSR = 1.000000, finalSR = 0.991667
+block = 3 repeat = 10 a = 0.578947 initSR = 1.000000, finalSR = 1.000000
+
+Saving to: matlab.mat
+
+initQ = 2.41451298211350806611 	finalQ = 0.40531921041502999570 initSR = 0.810847 	finalSR = 0.835979
+initQ = 2.41451298211350806611 	finalQ = 0.36108791072584545123 initSR = 0.810847 	finalSR = 0.878307
+initQ = 2.41451298211350806611 	finalQ = 0.40456124141421523355 initSR = 0.810847 	finalSR = 0.910053
+initQ = 2.41451298211350806611 	finalQ = 0.45109083550523298989 initSR = 0.810847 	finalSR = 0.839947
+initQ = 2.41451298211350806611 	finalQ = 0.38589097257088528226 initSR = 0.810847 	finalSR = 0.814815
+initQ = 2.41451298211350806611 	finalQ = 0.38073985906641671928 initSR = 0.810847 	finalSR = 0.876984
+initQ = 2.41451298211350806611 	finalQ = 0.34817807994794508497 initSR = 0.810847 	finalSR = 0.866402
+initQ = 2.41451298211350806611 	finalQ = 0.36718909325873866356 initSR = 0.810847 	finalSR = 0.862434
+initQ = 2.41451298211350806611 	finalQ = 0.35305719823484271735 initSR = 0.810847 	finalSR = 0.878307
+initQ = 2.41451298211350806611 	finalQ = 0.43618879146238814792 initSR = 0.810847 	finalSR = 0.843915
+initQ = 2.41451298211350806611 	finalQ = 0.37767749173037806765 initSR = 0.810847 	finalSR = 0.849206
+initQ = 2.41451298211350806611 	finalQ = 0.40481229874452601125 initSR = 0.810847 	finalSR = 0.869048
+initQ = 2.41451298211350806611 	finalQ = 0.44001946248442702636 initSR = 0.810847 	finalSR = 0.890212
+initQ = 2.41451298211350806611 	finalQ = 0.32873834719071404198 initSR = 0.810847 	finalSR = 0.858466
+initQ = 2.41451298211350806611 	finalQ = 0.35846289030083755556 initSR = 0.810847 	finalSR = 0.907407
+optimal r dist = 0.328738, signRate = 0.858466
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588906633 initSR = 0.672355 	finalSR = 0.542662
+initQ = 0.30003186280390814478 	finalQ = 0.00765772017752675352 initSR = 0.672355 	finalSR = 0.692833
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588927363 initSR = 0.672355 	finalSR = 0.631399
+initQ = 0.30003186280390814478 	finalQ = 0.01774224779982370645 initSR = 0.672355 	finalSR = 0.556314
+initQ = 0.30003186280390814478 	finalQ = 0.00719962671154754721 initSR = 0.672355 	finalSR = 0.621160
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588914353 initSR = 0.672355 	finalSR = 0.440273
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588907761 initSR = 0.672355 	finalSR = 0.406143
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588936904 initSR = 0.672355 	finalSR = 0.529010
+initQ = 0.30003186280390814478 	finalQ = 0.00765772017752696689 initSR = 0.672355 	finalSR = 0.645051
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588984436 initSR = 0.672355 	finalSR = 0.511945
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588948006 initSR = 0.672355 	finalSR = 0.703072
+initQ = 0.30003186280390814478 	finalQ = 0.00765772017752666331 initSR = 0.672355 	finalSR = 0.522184
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588939159 initSR = 0.672355 	finalSR = 0.525597
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588930659 initSR = 0.672355 	finalSR = 0.668942
+initQ = 0.30003186280390814478 	finalQ = 0.00289481588588907761 initSR = 0.672355 	finalSR = 0.576792
+optimal r dist = 0.002895, signRate = 0.542662
+initQ = 3.04694344127136318434 	finalQ = 0.58264807589831091317 initSR = 0.868263 	finalSR = 0.928144
+initQ = 3.04694344127136318434 	finalQ = 0.57581411924365122346 initSR = 0.868263 	finalSR = 0.862275
+initQ = 3.04694344127136318434 	finalQ = 0.29975371433360920026 initSR = 0.868263 	finalSR = 0.906375
+initQ = 3.04694344127136318434 	finalQ = 0.55580212893513325501 initSR = 0.868263 	finalSR = 0.910180
+initQ = 3.04694344127136318434 	finalQ = 0.59995902083433927388 initSR = 0.868263 	finalSR = 0.906188
+initQ = 3.04694344127136318434 	finalQ = 0.30582186241679365502 initSR = 0.868263 	finalSR = 0.960159
+initQ = 3.04694344127136318434 	finalQ = 0.62510912272601593109 initSR = 0.868263 	finalSR = 0.892216
+initQ = 3.04694344127136318434 	finalQ = 0.28712945729470884526 initSR = 0.868263 	finalSR = 0.902390
+initQ = 3.04694344127136318434 	finalQ = 0.61529782046969583309 initSR = 0.868263 	finalSR = 0.864271
+initQ = 3.04694344127136318434 	finalQ = 0.27140633711146933127 initSR = 0.868263 	finalSR = 0.880478
+initQ = 3.04694344127136318434 	finalQ = 0.62836755979188507748 initSR = 0.868263 	finalSR = 0.894212
+initQ = 3.04694344127136318434 	finalQ = 0.63082876024721445951 initSR = 0.868263 	finalSR = 0.884462
+initQ = 3.04694344127136318434 	finalQ = 0.63294333424580950798 initSR = 0.868263 	finalSR = 0.956175
+initQ = 3.04694344127136318434 	finalQ = 0.60060369907403543532 initSR = 0.868263 	finalSR = 0.916168
+initQ = 3.04694344127136318434 	finalQ = 0.31204997333913359059 initSR = 0.868263 	finalSR = 0.880478
+optimal r dist = 0.271406, signRate = 0.880478
+ PreSignRate = 0.836574
+ PostSignRate = 0.895062
+ PreCaseTr>0         160
+ PostCaseTr>0        125
+ PreReferenceTr<0    395
+ PostReferenceTr<0   403
+ CorrectCaseTr>0     177
+ CorrectReference<0  385
+ 
+*** trial 10 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.444444 initSR = 0.992754, finalSR = 0.985507
+block = 1 repeat = 7 a = 0.422222 initSR = 0.992754, finalSR = 0.985507
+block = 1 repeat = 3 a = 0.577778 initSR = 0.992754, finalSR = 0.985507
+block = 1 repeat = 6 a = 0.533333 initSR = 0.992754, finalSR = 0.963768
+block = 1 repeat = 2 a = 0.711111 initSR = 0.992754, finalSR = 0.992754
+block = 1 repeat = 5 a = 0.622222 initSR = 0.992754, finalSR = 0.963768
+block = 1 repeat = 1 a = 0.622222 initSR = 0.992754, finalSR = 0.981884
+block = 1 repeat = 9 a = 0.600000 initSR = 0.992754, finalSR = 0.981884
+block = 1 repeat = 10 a = 0.600000 initSR = 0.992754, finalSR = 0.956522
+block = 1 repeat = 8 a = 0.577778 initSR = 0.992754, finalSR = 0.992754
+
+************ learning block 2 ***********
+block = 2 repeat = 4 a = 0.867347 initSR = 0.962195, finalSR = 0.974390
+block = 2 repeat = 7 a = 0.836735 initSR = 0.962195, finalSR = 0.973171
+block = 2 repeat = 3 a = 0.867347 initSR = 0.962195, finalSR = 0.975610
+block = 2 repeat = 6 a = 0.724490 initSR = 0.962195, finalSR = 0.976829
+block = 2 repeat = 2 a = 0.867347 initSR = 0.962195, finalSR = 0.974390
+block = 2 repeat = 5 a = 0.928571 initSR = 0.962195, finalSR = 0.974390
+block = 2 repeat = 1 a = 0.765306 initSR = 0.962195, finalSR = 0.970732
+block = 2 repeat = 9 a = 0.887755 initSR = 0.962195, finalSR = 0.980488
+block = 2 repeat = 8 a = 0.785714 initSR = 0.962195, finalSR = 0.979268
+block = 2 repeat = 10 a = 0.775510 initSR = 0.962195, finalSR = 0.975610
+
+************ learning block 3 ***********
+block = 3 repeat = 4 a = 0.600000 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 7 a = 0.861538 initSR = 1.000000, finalSR = 0.933333
+block = 3 repeat = 3 a = 0.723077 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 6 a = 0.507692 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 5 a = 0.738462 initSR = 1.000000, finalSR = 0.983333
+block = 3 repeat = 2 a = 0.723077 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 1 a = 0.646154 initSR = 1.000000, finalSR = 0.950000
+block = 3 repeat = 9 a = 0.630769 initSR = 1.000000, finalSR = 1.000000
+block = 3 repeat = 8 a = 0.646154 initSR = 1.000000, finalSR = 0.950000
+block = 3 repeat = 10 a = 0.446154 initSR = 1.000000, finalSR = 1.000000
+
+Saving to: matlab.mat
+
+initQ = 4.97439595472143025745 	finalQ = 0.58545385066616750791 initSR = 0.765766 	finalSR = 0.886744
+initQ = 4.97439595472143025745 	finalQ = 0.74663993724305044442 initSR = 0.765766 	finalSR = 0.837838
+initQ = 4.97439595472143025745 	finalQ = 0.47136934349069142813 initSR = 0.765766 	finalSR = 0.903475
+initQ = 4.97439595472143025745 	finalQ = 0.58551242818786586319 initSR = 0.765766 	finalSR = 0.909910
+initQ = 4.97439595472143025745 	finalQ = 0.56428348365472169590 initSR = 0.765766 	finalSR = 0.893179
+initQ = 4.97439595472143025745 	finalQ = 0.59701962937748476179 initSR = 0.765766 	finalSR = 0.867439
+initQ = 4.97439595472143025745 	finalQ = 0.61574071126890772554 initSR = 0.765766 	finalSR = 0.895753
+initQ = 4.97439595472143025745 	finalQ = 0.55803490360458918307 initSR = 0.765766 	finalSR = 0.878866
+initQ = 4.97439595472143025745 	finalQ = 0.54437202127779116267 initSR = 0.765766 	finalSR = 0.880000
+initQ = 4.97439595472143025745 	finalQ = 0.61709454574643829439 initSR = 0.765766 	finalSR = 0.824968
+initQ = 4.97439595472143025745 	finalQ = 0.57268030023054261601 initSR = 0.765766 	finalSR = 0.862291
+initQ = 4.97439595472143025745 	finalQ = 0.65280494755384588235 initSR = 0.765766 	finalSR = 0.894330
+initQ = 4.97439595472143025745 	finalQ = 0.66548881945832105700 initSR = 0.765766 	finalSR = 0.875161
+initQ = 4.97439595472143025745 	finalQ = 0.67394451665141785757 initSR = 0.765766 	finalSR = 0.875809
+initQ = 4.97439595472143025745 	finalQ = 0.60177833574266814676 initSR = 0.765766 	finalSR = 0.888031
+optimal r dist = 0.471369, signRate = 0.903475
+initQ = 0.45165707718079628474 	finalQ = 0.03877099622633650017 initSR = 0.448980 	finalSR = 0.380952
+initQ = 0.45165707718079628474 	finalQ = 0.02056071744099528809 initSR = 0.448980 	finalSR = 0.496599
+initQ = 0.45165707718079628474 	finalQ = 0.01371831231165244330 initSR = 0.448980 	finalSR = 0.435374
+initQ = 0.45165707718079628474 	finalQ = 0.02761679120419198441 initSR = 0.448980 	finalSR = 0.387755
+initQ = 0.45165707718079628474 	finalQ = 0.02761679120419153338 initSR = 0.448980 	finalSR = 0.374150
+initQ = 0.45165707718079628474 	finalQ = 0.01890157005886699756 initSR = 0.448980 	finalSR = 0.411565
+initQ = 0.45165707718079628474 	finalQ = 0.04274865687360061145 initSR = 0.448980 	finalSR = 0.479592
+initQ = 0.45165707718079628474 	finalQ = 0.02761679120419287953 initSR = 0.448980 	finalSR = 0.435374
+initQ = 0.45165707718079628474 	finalQ = 0.01458093435972063721 initSR = 0.448980 	finalSR = 0.452381
+initQ = 0.45165707718079628474 	finalQ = 0.03590625174425838423 initSR = 0.448980 	finalSR = 0.435374
+initQ = 0.45165707718079628474 	finalQ = 0.02340716771274637883 initSR = 0.448980 	finalSR = 0.397959
+initQ = 0.45165707718079628474 	finalQ = 0.03280004895140697235 initSR = 0.448980 	finalSR = 0.374150
+initQ = 0.45165707718079628474 	finalQ = 0.03590625174425694788 initSR = 0.448980 	finalSR = 0.394558
+initQ = 0.45165707718079628474 	finalQ = 0.01452000154725680350 initSR = 0.448980 	finalSR = 0.411565
+initQ = 0.45165707718079628474 	finalQ = 0.03590625174425749605 initSR = 0.448980 	finalSR = 0.421769
+optimal r dist = 0.013718, signRate = 0.435374
+initQ = 4.11012668203857423066 	finalQ = 0.48989480002692187277 initSR = 0.791506 	finalSR = 0.889961
+initQ = 4.11012668203857423066 	finalQ = 0.54010713251591924156 initSR = 0.791506 	finalSR = 0.888031
+initQ = 4.11012668203857423066 	finalQ = 0.48714264033780724228 initSR = 0.791506 	finalSR = 0.924710
+initQ = 4.11012668203857423066 	finalQ = 0.52888495306053107115 initSR = 0.791506 	finalSR = 0.913127
+initQ = 4.11012668203857423066 	finalQ = 0.46408222739625260012 initSR = 0.791506 	finalSR = 0.886100
+initQ = 4.11012668203857423066 	finalQ = 0.57224176733802145645 initSR = 0.791506 	finalSR = 0.918919
+initQ = 4.11012668203857423066 	finalQ = 0.52787786361934452284 initSR = 0.791506 	finalSR = 0.916988
+initQ = 4.11012668203857423066 	finalQ = 0.49682428793842736692 initSR = 0.791506 	finalSR = 0.905405
+initQ = 4.11012668203857423066 	finalQ = 0.54981305009586400878 initSR = 0.791506 	finalSR = 0.903475
+initQ = 4.11012668203857423066 	finalQ = 0.62384036531022601935 initSR = 0.791506 	finalSR = 0.905405
+initQ = 4.11012668203857423066 	finalQ = 0.53676413293437619245 initSR = 0.791506 	finalSR = 0.891892
+initQ = 4.11012668203857423066 	finalQ = 0.45151970381101563801 initSR = 0.791506 	finalSR = 0.924710
+initQ = 4.11012668203857423066 	finalQ = 0.50869672361025075613 initSR = 0.791506 	finalSR = 0.899614
+initQ = 4.11012668203857423066 	finalQ = 0.58110747826749875600 initSR = 0.791506 	finalSR = 0.897683
+initQ = 4.11012668203857423066 	finalQ = 0.54986244023124419833 initSR = 0.791506 	finalSR = 0.907336
+optimal r dist = 0.451520, signRate = 0.924710
+ PreSignRate = 0.867284
+ PostSignRate = 0.896605
+ PreCaseTr>0         177
+ PostCaseTr>0        187
+ PreReferenceTr<0    402
+ PostReferenceTr<0   349
+ CorrectCaseTr>0     247
+ CorrectReference<0  346
+ 
+*** trial 11 ***
+
+************ learning block 1 ***********
+block = 1 repeat = 4 a = 0.588235 initSR = 0.989130, finalSR = 0.989130
+block = 1 repeat = 7 a = 0.529412 initSR = 0.989130, finalSR = 0.978261
+block = 1 repeat = 3 a = 0.705882 initSR = 0.989130, finalSR = 0.992754
+block = 1 repeat = 6 a = 0.588235 initSR = 0.989130, finalSR = 0.992754
+pure virtual method called
+terminate called without an active exception
+[1]    3078 abort      matlab -nodesktop
+[1m[3m%[23m[1m[m                                                                               [m[23m[24m[Jxzhou-desktop% [K[4C ~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo[64D[m[23m[24m[Jxzhou-desktop% [K[72C ~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo[132D[m[23m[24m[Jxzhou-desktop% e[K[71C ~/research_linux/gnome/bioWorkspace/genomeprj/hBlockRecombo[131Dexit
