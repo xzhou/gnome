@@ -27,21 +27,23 @@ for i= 1:m
 end
 
 %% begin configuration
-FDR = 0.01;
+FDR = 0.05;
 sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 20;
-nSnps = n;
+trial = 50;
+nSnps = 176;
 useEstR = 0;
+levels = 10; %divide sign recover rate by 10 level
 
 %% cut end snps
 if nSnps < n
-    nCut = n - nSnps;
-    ub = n - floor(nCut/2);
-    lb = floor(nCut/2) + 1;
-    hap01Seq = hap01Seq(:, lb:ub);
+%     nCut = n - nSnps;
+%     ub = n - floor(nCut/2);
+%     lb = floor(nCut/2) + 1;
+%     hap01Seq = hap01Seq(:, lb:ub);
+hap01Seq = hap01Seq(:, 1:nSnps);
 end
 
 %% try different case and reference
@@ -85,6 +87,8 @@ parfor i = 1:trial
     caseP = sum(caseSeq)/caseSize/2;
     refP = sum(refSeq)/refSize/2;
     testP = sum(testSeq)/testSize/2;
+    
+    %find sign rate and power
     
     %calculate Homer's attack's identification rate
     Tp_case = getTpM(caseGenoSeq, caseP, refP);
