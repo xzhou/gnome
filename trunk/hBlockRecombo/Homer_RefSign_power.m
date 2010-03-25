@@ -34,8 +34,10 @@ refSize = sameSize;
 testSize = sameSize;
 trial = 50;
 nSnps = 176;
-useEstR = 0;
+useEstR = 1;
 levels = 10; %divide sign recover rate by 10 level
+configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
+    'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
 
 %% cut end snps
 if nSnps < n
@@ -113,10 +115,13 @@ parfor i = 1:trial
     
     %save result
     idr(i,:) = [TpIdr, TrIdr, TrIdr_cs];
-    fprintf(1, '# %d\t%d\t%d\n', TpIdr, TrIdr, TrIdr_cs);
+    fprintf(1, '%d\t%d\t%d\n', TpIdr, TrIdr, TrIdr_cs);
 end
 %profile viewer;
-fileName = ['compare_power', num2str(caseSize), '.mat'];
+configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
+    'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
+
+fileName = [configStr, '.mat'];
 fprintf(1, 'write to %s\n', fileName);
 save(fileName);
 
@@ -132,8 +137,8 @@ plot(2*trial+1:3*trial, idr(:,3), 'g.');
 line([1,3*trial], [mean(idr(:,1)), mean(idr(:,1))], 'Color', 'red', 'LineWidth', 2);
 line([1,3*trial], [mean(idr(:,2)), mean(idr(:,2))], 'Color', 'blue', 'LineWidth', 2);
 line([1,3*trial], [mean(idr(:,3)), mean(idr(:,3))], 'Color', 'green', 'LineWidth', 2);
-configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
-    'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
+% configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
+%     'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
 title(configStr);
 legend('Homer', 'All sign', 'Copy Sign', 2);
 hold off;
