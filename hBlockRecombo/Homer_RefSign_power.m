@@ -134,6 +134,6 @@ title(configStr);
 legend('Homer', 'All sign', 'Copy Sign', 2);
 hold off;
 mkdir(dataPath, 'powerAna');
-saveas(h, ['./powerAna/', configStr, '.fig']);
+saveas(h, ['./powerAna/', configStr, '.pdf']);
 
 
