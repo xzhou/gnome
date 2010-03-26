@@ -32,7 +32,7 @@ sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 50;
+trial = 30;
 nSnps = 176;
 useEstR = 0;
 levels = 10; %divide sign recover rate by 10 level
@@ -51,10 +51,12 @@ end
 %% try different case and reference
 RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));   %reset the random number generator
 
-%idr = [Homer, Yong, Yong_copySign]
-idr = zeros(trial, 3); %identification rate
+%idr = [signLevel, trials]
+idrSignPower = zeros(levels, trial);
+idrP = zeros(1, trial);
+idrCS = zeros(1, trial);
 %profile on;
-parfor i = 1:trial
+for i = 1:trial
     %fprintf(1, 'trial %d\n', i);
     %randomly sample case, ref, test sample
     [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
@@ -96,53 +98,34 @@ parfor i = 1:trial
     Tp_case = getTpM(caseGenoSeq, caseP, refP);
     Tp_test = getTpM(testGenoSeq, caseP, refP);
     zp = getThreshold(Tp_test, FDR);%get percentile
-    TpIdr = sum(Tp_case > zp);%get identification rate
+    idrP(i) = sum(Tp_case > zp);%get identification rate
     
-    %calculate Yong's attack power
-    Tr_case = getTrM(caseSeq, caseEstR, refEstR);
-    Tr_ref = getTrM(refSeq, caseEstR, refEstR);
-    Tr_test = getTrM(testSeq, caseEstR, refEstR);
-    zr = getThreshold(Tr_test, FDR);%get fdr percentile
-    TrIdr = sum(Tr_case > zr);%get identification rate
+    idrSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseEstR, refEstR);
 
     %calculate Yong's attack using ref sign or copy sign
     caseEstRCopySign = caseEstR.*sign(refEstR);
-    Tr_case_copySign = getTrM(caseSeq, caseEstRCopySign, refEstR);
-    Tr_ref_copySign = getTrM(refSeq, caseEstRCopySign, refEstR);
-    Tr_test_copySign = getTrM(testSeq, caseEstRCopySign, refEstR);
-    zr_cs = getThreshold(Tr_test_copySign, FDR);
-    TrIdr_cs = sum(Tr_case_copySign > zr_cs);
-    
-    %save result
-    idr(i,:) = [TpIdr, TrIdr, TrIdr_cs];
-    fprintf(1, '%d\t%d\t%d\n', TpIdr, TrIdr, TrIdr_cs);
+    idrCS(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refEstR);
 end
 %profile viewer;
-configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
-    'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
 
-fileName = [configStr, '.mat'];
+%% save
+% configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
+%     'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
+
+fileName = [configStr, 'sp.mat'];
 fprintf(1, 'write to %s\n', fileName);
 save(fileName);
 
-%%
-%load(fileName);
 
-%% plot result
-%h = figure;
+%% plot
+h = figure;
+line([0, 1], [mean(idrP), mean(idrP)], 'Color', 'red', 'Marker', '.');
 hold on;
-h = plot(1:trial, idr(:,1), 'rx');
-plot(trial+1:2*trial, idr(:,2), 'bo');
-plot(2*trial+1:3*trial, idr(:,3), 'g.');
-line([1,3*trial], [mean(idr(:,1)), mean(idr(:,1))], 'Color', 'red', 'LineWidth', 2);
-line([1,3*trial], [mean(idr(:,2)), mean(idr(:,2))], 'Color', 'blue', 'LineWidth', 2);
-line([1,3*trial], [mean(idr(:,3)), mean(idr(:,3))], 'Color', 'green', 'LineWidth', 2);
-% configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
-%     'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
-title(configStr);
-legend('Homer', 'All sign', 'Copy Sign', 2);
-hold off;
-mkdir(dataPath, 'powerAna');
-saveas(h, ['./powerAna/', configStr, '.pdf']);
-
-
+line([0, 1], [mean(idrCS), mean(idrCS)], 'Color', 'blue', 'Marker', 'x');
+plot(1/levels:1/levels:1, mean(idrSignPower, 2), 'go-');
+legend('Tp', 'CopySign', 'idr', 2);
+title('sign power curve');
+ylabel('identification rate');
+xlabel('level')
+mkdir('./signPower');
+saveas(h, ['./signPower/', configStr, '.pdf']);
