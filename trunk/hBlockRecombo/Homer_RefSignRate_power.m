@@ -32,9 +32,9 @@ sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 30;
+trial = 40;
 nSnps = 176;
-useEstR = 0;
+useEstR = 1;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
     'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
@@ -53,6 +53,7 @@ RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));   %r
 
 %idr = [signLevel, trials]
 idrSignPower = zeros(levels, trial);
+idrEstSignPower = zeros(levels, trial);
 idrP = zeros(1, trial);
 idrCS = zeros(1, trial);
 %profile on;
@@ -68,24 +69,12 @@ for i = 1:trial
     caseR(isnan(caseR)) = 0;
     refR = corrcoef(refSeq);
     refR(isnan(refR)) = 0;
-    
-    if useEstR == 1
-        %calculate estimate R
-        %fprintf(1, '\testR');
-        caseEstR = estimateR(caseGenoSeq);
-        caseEstR(isnan(caseEstR)) = 0;
-        %fprintf(1, '.');
-        refEstR = estimateR(refGenoSeq);
-        refEstR(isnan(refEstR)) = 0;
-        %fprintf(1, '.');
-        %testEstR = estimateR(testGenoSeq);
-        %fprintf(1, '.\n');
-    else
-        caseEstR = corrcoef(caseSeq);
-        caseEstR(isnan(caseEstR)) = 0;
-        refEstR = corrcoef(refSeq);
-        refEstR(isnan(refEstR)) = 0;
-    end
+
+    %calculate estimate R
+    caseEstR = estimateR(caseGenoSeq);
+    caseEstR(isnan(caseEstR)) = 0;
+    refEstR = estimateR(refGenoSeq);
+    refEstR(isnan(refEstR)) = 0;
     
     %calculate single allele frequence
     caseP = sum(caseSeq)/caseSize/2;
@@ -100,7 +89,8 @@ for i = 1:trial
     zp = getThreshold(Tp_test, FDR);%get percentile
     idrP(i) = sum(Tp_case > zp);%get identification rate
     
-    idrSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseEstR, refEstR);
+    idrSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseR, refR);
+    idrEstSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseEstR, refEstR);
 
     %calculate Yong's attack using ref sign or copy sign
     caseEstRCopySign = caseEstR.*sign(refEstR);
@@ -122,7 +112,9 @@ h = figure;
 line([0, 1], [mean(idrP), mean(idrP)], 'Color', 'red', 'Marker', '.');
 hold on;
 line([0, 1], [mean(idrCS), mean(idrCS)], 'Color', 'blue', 'Marker', 'x');
-plot(1/levels:1/levels:1, mean(idrSignPower, 2), 'go-');
+x = 1/levels:1/levels:1;
+plot(x, mean(idrSignPower, 2), 'go-');
+plot(x, mean(idrEstSignPower, 2), 'bx-');
 legend('Tp', 'CopySign', 'idr', 2);
 title('sign power curve');
 ylabel('identification rate');
