@@ -1,49 +1,10 @@
-%we need to know what's the power of copy sign and homer's test
-if (~isdeployed)
-    disp 'not deployed';
-    cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
-    change_env();
-end
-
-startParallel();
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
-
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
-
-logFile = 'signCompare.log';
-logfid = fopen(logFile, 'w');
-cd(dataPath);
-
-%% reading fasta data
-hapSeq = fastaread(fastaFile);
-hapIntSeq = seq2int(hapSeq);
-hapSeqNoID = getSeqMatrix(hapIntSeq);
-
-alleleMapping = getMajorAllele(hapSeqNoID);
-
-[m n] = size(hapSeqNoID);
-hap01Seq = zeros(m, n);
-for i= 1:m
-    %1 major,  0 is minor
-    hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
-end
-
+function [] = powerAnalysis(hap01Seq, FDR, caseSize, refSize, testSize, trial, nSnps, levels, useEstR)
 %% begin configuration
-FDR = 0.05;
-sameSize = 200;
-caseSize = sameSize;
-refSize = sameSize;
-testSize = sameSize;
-trial = 20;
-nSnps = 300;
-useEstR = 1;
-levels = 10; %divide sign recover rate by 10 level
+[m n] = size(hap01Seq);
+
 configStr = ['case', num2str(caseSize),' ref', num2str(refSize), ...
     ' test', num2str(testSize), ' fdr', num2str(FDR), ' trial', num2str(trial), ' nSnps', num2str(nSnps), ' EstR', num2str(useEstR)];
 fprintf(1, '%s', configStr);
-
 
 %% cut end snps
 if nSnps < n
@@ -67,7 +28,7 @@ idrCSEst = idrCS;
 
 %profile on;
 parfor i = 1:trial
-    fprintf(1, 'trial %d\n', i);
+    fprintf(1, 'trial %d ', i);
     %randomly sample case, ref, test sample
     [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
     caseGenoSeq = combineHapSeq(caseSeq);
@@ -120,12 +81,12 @@ fprintf(1, 'write to %s\n', fileName);
 save(fileName);
 
 %% print result
-fprintf(1, '%s\n', configStr);
+fprintf(1, '\n%s\n', configStr);
 fprintf(1, '\tHomer: \t%f\n', mean(idrP));
 fprintf(1, '\trealR cp sign: \t%f\n', mean(idrCS));
 fprintf(1, '\testR cp sign: \t%f\n', mean(idrCSEst));
 fprintf(1, '\tmax Est R: \t%f\n', max(mean(idrEstSignPower,2)));
-fprintf(1, '\tmax Real R: \t%f\n', max(mean(idrSignPower, 2)));
+fprintf(1, '\tmax Real R: \t%f\n\n\n', max(mean(idrSignPower, 2)));
 
 %% plot
 h = figure;
@@ -143,14 +104,15 @@ legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 
 title(configStr);
 ylabel('identification rate');
 xlabel('level')
-mkdir('./signPower');
-saveas(h, ['./signPower/', configStr, '.pdf']);
+dirName = 'signPowerBatch';
+mkdir('./', dirName);
+saveas(h, ['./',dirName, '/', configStr, '.pdf']);
 hold off;
 hasT = exist('T', 'var') > 0;
 if hasT
     figure;
     h2 = plot(x, mean(T, 2));
-    saveas(h2, ['./signPower/', configStr, 'T.pdf']);
+    saveas(h2, ['./',dirName, '/', configStr, 'T.pdf']);
 end
-
+end
 
