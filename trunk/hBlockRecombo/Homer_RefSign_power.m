@@ -6,8 +6,14 @@ if (~isdeployed)
 end
 
 startParallel();
+
+
 dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+
+dataPath = '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
+fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
+
 logFile = 'signCompare.log';
 logfid = fopen(logFile, 'w');
 cd(dataPath);
@@ -32,8 +38,8 @@ sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 100;
-nSnps = n;
+trial = 30;
+nSnps = 400;
 useEstR = 0;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...

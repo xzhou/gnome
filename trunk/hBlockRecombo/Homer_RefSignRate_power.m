@@ -8,6 +8,10 @@ end
 startParallel();
 dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+
+dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
+fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
+
 logFile = 'signCompare.log';
 logfid = fopen(logFile, 'w');
 cd(dataPath);
@@ -28,16 +32,18 @@ end
 
 %% begin configuration
 FDR = 0.05;
-sameSize = 150;
+sameSize = 100;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
 trial = 20;
-nSnps = 200;
-useEstR = 1;
+nSnps = 100;
+useEstR = 0;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
     'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
+fprintf(1, '%s', configStr);
+
 
 %% cut end snps
 if nSnps < n
@@ -53,10 +59,12 @@ RandStream.setDefaultStream(RandStream('mt19937ar','seed',sum(100*clock)));   %r
 
 %idr = [signLevel, trials]
 idrSignPower = zeros(levels, trial);
+T = idrSignPower;
 idrEstSignPower = zeros(levels, trial);
 idrP = zeros(1, trial);
 idrCS = zeros(1, trial);
 idrCSEst = idrCS;
+
 %profile on;
 parfor i = 1:trial
     fprintf(1, 'trial %d\n', i);
@@ -84,7 +92,7 @@ parfor i = 1:trial
     zp = getThreshold(Tp_test, FDR);%get percentile
     idrP(i) = sum(Tp_case > zp);%get identification rate
     
-    idrSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseR, refR);
+    [idrSignPower(:,i) T(:,i)] = signRateIdr(caseSeq, testSeq, FDR, levels, caseR, refR);
         
     %calculate Yong's attack using ref sign or copy sign
     caseRCopySign = abs(caseR).*sign(refR);
@@ -100,7 +108,6 @@ parfor i = 1:trial
         caseEstRCopySign = abs(caseEstR).*sign(refR);
         idrCSEst(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refR);
     end
-    
 end
 %profile viewer;
 
@@ -115,11 +122,14 @@ save(fileName);
 
 %% plot
 h = figure;
-line([0, 1], [mean(idrP), mean(idrP)], 'Color', 'red', 'Marker', '.');
+maxT = max(max(T));
+line([0, maxT], [mean(idrP), mean(idrP)], 'Color', 'red', 'Marker', '.');
 hold on;
-line([0, 1], [mean(idrCS), mean(idrCS)], 'Color', 'yellow', 'Marker', 'x');
-line([0, 1], [mean(idrCSEst), mean(idrCSEst)], 'Color', 'green', 'Marker', '.');
+line([0, maxT], [mean(idrCS), mean(idrCS)], 'Color', 'yellow', 'Marker', 'x');
+line([0, maxT], [mean(idrCSEst), mean(idrCSEst)], 'Color', 'green', 'Marker', '.');
 x = 1/levels:1/levels:1;
+x = mean(T, 2);
+
 plot(x, mean(idrSignPower, 2), 'go-');
 plot(x, mean(idrEstSignPower, 2), 'bx-');
 legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 'idrEstSignPower', 2);
