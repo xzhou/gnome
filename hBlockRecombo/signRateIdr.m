@@ -1,4 +1,4 @@
-function [idr] = signRateIdr(caseSeq, testSeq, fdr, level, caseR, refR)
+function [idr, T] = signRateIdr(caseSeq, testSeq, fdr, level, caseR, refR)
 %in this experimtns, we try to find the relationship between identification
 %rate and sign rate, 
 
@@ -32,7 +32,7 @@ T = p;
 pLen = length(p);
 for i = 1:pLen
     pi = p(i);
-    idx = pi*n;
+    idx = round(pi*n);
     T(i) = sortv(idx);
 end
 end
