@@ -34,12 +34,12 @@ end
 
 %% begin configuration
 FDR = 0.05;
-sameSize = 200;
+sameSize = 100;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
 trial = 30;
-nSnps = 400;
+nSnps = 200;
 useEstR = 0;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
@@ -135,7 +135,7 @@ save(fileName);
 %load(fileName);
 
 %% plot result
-%h = figure;
+h = figure;
 hold on;
 h = plot(1:trial, idr(:,1), 'rx');
 plot(trial+1:2*trial, idr(:,2), 'bo');

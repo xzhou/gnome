@@ -1,4 +1,5 @@
 %we need to know what's the power of copy sign and homer's test
+function [] = Homer_RefSignRate_power(FDR, nSnps, sampleSize)
 if (~isdeployed)
     disp 'not deployed';
     cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
@@ -30,18 +31,30 @@ for i= 1:m
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
 
+%%config Pool
+fdrl = [0.01, 0.05];
+nSnps = [100, 200, 250, 300];
+sampleSize = [200];
+
+for i = 1:length(fdrl)
+    for j = 1:length(sampleSize);
+        for k = 1:length(nSnps)
+            
+        end
+    end
+end
 %% begin configuration
-FDR = 0.05;
-sameSize = 100;
+FDR = 0.01;
+sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
 trial = 20;
-nSnps = 100;
-useEstR = 0;
+nSnps = 200;
+useEstR = 1;
 levels = 10; %divide sign recover rate by 10 level
-configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
-    'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];
+configStr = ['case', num2str(caseSize),' ref', num2str(refSize), ...
+    ' test', num2str(testSize), ' fdr', num2str(FDR), ' trial', num2str(trial), ' nSnps', num2str(nSnps), ' EstR', num2str(useEstR)];
 fprintf(1, '%s', configStr);
 
 
@@ -94,7 +107,7 @@ parfor i = 1:trial
     
     [idrSignPower(:,i) T(:,i)] = signRateIdr(caseSeq, testSeq, FDR, levels, caseR, refR);
         
-    %calculate Yong's attack using ref sign or copy sign
+    %calculate Yong's attack using copy sign from reference calculate R
     caseRCopySign = abs(caseR).*sign(refR);
     idrCS(i) = getIdr(caseSeq, testSeq, FDR, caseRCopySign, refR);
     
@@ -119,22 +132,38 @@ fileName = [configStr, 'sp.mat'];
 fprintf(1, 'write to %s\n', fileName);
 save(fileName);
 
+%% print result
+fprintf(1, '%s\n', configStr);
+fprintf(1, '\tHomer: \t%f\n', mean(idrP));
+fprintf(1, '\trealR cp sign: \t%f\n', mean(idrCS));
+fprintf(1, '\testR cp sign: \t%f\n', mean(idrCSEst));
+fprintf(1, '\tmax Est R: \t%f\n', max(mean(idrEstSignPower,2)));
+fprintf(1, '\tmax Real R: \t%f\n', max(mean(idrSignPower, 2)));
 
 %% plot
 h = figure;
-maxT = max(max(T));
+maxT = 1;
 line([0, maxT], [mean(idrP), mean(idrP)], 'Color', 'red', 'Marker', '.');
 hold on;
 line([0, maxT], [mean(idrCS), mean(idrCS)], 'Color', 'yellow', 'Marker', 'x');
 line([0, maxT], [mean(idrCSEst), mean(idrCSEst)], 'Color', 'green', 'Marker', '.');
 x = 1/levels:1/levels:1;
-x = mean(T, 2);
-
+%x = mean(T, 2);
+%set(gca,'XDir','reverse')
 plot(x, mean(idrSignPower, 2), 'go-');
 plot(x, mean(idrEstSignPower, 2), 'bx-');
 legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 'idrEstSignPower', 2);
-title('sign power curve');
+title(configStr);
 ylabel('identification rate');
 xlabel('level')
 mkdir('./signPower');
 saveas(h, ['./signPower/', configStr, '.pdf']);
+hold off;
+hasT = exist('T', 'var') > 0;
+if hasT
+    figure;
+    h2 = plot(x, mean(T, 2));
+    saveas(h2, ['./signPower/', configStr, 'T.pdf']);
+end
+
+
