@@ -32,8 +32,8 @@ sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 50;
-nSnps = 176;
+trial = 100;
+nSnps = n;
 useEstR = 0;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
@@ -106,7 +106,7 @@ parfor i = 1:trial
     TrIdr = sum(Tr_case > zr);%get identification rate
 
     %calculate Yong's attack using ref sign or copy sign
-    caseEstRCopySign = caseEstR.*sign(refEstR);
+    caseEstRCopySign = abs(caseEstR).*sign(refEstR);
     Tr_case_copySign = getTrM(caseSeq, caseEstRCopySign, refEstR);
     Tr_ref_copySign = getTrM(refSeq, caseEstRCopySign, refEstR);
     Tr_test_copySign = getTrM(testSeq, caseEstRCopySign, refEstR);

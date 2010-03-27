@@ -28,12 +28,12 @@ end
 
 %% begin configuration
 FDR = 0.05;
-sameSize = 200;
+sameSize = 150;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
-trial = 40;
-nSnps = 176;
+trial = 20;
+nSnps = 200;
 useEstR = 1;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
@@ -56,9 +56,10 @@ idrSignPower = zeros(levels, trial);
 idrEstSignPower = zeros(levels, trial);
 idrP = zeros(1, trial);
 idrCS = zeros(1, trial);
+idrCSEst = idrCS;
 %profile on;
-for i = 1:trial
-    %fprintf(1, 'trial %d\n', i);
+parfor i = 1:trial
+    fprintf(1, 'trial %d\n', i);
     %randomly sample case, ref, test sample
     [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
     caseGenoSeq = combineHapSeq(caseSeq);
@@ -70,12 +71,6 @@ for i = 1:trial
     refR = corrcoef(refSeq);
     refR(isnan(refR)) = 0;
 
-    %calculate estimate R
-    caseEstR = estimateR(caseGenoSeq);
-    caseEstR(isnan(caseEstR)) = 0;
-    refEstR = estimateR(refGenoSeq);
-    refEstR(isnan(refEstR)) = 0;
-    
     %calculate single allele frequence
     caseP = sum(caseSeq)/caseSize/2;
     refP = sum(refSeq)/refSize/2;
@@ -90,11 +85,22 @@ for i = 1:trial
     idrP(i) = sum(Tp_case > zp);%get identification rate
     
     idrSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseR, refR);
-    idrEstSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseEstR, refEstR);
-
+        
     %calculate Yong's attack using ref sign or copy sign
-    caseEstRCopySign = caseEstR.*sign(refEstR);
-    idrCS(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refEstR);
+    caseRCopySign = abs(caseR).*sign(refR);
+    idrCS(i) = getIdr(caseSeq, testSeq, FDR, caseRCopySign, refR);
+    
+    if useEstR == 1
+        %calculate estimate R
+        caseEstR = estimateR(caseGenoSeq);
+        caseEstR(isnan(caseEstR)) = 0;
+        refEstR = estimateR(refGenoSeq);
+        refEstR(isnan(refEstR)) = 0;
+        idrEstSignPower(:,i) = signRateIdr(caseSeq, testSeq, FDR, levels, caseEstR, refEstR);
+        caseEstRCopySign = abs(caseEstR).*sign(refR);
+        idrCSEst(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refR);
+    end
+    
 end
 %profile viewer;
 
@@ -111,11 +117,12 @@ save(fileName);
 h = figure;
 line([0, 1], [mean(idrP), mean(idrP)], 'Color', 'red', 'Marker', '.');
 hold on;
-line([0, 1], [mean(idrCS), mean(idrCS)], 'Color', 'blue', 'Marker', 'x');
+line([0, 1], [mean(idrCS), mean(idrCS)], 'Color', 'yellow', 'Marker', 'x');
+line([0, 1], [mean(idrCSEst), mean(idrCSEst)], 'Color', 'green', 'Marker', '.');
 x = 1/levels:1/levels:1;
 plot(x, mean(idrSignPower, 2), 'go-');
 plot(x, mean(idrEstSignPower, 2), 'bx-');
-legend('Tp', 'CopySign', 'idr', 2);
+legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 'idrEstSignPower', 2);
 title('sign power curve');
 ylabel('identification rate');
 xlabel('level')
