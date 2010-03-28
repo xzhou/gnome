@@ -4,7 +4,7 @@ function [] = powerAnalysis(hap01Seq, FDR, caseSize, refSize, testSize, trial, n
 
 configStr = ['case', num2str(caseSize),' ref', num2str(refSize), ...
     ' test', num2str(testSize), ' fdr', num2str(FDR), ' trial', num2str(trial), ' nSnps', num2str(nSnps), ' EstR', num2str(useEstR)];
-fprintf(1, '%s', configStr);
+fprintf(1, '%s\n', configStr);
 
 %% cut end snps
 if nSnps < n
@@ -25,10 +25,11 @@ idrEstSignPower = zeros(levels, trial);
 idrP = zeros(1, trial);
 idrCS = zeros(1, trial);
 idrCSEst = idrCS;
+signAgreement = zeros(1, trial);
 
 %profile on;
 parfor i = 1:trial
-    fprintf(1, 'trial %d ', i);
+    fprintf(1, '  %d  ', i);
     %randomly sample case, ref, test sample
     [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
     caseGenoSeq = combineHapSeq(caseSeq);
@@ -39,6 +40,8 @@ parfor i = 1:trial
     caseR(isnan(caseR)) = 0;
     refR = corrcoef(refSeq);
     refR(isnan(refR)) = 0;
+    
+    signAgreement(i) = SignRate(caseR, refR);
 
     %calculate single allele frequence
     caseP = sum(caseSeq)/caseSize/2;
@@ -86,7 +89,8 @@ fprintf(1, '\tHomer: \t%f\n', mean(idrP));
 fprintf(1, '\trealR cp sign: \t%f\n', mean(idrCS));
 fprintf(1, '\testR cp sign: \t%f\n', mean(idrCSEst));
 fprintf(1, '\tmax Est R: \t%f\n', max(mean(idrEstSignPower,2)));
-fprintf(1, '\tmax Real R: \t%f\n\n\n', max(mean(idrSignPower, 2)));
+fprintf(1, '\tmax Real R: \t%f\n', max(mean(idrSignPower, 2)));
+fprintf(1, '\tsign rate: \t%f\n\n', mean(signAgreement));
 
 %% plot
 h = figure;

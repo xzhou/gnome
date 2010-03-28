@@ -6,17 +6,29 @@ if (~isdeployed)
     cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
     change_env();
 end
-
 startParallel();
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+
+%% data source
+%dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
+%fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
 
 dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 
+%% Yong's data source
+% %real
+% dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/real';
+% fastaFile = 'chr10_FGFR2_200kb_phased_yri.fasta';
+% 
+% %sim
+% dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/sim';
+% fastaFile = '174SNP_CEU_sim_4000seq.fasta';
+
+%%init
 logFile = 'signCompare.log';
 logfid = fopen(logFile, 'w');
 cd(dataPath);
+fprintf(1, '%s\n', dataPath);
 
 %% reading fasta data
 hapSeq = fastaread(fastaFile);
@@ -32,16 +44,23 @@ for i= 1:m
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
 
-fdrl = [0.01];
-nSnps = [170, 200, 250, 300];
-sampleSize = [200];
+%% analysis LD structure
+r = calcRHapSeq(hap01Seq);
+save;
+plotWithSignSimple(r.*r);
+
+%% begin exp with schedule
+fdrl = [0.05];
+nSnps = [n];
+sampleSize = [100, 200];%note this is individual size, sequence should 2*sampleSize
 trials = 15;
 levels = 10;
+useEstR = 0;
 
 for i = 1:length(fdrl)
     for j = 1:length(sampleSize);
         for k = 1:length(nSnps)
-            powerAnalysis(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), sampleSize(j), trials, nSnps(k), levels, 1);
+            powerAnalysis(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), sampleSize(j), trials, nSnps(k), levels, useEstR);
         end
     end
 end

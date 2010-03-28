@@ -49,8 +49,8 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
         end
     end
     
-    load('depColor', 'depColor');
-    set(gcf, 'ColorMap', depColor);
+    %load('depColor', 'depColor');
+    %set(gcf, 'ColorMap', depColor);
     axis equal;
     %plot sign
     if plotSign
@@ -61,7 +61,6 @@ function [h] = plotWithSignSimple(r1, r2, T, plotSign)
         scatter3(signVector(:,1), signVector(:,2), z,'marker', 'x', 'LineWidth', 0.1);
     end
     colorbar;
-
     caxis([-zLim zLim]);
 
     h = gcf;
