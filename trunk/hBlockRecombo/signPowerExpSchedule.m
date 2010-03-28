@@ -24,6 +24,15 @@ fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 % dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/sim';
 % fastaFile = '174SNP_CEU_sim_4000seq.fasta';
 
+% dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/sim';
+% fastaFile = '80SNP_YRI_sim_4000seq.fasta';
+% 
+% dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/sim';
+% fastaFile = '80SNP_CEU_sim_4000seq.fasta';
+
+dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/real';
+fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
+
 %%init
 logFile = 'signCompare.log';
 logfid = fopen(logFile, 'w');
