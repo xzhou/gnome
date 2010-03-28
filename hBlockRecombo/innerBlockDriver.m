@@ -32,7 +32,7 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks, verbose)
     matchedCase = blockCheck(caseBlockFreqInfo, refBlockFreqInfo, blocks);
     refMatchedCase = blockCheck(refBlockFreqInfo, caseBlockFreqInfo, blocks);
 
-    startParallel(2);
+    startParallel();
 
     nRepeat = 10;
     result = cell(nBlock,nRepeat);
@@ -53,8 +53,12 @@ function [seq] = innerBlockDriver(caseSeq4, refSeq4, blocks, verbose)
         if verbose
             fprintf(1, '\n************ learning block %d ***********\n', i);
         end
-        parfor k = 1:nRepeat
+        for k = 1:nRepeat
+            profile on;
             [aResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping);
+                                    profile viewer;
+                    p = profile('info');
+                    profsave(p,'profile_results')
             %[bResult] = innerBlockLearning(caseBlock, caseFreq, refBlock, refFreq, refCaseFreq, alleleMapping,1);
             try
                 result{i, k} = aResult;

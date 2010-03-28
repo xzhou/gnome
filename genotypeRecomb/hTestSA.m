@@ -11,24 +11,18 @@ end
 
 %start computing slaves
 
-startParallel(2);
+startParallel();
 
-blocks = [1 1; 2 2; 3 3;4 4; 5 5; 6 6; 7 7; 8 8; 9 9; 10 16; 
-            18 21;22 22; 23 23; 24 24; 25 28; 29 29; 30 30; 31 31; 32 32; 33 33; 
-            34 41; 41 41; 42 42; 43 43; 44 44; 45 45; 46 46; 47 47; 48 48; 49 49; 50 53; 
-            54 56; 57 57; 58 58; 59 59; 60 60; 61 61; 62 62; 63 63; 64 64; 65 65; 66 66;
-            67 67; 68 68; 69 69; 70 70;
-            71 77];       
-blocks = [1 15; 16 59; 60 77];            
+blocks = [1, 24; 25, 65; 66, 81]; 
 
-%blocks = [1 24; 25 45; 46 111; 112 174];      
+% blocks = [1 24; 25 45; 46 111; 112 174];      
 
 
 %cd 'D:\IUBResearch\Projects\Bioinfor\data\88_77_CEU_YRI_DATA';
 %for different platform
 
 try
-    cd 'D:\IUBResearch\Projects\Bioinfor\data\HAPMAP';
+    cd 'D:\IUBResearch\Projects\Bioinfor\data\1500';
     disp 'WINDOWS'
 catch e
     disp 'LINUX'
@@ -41,18 +35,17 @@ end
 delete('hbrecombo.log');
 diary hbrecombo.log;
 
-rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+%rawFastaData = fastaread('hapmap_chr7_80SNP_CEU_haplotype.fasta');
+rawFastaData = fastaread('newAffx.fasta');
 
 for iBigRepeat = 1:1
     fprintf(1, '\n*** trial %d ***\n', iBigRepeat);
     
-    
 %      for 77 SNPs randomly select case and reference
-    [caseSeq4 refSeq4] = randomSelect(rawFastaData);
+    [caseSeq4 refSeq4] = randomSelect(rawFastaData, 250, 0);
     
     nS = length(caseSeq4(:,1));
     Len = length(caseSeq4(1,:));
-
 
     %% test the block structure
     caseBlockFreqInfo = cell(nBlock, 1);
@@ -97,13 +90,13 @@ for iBigRepeat = 1:1
         StatR.Tp(i) = (singleFreS - singleFreR)*(2*int2R(i,:)' - 1);
     end
     sortHomerStatR = sort(StatR.Tp);
-    homerAbove95S = sum(StatS.Tp>sortHomerStatR(int8(nS*0.95)));
+    homerAbove95S = sum(StatS.Tp>sortHomerStatR(int16(nS*0.95)));
     figure;
     hold on;
     plot(index1, StatS.Tp, '.r');
     plot(index2, StatR.Tp, '.g');
     legend({'case' 'ref'});
-    plot(ones(2*nS).*sortHomerStatR(int8(nS*0.95)));
+    plot(ones(2*nS).*sortHomerStatR(int16(nS*0.95)));
     xlabel('individual index');
     ylabel('T_r value');
     title('Homer Test');
@@ -117,6 +110,8 @@ for iBigRepeat = 1:1
     %targetGenotypeSeq = haplotype2genotype(caseSeq4, alleleMapping);
     %[targetR pA counts] = estimateR(targetGenotypeSeq);
     targetR = fix(targetR.*10000)./10000;
+    
+    realTargetR = targetR;
     
     refR = calcR(refSeq4, alleleMapping);
 
@@ -142,7 +137,7 @@ for iBigRepeat = 1:1
 
 
     sortCorrectStatR = sort(correctStatR.Tr);
-    correctAbove95S = sum(correctStatS.Tr>sortCorrectStatR(int8(nS*0.95)));
+    correctAbove95S = sum(correctStatS.Tr>sortCorrectStatR(int16(nS*0.95)));
 
     %For caculating the Tr befor recombination
     for i = 1:nS
@@ -153,7 +148,7 @@ for iBigRepeat = 1:1
     preStatR.Tr = preStatR.Tr/sqrt(Len*(Len-1)/2);
 
     sortPreStatR = sort(preStatR.Tr);
-    preAbove95S = sum(preStatS.Tr>sortPreStatR(int8(nS*0.95)));
+    preAbove95S = sum(preStatS.Tr>sortPreStatR(int16(nS*0.95)));
 
     %finalTargetR = preTargetR;
 
@@ -171,7 +166,7 @@ for iBigRepeat = 1:1
     [m n] = size(blocks);
     finalResult = zeros(m, m);
 
-    trials = 15;
+    trials = 16;
 
     f = fopen('result.txt', 'w');
 
@@ -187,28 +182,27 @@ for iBigRepeat = 1:1
     m=nBlock;
     for i = 1:m
         %fitnessfcn = @(x) innerBlockFitness(x,caseSeq(:,1:15));
-        fitnessfcn = @(x) innerBlockFitness(x,caseSeq4(:,blocks(i,1):blocks(i,2)));
-        
+        tempCaseR = calcR(caseSeq4(:,blocks(i,1):blocks(i,2)), alleleMapping(1, blocks(i,1):blocks(i,2)));
+        tempCaseRs = tempCaseR.*tempCaseR;
+        tempCaseAlleleFreq = GnomeCalculator.getSingleAlleleFreq(caseSeq4(:,blocks(i,1):blocks(i,2)), alleleMapping(1, blocks(i,1):blocks(i,2)));
+        fitnessfcn = @(x) innerBlockFitness(x,tempCaseRs, tempCaseAlleleFreq, alleleMapping(1, blocks(i,1):blocks(i,2)));
         options = saoptimset('DataType', 'custom', 'AnnealingFcn', @innerBlockMutate, ...
-            'StallIterLimit',800, 'ReannealInterval', 800);
+            'StallIterLimit',10000, 'ReannealInterval', 10000, 'TolFun', 1e-70);
         % Finally, we call simulated annealing with our problem information.
         [genotypeBlock,funval, exitflag, output] = simulannealbnd(fitnessfcn, refSeq4(:,blocks(i,1):blocks(i,2)), [], [], options);
         %genotypeBlock = simulannealbnd(fitnessfcn, refSeq, [], [], options);
         
         currentSeq(:,blocks(i,1):blocks(i,2)) = genotypeBlock;
-    end
-    
+    end   
     
     r1 = calcR(currentSeq);
-   % r11 = calcR(currentSeq1);
+    %r11 = calcR(currentSeq1);
     r2 = calcR(caseSeq4);
     r3 = calcR(refSeq4);
     diff1 = sum(sum(abs(r1.*r1-r2.*r2)))/2;
     diff2 = sum(sum(abs(r2.*r2-r3.*r3)))/2;
-   % diff3 = sum(sum(abs(r11.*r11-r2.*r2)))/2;
-    %initCaseSeq = currentSeq;
-    %%Generate start point according to ref
-    newCurrentSeq = zeros(nS, Len);
+%     diff3 = sum(sum(abs(r11.*r11-r2.*r2)))/2;
+      
     currentBlockFreqInfo = cell(nBlock, 1);
     parfor i = 1:nBlock
         currentBlockFreqInfo{i,1} = getBlockFreq(currentSeq, blocks(i,:));
@@ -216,132 +210,54 @@ for iBigRepeat = 1:1
     currentMatchedRef = blockCheck(currentBlockFreqInfo, refBlockFreqInfo, blocks);
     currentMatchedCase = blockCheck(currentBlockFreqInfo, caseBlockFreqInfo, blocks);
     
-    current1BlockFreqInfo = cell(nBlock, 1);
-    parfor i = 1:nBlock
-        current1BlockFreqInfo{i,1} = getBlockFreq(currentSeq1, blocks(i,:));
-    end
-    current1MatchedRef = blockCheck(current1BlockFreqInfo, refBlockFreqInfo, blocks);
-    current1MatchedCase = blockCheck(current1BlockFreqInfo, caseBlockFreqInfo, blocks);
+%     current1BlockFreqInfo = cell(nBlock, 1);
+%     parfor i = 1:nBlock
+%         current1BlockFreqInfo{i,1} = getBlockFreq(currentSeq1, blocks(i,:));
+%     end
+%     current1MatchedRef = blockCheck(current1BlockFreqInfo, refBlockFreqInfo, blocks);
+%     current1MatchedCase = blockCheck(current1BlockFreqInfo, caseBlockFreqInfo, blocks);
+      
+    newCurrentSeq = zeros(nS, Len);
+    newCurrentSeq = adjustStartPoint(currentSeq, refSeq4, blocks);
     
+    finalTargetR = calcR(newCurrentSeq, alleleMapping);
+    finalTargetR = abs(targetR).*sign(finalTargetR);
     
+    %% Start the inter block recombination
     
-    %for each block ???
-    for i = 1:nBlock
-        currentMatchedRef{i, 1} = currentMatchedRef{i,1}(1:end-2, :);
-        %for each
-        for j = 1 : nS
-            tempRefSeq4 = refSeq4(:, blocks(i,1):blocks(i,2));
-            k = 1;
-            found = 0;
-            while ((k<=length(currentMatchedRef{i,1}(:,1))&&(found == 0)))
-                found = isequal(tempRefSeq4(j,:), currentMatchedRef{i,1}(k, 1:end-2));
-                k = k+1;
-            end
-            if ((found == 1)&&(currentMatchedRef{i,1}(k-1, end-1)~=0))
-                newCurrentSeq(j, blocks(i,1):blocks(i,2)) = currentMatchedRef{i,1}(k-1, 1:end-2);
-                currentMatchedRef{i,1}(k-1, end-1) = currentMatchedRef{i,1}(k-1, end-1)-1;
-                currentMatchedRef{i,1}(k-1, end) = currentMatchedRef{i,1}(k-1, end)-1;
-            else
-                disBetweenSeq = zeros(length(currentMatchedRef{i,1}), 1);
-                for l = 1 : length(currentMatchedRef{i,1}(:,1))
-                    if ((currentMatchedRef{i,1}(l,end-1))>(currentMatchedRef{i,1}(l, end)))
-                        disBetweenSeq(l,1) = sum(tempRefSeq4(j,:) == currentMatchedRef{i,1}(l, 1:end-2));
-                    end
-                end
-                [maxDisSum,maxDisIdx] = max(disBetweenSeq(:,1));
-                newCurrentSeq(j, blocks(i,1):blocks(i,2)) = currentMatchedRef{i,1}(maxDisIdx, 1:end-2);
-                currentMatchedRef{i,1}(maxDisIdx, end-1) = currentMatchedRef{i,1}(maxDisIdx, end-1)-1;
-            end
-        end
-    end
-    
-    finalTargetR = calcR(currentSeq, alleleMapping);
-    
-    
-    %%Start inter block recombination
-    
-    %     for i = 1:(m-1)
-    %         for j = i+1:m
-    %             blockRate = zeros(trials, 2);
-    %             block1 = blocks(i,:);
-    %             block2 = blocks(j,:);
-    %             if(block1(1,3) >= block2(1,3))
-    %                 block1(1,4) = 1;%??
-    %                 %currentSeq = shuffleNewBlock(currentSeq, block2);
-    %                 parfor t = 1:trials
-    %                     [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, newCurrentSeq, block1, block2, alleleMapping, 0.01);
-    %                     bufferMatrix(:,:,t) = sign(finalR.*blockMask);
-    %                     blockRate(t,:) = [finalSignRate finalQual];
-    %                     if finalQual == 0 && finalSignRate ~= 1.0
-    %                         pause
-    %                     end
-    %                 end
-    %             else
-    %                 block2(1,4) = 1;%??
-    %                 %currentSeq = shuffleNewBlock(currentSeq, block1);
-    %                 parfor t = 1:trials
-    %                     [finalSeq finalR finalSignRate finalQual blockMask] = newHBRecombo(targetR, caseSeq4, newCurrentSeq, block2, block1, alleleMapping, 0.01);
-    %                     bufferMatrix(:,:,t) = sign(finalR.*blockMask);
-    %                     blockRate(t,:) = [finalSignRate finalQual];
-    %                     if finalQual == 0 && finalSignRate ~= 1.0
-    %                         pause
-    %                     end
-    %                 end
-    %             end
-    %
-    %
-    %             %for max recover rate
-    %             [maxVal, maxIdx] = max(blockRate(:,1));
-    %
-    %             %optimal
-    %             [minQ, minIdx] = min(blockRate(:,2));
-    %             maxQ = min(blockRate(:,2));
-    %
-    %             %Apply signs to these cross blocks
-    %             finalTargetR = finalTargetR.*(bufferMatrix(:,:,minIdx)==0) + abs(finalTargetR).*(bufferMatrix(:,:,minIdx)~=0).*bufferMatrix(:,:,minIdx);
-    %
-    %             finalResult(i,j) = maxVal;
-    %
-    %             fprintf(1, 'optimal r dist = %f, signRate = %f\n', blockRate(minIdx,2),blockRate(minIdx,1));
-    %     %         if maxQ == blockRate(maxIdx, 2)
-    %     %             fprintf(f, '[%d-%d]x[%d-%d]\t = %f\t YES\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-    %     %             fprintf(1, '[%d-%d]x[%d-%d]\t = %f\t YES\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-    %     %         else
-    %     %             fprintf(f, '[%d-%d]x[%d-%d]\t = %f\t NO\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-    %     %             fprintf(1, '[%d-%d]x[%d-%d]\t = %f\t NO\n', block1(1,1), block1(1,2), block2(1,1), block2(1,2), finalResult(i,j));
-    %     %         end
-    %end
-    %end
+%    newCurrentSeq = refSeq4;
     
     type interBlockMutate.m
     type interBlockFitness.m
     
     signMatrix = zeros(size(caseSeq4));
-    seqAfterInnerLearning = haplotype2genotype(currentSeq);
-    signMatrix = sign(estimateR(seqAfterInnerLearning));
+%   seqAfterInnerLearning = haplotype2genotype(currentSeq);
+    signMatrix = sign(finalTargetR);
     for i= 1:(m-1)
         for j = i+1:m
             block1 = blocks(i,:);
             block2 = blocks(j,:);
             if(block1(1,3)>= block2(1,3))
+                block1(1,4) = 1;
                 fitnessfcn = @(x) interBlockFitness(x,caseSeq4,block1,block2);
-                %interBlockMutateNew = @(optimValues, problemData) interBlockMutate(optimValues, problemData, block2);
-                options = saoptimset('DataType', 'custom', 'AnnealingFcn', @interBlockMutate, ...
-                    'StallIterLimit',800, 'ReannealInterval', 800);
-                genotypeBlock = simulannealbnd(fitnessfcn, seqAfterInnerLearning, [], [], options);
+                interBlockMutateNew = @(optimValues, problem) interBlockMutate(optimValues, problem, block2);
+                options = saoptimset('DataType', 'custom', 'AnnealingFcn', interBlockMutateNew, ...
+                    'StallIterLimit',10000, 'ReannealInterval', 10000, 'TolFun', 1e-70);
+                genotypeBlock = simulannealbnd(fitnessfcn, newCurrentSeq, [], [], options);
                 
             else
-                fitnessfcn = @(x) interBlockFitness(x,caseSeq4,block1,block2);
-                %interBlockMutateNew = @(optimValues, problemData) interBlockMutate(optimValues, problemData, block1);
-                options = saoptimset('DataType', 'custom', 'AnnealingFcn', @interBlockMutate, ...
-                    'StallIterLimit',800, 'ReannealInterval', 800);
-                genotypeBlock = simulannealbnd(fitnessfcn, seqAfterInnerLearning, [], [], options);
+                block2(1,4) = 1;
+                fitnessfcn = @(x) interBlockFitness(x,caseSeq4,block2,block1);
+                interBlockMutateNew = @(optimValues, problem) interBlockMutate(optimValues, problem, block1);
+                options = saoptimset('DataType', 'custom', 'AnnealingFcn', interBlockMutateNew, ...
+                    'StallIterLimit',10000, 'ReannealInterval', 10000, 'TolFun', 1e-70);
+                genotypeBlock = simulannealbnd(fitnessfcn, newCurrentSeq, [], [], options);
             end
+            blockMask = getBlockMaskForEval(finalTargetR, block1, block2);
+            signMatrix = signMatrix.*(blockMask==0) + sign(calcR(genotypeBlock)).*blockMask;  
         end
         %Get the sign from the seq after learning at the end
-        blockMask = getBlockMaskForEval(caseSeq, block1, block2);
-        signMatrix = signMatrix.*(blockMask==0) + sign(estimateR(genotypeBlock)).*blockMask;
-        
+ 
     end
     
     finalTargetR = signMatrix.*finalTargetR;
@@ -358,24 +274,29 @@ for iBigRepeat = 1:1
     postStatR.Tr = postStatR.Tr/sqrt(Len*(Len-1)/2);
 
     sortPostStatR = sort(postStatR.Tr);
-    postAbove95S = sum(postStatS.Tr>sortPostStatR(int8(nS*0.95)));
+    postAbove95S = sum(postStatS.Tr>sortPostStatR(int16(nS*0.95)));
 
-    plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
-    plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
-    plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
-    preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
-    postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
+%     plotScatter(caseSeq4, refSeq4, preTargetR, refR, 'With Signs from REF');
+%     plotScatter(caseSeq4, refSeq4, finalTargetR, refR, 'After Sign Recovery');
+%     plotScatter(caseSeq4, refSeq4, targetR, refR, 'With Correct Signs');
+%     preSignRate = sum(sum(sign(targetR)==sign(refR)))/Len/(Len-1);
+%     postSignRate = sum(sum(sign(targetR)==sign(finalTargetR)))/Len/(Len-1);
+
+	[preSignRate test1 test2] = SignRate(realTargetR, refR);
+	[postSignRate test1 test2] = SignRate(realTargetR, finalTargetR);
+	[estiSignRate test1 test2] = SignRate(realTargetR, targetR);
+	[postToEstiSignRate test1 test2] = SignRate(finalTargetR, targetR);
     
     
     fprintf (1, ' PreSignRate = %f\n ', preSignRate);
     fprintf (1, 'PostSignRate = %f\n ', postSignRate);
 
-    fprintf (1, 'PreCaseTr>0         %d\n ', sum(preStatS.Tr>0));
-    fprintf (1, 'PostCaseTr>0        %d\n ', sum(postStatS.Tr>0));
-    fprintf (1, 'PreReferenceTr<0    %d\n ', sum(preStatR.Tr<0));
-    fprintf (1, 'PostReferenceTr<0   %d\n ', sum(postStatR.Tr<0));
-    fprintf (1, 'CorrectCaseTr>0     %d\n ', sum(correctStatS.Tr>0));
-    fprintf (1, 'CorrectReference<0  %d\n ', sum(correctStatR.Tr<0));
+%     fprintf (1, 'PreCaseTr>0         %d\n ', sum(preStatS.Tr>0));
+%     fprintf (1, 'PostCaseTr>0        %d\n ', sum(postStatS.Tr>0));
+%     fprintf (1, 'PreReferenceTr<0    %d\n ', sum(preStatR.Tr<0));
+%     fprintf (1, 'PostReferenceTr<0   %d\n ', sum(postStatR.Tr<0));
+%     fprintf (1, 'CorrectCaseTr>0     %d\n ', sum(correctStatS.Tr>0));
+%     fprintf (1, 'CorrectReference<0  %d\n ', sum(correctStatR.Tr<0));
 end
 
 
