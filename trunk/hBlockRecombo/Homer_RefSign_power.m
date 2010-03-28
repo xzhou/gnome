@@ -34,7 +34,7 @@ end
 
 %% begin configuration
 FDR = 0.05;
-sameSize = 100;
+sameSize = 200;
 caseSize = sameSize;
 refSize = sameSize;
 testSize = sameSize;
