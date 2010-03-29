@@ -40,7 +40,7 @@ refSize = sameSize;
 testSize = sameSize;
 trial = 30;
 nSnps = 200;
-useEstR = 0;
+useEstR = 1;
 levels = 10; %divide sign recover rate by 10 level
 configStr = ['case', num2str(caseSize),'ref', num2str(refSize), ...
     'test', num2str(testSize), 'fdr', num2str(FDR), 'trial', num2str(trial), 'nSnps', num2str(nSnps), 'EstR', num2str(useEstR)];

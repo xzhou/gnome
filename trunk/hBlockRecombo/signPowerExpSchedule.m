@@ -8,6 +8,7 @@ if (~isdeployed)
 end
 startParallel();
 
+
 %% data source
 %dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
 %fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
@@ -61,6 +62,8 @@ for i= 1:m
     %1 major,  0 is minor
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
+
+hap01Seq = unique(hap01Seq, 'rows');
 
 %% analysis LD structure
 r = calcRHapSeq(hap01Seq);
