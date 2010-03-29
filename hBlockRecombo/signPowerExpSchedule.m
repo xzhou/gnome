@@ -67,8 +67,8 @@ hap01Seq = unique(hap01Seq, 'rows');
 %% analysis LD structure
 r = calcRHapSeq(hap01Seq);
 save;
-h = plotLD(r);
-saveas(gcf, ['LD', num2str(n), '.fig']);
+%h = plotLD(r);
+%saveas(gcf, ['LD', num2str(n), '.fig']);
 
 %% begin exp with schedule
 fdrl = [0.01, 0.05];%list of false discover rate
