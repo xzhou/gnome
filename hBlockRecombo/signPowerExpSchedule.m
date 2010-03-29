@@ -19,6 +19,7 @@ fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 %[39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
 filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:210,224:230, ...
 240:248,259:277,289:297,315:319,323:331,345:353,450:478,480:497];
+blocks2 = [1,16; 17,33; 34,47; 48,56; 57,75; 76,95; 96,104; 105,120; 121,148; 149,171; 172,200; 201,217];
 
 %% Yong's data source
 % %real
@@ -80,12 +81,14 @@ nSnps = [n];
 sampleSize = [100];%note this is individual size, sequence should 2*sampleSize
 trials = 30;
 levels = 10;
-useEstR = 1;
+useEstR = 0;
 
 for i = 1:length(fdrl)
     for j = 1:length(sampleSize);
         for k = 1:length(nSnps)
-            powerAnalysis(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), sampleSize(j), trials, nSnps(k), levels, useEstR);
+            %powerAnalysis(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), sampleSize(j), trials, nSnps(k), levels, useEstR);
+            signPowerKeepBlock(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), ...
+                sampleSize(j), trials, nSnps(k), levels, useEstR, blocks2);
         end
     end
 end
