@@ -67,11 +67,11 @@ hap01Seq = unique(hap01Seq, 'rows');
 %% analysis LD structure
 r = calcRHapSeq(hap01Seq);
 save;
-genoSeq = combineHapSeq(hap01Seq);
-estR = estimateR(genoSeq);
-%h = plotLD(r);
-plotLD(r);
-plotLD(estR);
+% genoSeq = combineHapSeq(hap01Seq);
+% estR = estimateR(genoSeq);
+% %h = plotLD(r);
+% plotLD(r);
+% plotLD(estR);
 %saveas(gcf, ['LD', num2str(n), '.fig']);
 
 %% begin exp with schedule
