@@ -79,9 +79,9 @@ save;
 fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
 sampleSize = [100];%note this is individual size, sequence should 2*sampleSize
-trials = 30;
+trials = 10;
 levels = 10;
-useEstR = 0;
+useEstR = 1;
 
 for i = 1:length(fdrl)
     for j = 1:length(sampleSize);
