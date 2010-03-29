@@ -1,6 +1,6 @@
 %%experiments schedule
 
-%% reading data
+%% prepare env
 if (~isdeployed)
     disp 'not deployed';
     cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
@@ -18,7 +18,7 @@ fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 %filter1 =
 %[39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
 filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:210,224:230, ...
-240:248,259:277,289:297,315:319,323:331,345:353,450:478,480:497];
+240:248,259:277,289:297,315:319,323:331,345:353,450:460,480:497];
 
 %% Yong's data source
 % %real
@@ -38,7 +38,7 @@ filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:
 % dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/YongExpData/real';
 % fastaFile = 'hapmap_chr7_80SNP_CEU_haplotype.fasta';
 
-%%init
+%% init
 logFile = 'signCompare.log';
 logfid = fopen(logFile, 'w');
 cd(dataPath);
@@ -50,11 +50,10 @@ hapIntSeq = seq2int(hapSeq);
 hapSeqNoID = getSeqMatrix(hapIntSeq);
 
 
-
 %% filter
 hapSeqNoID = hapSeqNoID(:, filter2);
 
-%%
+%% convert data
 alleleMapping = getMajorAllele(hapSeqNoID);
 [m n] = size(hapSeqNoID);
 hap01Seq = zeros(m, n);
@@ -68,13 +67,13 @@ hap01Seq = unique(hap01Seq, 'rows');
 %% analysis LD structure
 r = calcRHapSeq(hap01Seq);
 save;
-%h = plotLD(r);
-%saveas(gcf, ['LD', num2str(n), '.fig']);
+h = plotLD(r);
+saveas(gcf, ['LD', num2str(n), '.fig']);
 
 %% begin exp with schedule
-fdrl = [0.01, 0.05];
+fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
-sampleSize = [200];%note this is individual size, sequence should 2*sampleSize
+sampleSize = [100, 200];%note this is individual size, sequence should 2*sampleSize
 trials = 15;
 levels = 10;
 useEstR = 1;

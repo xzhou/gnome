@@ -13,7 +13,6 @@ psyco.full()
 r = robjects.r
 r.library("rcalc")
 
-
 def convert2StandardPEDFormat(rawGenotype):
     nSnps = len(rawGenotype)
     nIndividual = len(rawGenotype[0])/2
