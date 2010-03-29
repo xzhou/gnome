@@ -73,7 +73,7 @@ save;
 %% begin exp with schedule
 fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
-sampleSize = [100, 200];%note this is individual size, sequence should 2*sampleSize
+sampleSize = [300];%note this is individual size, sequence should 2*sampleSize
 trials = 15;
 levels = 10;
 useEstR = 1;
