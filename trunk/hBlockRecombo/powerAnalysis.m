@@ -28,7 +28,7 @@ idrCSEst = idrCS;
 signAgreement = zeros(1, trial);
 
 %profile on;
-for i = 1:trial
+parfor i = 1:trial
     fprintf(1, '  %d  ', i);
     %randomly sample case, ref, test sample
     [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
