@@ -14,8 +14,10 @@ startParallel();
 
 dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
-filter1 = [39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
-
+%filter1 =
+%[39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
+filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:210,224:230, ...
+240:248,259 277,289:297,315:319,323:331,345:353,450:478,480:497];
 
 %% Yong's data source
 % %real
@@ -49,7 +51,7 @@ hapSeqNoID = getSeqMatrix(hapIntSeq);
 
 
 %% filter
-hapSeqNoID = hapSeqNoID(:, filter1);
+hapSeqNoID = hapSeqNoID(:, filter2);
 
 %%
 alleleMapping = getMajorAllele(hapSeqNoID);
@@ -63,10 +65,11 @@ end
 %% analysis LD structure
 r = calcRHapSeq(hap01Seq);
 save;
-%plotLD(r);
+%h = plotLD(r);
+%saveas(gcf, ['LD', num2str(n), '.fig']);
 
 %% begin exp with schedule
-fdrl = [0.05];
+fdrl = [0.01, 0.05];
 nSnps = [n];
 sampleSize = [200];%note this is individual size, sequence should 2*sampleSize
 trials = 15;
