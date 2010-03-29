@@ -9,7 +9,7 @@ if 2*totalSample > m
     e = MException('signPower:notEnoughUniqueSeq', 'xzhou:not enough unique sequence');
     throw(e);
 end
-idx = randsample(round(m/2), totalSample);
+idx = randsample(floor(m/2), totalSample);
 idxCase = sort([idx(1:nCase)*2; idx(1:nCase)*2-1]);
 idxRef = sort([idx(nCase+1:nCase+nRef)*2; idx(nCase+1:nCase+nRef)*2-1]);
 idxTest = sort([idx(nCase+nRef+1:end)*2; idx(nCase+nRef+1:end)*2-1]);
