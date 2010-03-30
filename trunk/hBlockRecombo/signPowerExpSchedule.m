@@ -75,9 +75,9 @@ save;
 % genoSeq = combineHapSeq(hap01Seq);
 % estR = estimateR(genoSeq);
 % %h = plotLD(r);
- plotLD(r);
+% plotLD(r);
 % plotLD(estR);
-saveas(gcf, ['LDEven', num2str(n), '.fig']);
+%saveas(gcf, ['LDEven', num2str(n), '.fig']);
 
 %% begin exp with schedule
 fdrl = [0.01, 0.05];%list of false discover rate
