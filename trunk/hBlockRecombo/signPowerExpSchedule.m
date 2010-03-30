@@ -57,6 +57,7 @@ hapSeqNoID = getSeqMatrix(hapIntSeq);
 evenFilter = [1:2:n];
 hapSeqNoID = hapSeqNoID(:, evenFilter);
 hapSeqNoID = hapSeqNoID(:,1:180);
+blocksEven180 = [1,19;20,29;31,47;48,55;56,61;62,71;72,83;84,94;94,101;102,116;117,128;129,149;150,157;158,166;167,180];
 
 %% convert data
 alleleMapping = getMajorAllele(hapSeqNoID);
@@ -75,9 +76,12 @@ save;
 % genoSeq = combineHapSeq(hap01Seq);
 % estR = estimateR(genoSeq);
 % %h = plotLD(r);
-% plotLD(r);
-% plotLD(estR);
-%saveas(gcf, ['LDEven', num2str(n), '.fig']);
+try
+    plotLD(r);
+    plotLD(estR);
+    saveas(gcf, ['LDEven', num2str(n), '.fig']);
+catch e
+end
 
 %% begin exp with schedule
 fdrl = [0.01, 0.05];%list of false discover rate
@@ -92,7 +96,7 @@ for i = 1:length(fdrl)
         for k = 1:length(nSnps)
             %powerAnalysis(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), sampleSize(j), trials, nSnps(k), levels, useEstR);
             signPowerKeepBlock(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), ...
-                sampleSize(j), trials, nSnps(k), levels, useEstR, blocks2);
+                sampleSize(j), trials, nSnps(k), levels, useEstR, blocksEven180);
         end
     end
 end
