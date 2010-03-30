@@ -150,7 +150,6 @@ distPlot <- function(result = NULL, loadFromFile = T)
 }
 
 #rdist()
-
 sign <- dist2Sign()
 print(sign)
 
