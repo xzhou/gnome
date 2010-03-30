@@ -17,9 +17,10 @@ dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 %filter1 =
 %[39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
-filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:210,224:230, ...
-240:248,259:277,289:297,315:319,323:331,345:353,450:478,480:497];
-blocks2 = [1,16; 17,33; 34,47; 48,56; 57,75; 76,95; 96,104; 105,120; 121,148; 149,171; 172,200; 201,217];
+% filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:210,224:230, ...
+% 240:248,259:277,289:297,315:319,323:331,345:353,450:478,480:497];
+% blocks2 = [1,16; 17,33; 34,47; 48,56; 57,75; 76,95; 96,104; 105,120; 121,148; 149,171; 172,200; 201,217];
+
 
 %% Yong's data source
 % %real
@@ -49,10 +50,13 @@ fprintf(1, '%s\n', dataPath);
 hapSeq = fastaread(fastaFile);
 hapIntSeq = seq2int(hapSeq);
 hapSeqNoID = getSeqMatrix(hapIntSeq);
+[m n] = size(hapSeqNoID);
 
 
 %% filter
-hapSeqNoID = hapSeqNoID(:, filter2);
+evenFilter = [1:2:n];
+hapSeqNoID = hapSeqNoID(:, evenFilter);
+hapSeqNoID = hapSeqNoID(:,1:180);
 
 %% convert data
 alleleMapping = getMajorAllele(hapSeqNoID);
@@ -71,14 +75,14 @@ save;
 % genoSeq = combineHapSeq(hap01Seq);
 % estR = estimateR(genoSeq);
 % %h = plotLD(r);
-% plotLD(r);
+ plotLD(r);
 % plotLD(estR);
-%saveas(gcf, ['LD', num2str(n), '.fig']);
+saveas(gcf, ['LDEven', num2str(n), '.fig']);
 
 %% begin exp with schedule
 fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
-sampleSize = [100];%note this is individual size, sequence should 2*sampleSize
+sampleSize = [100, 200];%note this is individual size, sequence should 2*sampleSize
 trials = 10;
 levels = 10;
 useEstR = 1;

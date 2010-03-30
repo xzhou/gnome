@@ -100,7 +100,7 @@ hold on;
 line([0, maxT], [mean(idrCS), mean(idrCS)], 'Color', 'yellow', 'Marker', 'x');
 line([0, maxT], [mean(idrCSEst), mean(idrCSEst)], 'Color', 'green', 'Marker', '.');
 x = 1/levels:1/levels:1;
-%x = mean(T, 2);
+x = mean(T, 2);
 %set(gca,'XDir','reverse')
 plot(x, mean(idrSignPower, 2), 'go-');
 plot(x, mean(idrEstSignPower, 2), 'bx-');
