@@ -11,8 +11,9 @@ for i = 1:level
     for k = 1:10
         p = i/level;
         maskP = getMaskP(n, p);
-        mask = ((maskP+1) + blockMask)>0 + 0;
-        caseMaskR = caseR.*mask;
+        %keep the sign in the block 
+        maskP(logical(blockMask)) = 1;
+        caseMaskR = caseR.*maskP;
         idr_i(k) = getIdr(caseSeq, testSeq, fdr, caseMaskR, refR);
         Ti(k) = (sum(sum(mask == 1)) - sum(diag(mask)))/2/nchoosek(n,2);
     end
