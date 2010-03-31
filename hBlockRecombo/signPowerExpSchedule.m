@@ -58,7 +58,7 @@ evenFilter = [1:2:n];
 hapSeqNoID = hapSeqNoID(:, evenFilter);
 hapSeqNoID = hapSeqNoID(:,1:180);
 %blocksEven180 = [1,19;20,29;31,47;48,55;56,61;62,71;72,83;84,94;94,101;102,116;117,128;129,149;150,157;158,166;167,180];
-blocksEven180 = [1,19;20,20;31,55;56,61;62,71;72,83;84,101;102,116;117,128;129,149;150,157;158,166;167,180];
+blocksEven180 = [1,19;20,30;31,55;56,61;62,71;72,83;84,101;102,116;117,128;129,149;150,157;158,166;167,180];
 %% convert data
 alleleMapping = getMajorAllele(hapSeqNoID);
 [m n] = size(hapSeqNoID);
@@ -87,7 +87,7 @@ end
 fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
 sampleSize = [100, 200];%note this is individual size, sequence should 2*sampleSize
-trials = 15;
+trials = 50;
 levels = 10;
 useEstR = 1;
 
