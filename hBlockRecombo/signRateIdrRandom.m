@@ -15,7 +15,7 @@ for i = 1:level
         maskP(logical(blockMask)) = 1;
         caseMaskR = caseR.*maskP;
         idr_i(k) = getIdr(caseSeq, testSeq, fdr, caseMaskR, refR);
-        Ti(k) = (sum(sum(mask == 1)) - sum(diag(mask)))/2/nchoosek(n,2);
+        Ti(k) = (sum(sum(maskP == 1)) - sum(diag(maskP)))/2/nchoosek(n,2);
     end
     idr(i) = mean(idr_i);
     T(i) = mean(Ti);
