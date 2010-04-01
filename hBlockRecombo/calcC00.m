@@ -13,6 +13,5 @@ function [c00] = calcC00(int4q, alleleMapping)
         end
     end
     
-    c00 = copyUpperToLower(c00);
-    
+    c00 = copyUpperToLower(c00);    
 end

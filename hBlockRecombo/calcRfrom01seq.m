@@ -2,7 +2,6 @@ function [r c00 c01 c10 c11] = calcRfrom01seq(int2seq)
 %   c00 is the major/major
     %int2seq = (int4q == repmat(alleleMapping, length(int4q), 1)) + 0;
     [m n] = size(int2seq);
-    
     for i = 1:n
         for j = 1:n
             snp1 = int2seq(:,i);

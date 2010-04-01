@@ -8,6 +8,8 @@ if any(bins(:,1) > 0)
     throw(e);
 end
 
+%count -Inf
+cInf = sum(bins(bins(:,1)==-Inf, 2));
 bins = bins(bins(:,1)~=-Inf, :);
 
 lowerBound = floor(min(bins(:,1)));
@@ -28,9 +30,13 @@ for i = 1:nBins
         if(counts == 0)
             newBins(i,:) = [binTop - binSize/2, 0];
         else
-            avg_p = sum(ps(:,1).*ps(:,2))/counts;
+            %avg_p = sum(ps(:,1).*ps(:,2))/counts;
+            avg_p = log2(sum(pow2(ps(:,1)).*ps(:,2))/counts);
             newBins(i,:) = [avg_p, counts];
         end
     end
 end
+
+%newBins = [newBins; [-Inf, cInf]];
+
 end
