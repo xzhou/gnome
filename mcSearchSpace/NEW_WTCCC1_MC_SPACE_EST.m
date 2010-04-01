@@ -101,10 +101,21 @@ cfp = cumsum(fp(:,1).*fp(:,2));
 plot(cfp);
 plot(fp(:,1).*fp(:,2), 'r.');
 
-%find effective size cut
+%find effective size and real size
 cutIdx = find(cfp>0.99999, 1, 'first');
 effectiveSize = sum(fp(1:cutIdx,2));
 fprintf('effective size = pow2(%d)\n', log2(effectiveSize));
+realSeqSize = 2^len;
+
+%find similarity space at alpha level
+alphaSnps = floor((1-similarity)*len);
+simSpace = 0;
+for i = 1:alphaSnps
+    simSpace = simSpace + nchoosek(len, i);
+end
+fprintf(1, 'simSpace = pow2(%f)', log2(simSpace));
+
+%plot 
 
 
 
