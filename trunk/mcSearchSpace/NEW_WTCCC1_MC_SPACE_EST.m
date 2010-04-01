@@ -34,12 +34,14 @@ rawFastaData = fastaread(conf.fastaFile);
 
 %profile on;
 %build MC model from real fasta data
-try
-    load('iMCmodel.mat');
-catch exception
-    iMCmodel = iMCmodelBuild_N_state(hap01Seq, pseudoCount);
-    save('iMCmodel.mat', 'iMCmodel');
-end
+iMCmodel = iMCmodelBuild_N_state(hap01Seq, pseudoCount);
+save('iMCmodel.mat', 'iMCmodel');
+% try
+%     %load('iMCmodel.mat');
+% catch exception
+%     iMCmodel = iMCmodelBuild_N_state(hap01Seq, pseudoCount);
+%     save('iMCmodel.mat', 'iMCmodel');
+% end
 
 len = size(iMCmodel.transition, 3) + 1;
 mcInit = iMCmodel.initial;
