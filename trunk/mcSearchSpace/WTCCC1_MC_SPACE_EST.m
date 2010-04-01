@@ -86,16 +86,12 @@ for i = acurateSteps+1:len-1
     bin1 = makeBin(newBin1, nBins);
 end
 
-%profile viewer
+%% save old data
 allbins = [bin0;bin1];
 save('allbins.mat', 'allbins');
 
-%sort by probability
+%% sort by probability
 [s idx] = sort(allbins(:,1), 'descend');
-
-%sort by distribution
-ppdf10 = pow2(allbins(:,1)).*allbins(:,2);
-[s idx] = sort(ppdf10, 'descend');
 
 %the distribution function of p
 fp = allbins(idx, :);
@@ -143,8 +139,6 @@ end
 fprintf(1, 'simSpace = pow2(%f)', log2(simSpace));
 
 %unique solutions at alpha level of similarity, estimation
-
-
 K = 10;
 
 avgConflictIndex = zeros(K, 2);
