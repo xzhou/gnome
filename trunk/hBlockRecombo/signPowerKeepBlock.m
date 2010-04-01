@@ -34,7 +34,7 @@ parfor i = 1:trial
     [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
     caseGenoSeq = combineHapSeq(caseSeq);
     refGenoSeq = combineHapSeq(refSeq);
-    testGenoSeq = combineHapSeq(refSeq);
+    testGenoSeq = combineHapSeq(testSeq);
     
     caseR = corrcoef(caseSeq);
     caseR(isnan(caseR)) = 0;
