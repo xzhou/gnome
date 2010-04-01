@@ -66,9 +66,9 @@ parfor i = 1:trial
         %calculate estimate R
         caseEstR = estimateR(caseGenoSeq);
         caseEstR(isnan(caseEstR)) = 0;
-        refEstR = estimateR(refGenoSeq);
-        refEstR(isnan(refEstR)) = 0;
-        idrEstSignPower(:,i) = signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseEstR, refEstR, blocks);
+%         refEstR = estimateR(refGenoSeq);
+%         refEstR(isnan(refEstR)) = 0;
+        idrEstSignPower(:,i) = signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseEstR, refR, blocks);
         caseEstRCopySign = abs(caseEstR).*sign(refR);
         idrCSEst(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refR);
     end
