@@ -26,6 +26,8 @@ idrP = zeros(1, trial);
 idrCS = zeros(1, trial);
 idrCSEst = idrCS;
 signAgreement = zeros(1, trial);
+maxIdrAll = zeros(levels, trial);
+
 
 %profile on;
 parfor i = 1:trial
@@ -71,7 +73,8 @@ parfor i = 1:trial
         [avgIdr, ~, maxIdr]= signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseEstR, refR, blocks);
         
         idrEstSignPower(:,i) = avgIdr;
-
+        maxIdrAll(:,i) = maxidr;
+        
         caseEstRCopySign = abs(caseEstR).*sign(refR);
         idrCSEst(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refR);
     end
