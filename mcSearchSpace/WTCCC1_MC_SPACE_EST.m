@@ -140,7 +140,6 @@ fprintf(1, 'simSpace = pow2(%f)', log2(simSpace));
 
 %unique solutions at alpha level of similarity, estimation
 K = 10;
-
 avgConflictIndex = zeros(K, 2);
 for k = 1:K
     sampleSize = k*len;

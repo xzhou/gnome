@@ -14,6 +14,7 @@ end
 %---begin config---
 conf.fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
 conf.logFileName = 'WTCCC1_200_SNP_ANALYSIS.log';
+conf.blocks = [1, 14;15, 25;26, 51;52, 78;79,119;120,136;137,154;155,177;178, 204];
 conf.verbose = 1;
 sampleSize = 100;%sequence to sample
 acurateSteps = 12;
@@ -30,7 +31,8 @@ cd(conf.dataPath);
 rawFastaData = fastaread(conf.fastaFile);
 [hap01Seq, alleleMapping] = encodeRawFastaSeq(rawFastaData);
 [nInvariantSnps, indexs] = findInvariantSnps(hap01Seq);
-[r c00 c01 c10 c11] = calcRfrom01seq(hap01Seq);
+r = calcRHapSeq(hap01Seq);
+plotLD(r);
 
 %profile on;
 %build MC model from real fasta data
@@ -92,20 +94,47 @@ end
 allbinslog = [bin0;bin1];
 save('McEst.mat');
 
-%% do analysis
+
+%%
+% using block estimation
+blocks = conf.blocks;
+nBlock = size(conf.blocks, 1);
+seqType = 1;
+for i = 1:nBlock
+    a = blocks(i, 1);
+    b = blocks(i, 2);
+    blockSeq = hap01Seq(:, a:b);
+    u = unique(blockSeq, 'rows');
+    nType = size(u, 1);
+    seqType = seqType * nType;
+end
+blockEstSizelog = log2(seqType);
+fprintf(1, 'block effectiveSize %f\n', blockEstSizelog);
+
+% do analysis
 allbins = [pow2(allbinslog(:,1)), allbinslog(:,2)];
 [s idx] = sort(allbins(:,1), 'descend');
 %the probability distribution
 fp = allbins(idx,:);
 cfp = cumsum(fp(:,1).*fp(:,2));
-plot(cfp);
-plot(fp(:,1).*fp(:,2), 'r.');
 
-%find effective size and real size
+% find effective size and real size
 cutIdx = find(cfp>0.99999, 1, 'first');
 effectiveSize = sum(fp(1:cutIdx,2));
 fprintf('effective size = pow2(%d)\n', log2(effectiveSize));
 realSeqSize = 2^len;
+
+% plot cfp
+h = figure;
+plot(cfp);
+line([cutIdx, cutIdx], [0, 1.5], 'LineStyle', '--', 'Color', 'red');
+title('cumulative distribution of p');
+xlabel('bins');
+ylabel('cumulative distribution of p');
+legend('cdf', '0.9999 cut');
+saveas(h, 'cfp.epsc');
+
+%plot(fp(:,1).*fp(:,2), 'r.');
 
 %find similarity space at alpha level
 alphaSnps = floor((1-similarity)*len);
@@ -115,8 +144,29 @@ for i = 1:alphaSnps
 end
 fprintf(1, 'simSpace = pow2(%f)', log2(simSpace));
 
-%plot 
+%plot confliction index
+K = 25;
+avgConflictIndex = zeros(K, 3);
+for k = 1:K
+    sampleSize = k*len;
+    mcSolutionlog = sampleSize*log2(effectiveSize) - log2(perms(sampleSize));
+    realSolutionlog = sampleSize*len - log2(perms(sampleSize));
+    blockSolutionlog = sampleSize*blockEstSizelog - log2(perms(sampleSize));
+    constrainSpacelog = nchoosek(len, 2)*log2(sampleSize);
+    avgConflictIndex(k, 1) = mcSolutionlog - constrainSpacelog;
+    avgConflictIndex(k, 2) = realSolutionlog - constrainSpacelog;
+    avgConflictIndex(k, 3) = blockSolutionlog - constrainSpacelog;
+end
 
-
-
-
+h = figure;
+hold on;
+plot(avgConflictIndex(:,1), 'rx-');
+plot(avgConflictIndex(:,2), 'bo-');
+plot(avgConflictIndex(:,3), 'g.-');
+line([1, k], [0, 0]);
+legend('MC Model', 'REAL', 'Block Est', 2);
+title('avg unique solutions');
+xlabel('sample size x*nSnps');
+ylabel('confliction index');
+hold off;
+saveas(h, 'conflictIndex.epsc');
