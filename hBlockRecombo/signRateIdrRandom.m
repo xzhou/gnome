@@ -1,10 +1,11 @@
-function [idr, T] = signRateIdrRandom(caseSeq, testSeq, fdr, level, caseR, refR, blocks)
+function [idr, T, maxIdr] = signRateIdrRandom(caseSeq, testSeq, fdr, level, caseR, refR, blocks)
 %we fix the block and assume the block sign are the same, then randomly
 %assign 
 [m n] = size(caseR);
 blockMask  = getAllBlockMask(caseR,blocks);
 T = zeros(1, level);
 idr=zeros(1, level);
+maxIdr = idr;
 for i = 1:level
     idr_i =  zeros(1, 10);
     Ti = idr_i;
@@ -17,6 +18,7 @@ for i = 1:level
         idr_i(k) = getIdr(caseSeq, testSeq, fdr, caseMaskR, refR);
         Ti(k) = (sum(sum(maskP == 1)) - sum(diag(maskP)))/2/nchoosek(n,2);
     end
+    maxIdr(i) = max(idr_i);
     idr(i) = mean(idr_i);
     T(i) = mean(Ti);
 end
