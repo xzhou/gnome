@@ -28,12 +28,15 @@ idrCSEst = idrCS;
 signAgreement = zeros(1, trial);
 maxIdrAll = zeros(levels, trial);
 
-
+%Keep the case, ramdomly choose ref and test
+[caseSeq, refSeq, testSeq, idxCase] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
+hap01Seq(idxCase, :) = [];
 %profile on;
 parfor i = 1:trial
     fprintf(1, '  %d  ', i);
     %randomly sample case, ref, test sample
-    [caseSeq, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
+    
+    [~, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, 0, refSize, testSize);
     caseGenoSeq = combineHapSeq(caseSeq);
     refGenoSeq = combineHapSeq(refSeq);
     testGenoSeq = combineHapSeq(testSeq);
@@ -73,7 +76,7 @@ parfor i = 1:trial
         [avgIdr, ~, maxIdr]= signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseEstR, refR, blocks);
         
         idrEstSignPower(:,i) = avgIdr;
-        maxIdrAll(:,i) = maxidr;
+        maxIdrAll(:,i) = maxIdr;
         
         caseEstRCopySign = abs(caseEstR).*sign(refR);
         idrCSEst(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refR);
@@ -110,6 +113,7 @@ x = mean(T, 2);
 %set(gca,'XDir','reverse')
 plot(x, mean(idrSignPower, 2), 'go-');
 plot(x, mean(idrEstSignPower, 2), 'bx-');
+plot(x, max(maxIdrAll, [], 2), 'rx-');
 legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 'idrEstSignPower', 2);
 title(configStr);
 ylabel('identification rate');

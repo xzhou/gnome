@@ -1,4 +1,4 @@
-function [refSeq, caseSeq, testSeq] = randomSampleCaseRefTest(hapSeq, nCase, nRef, nTest)
+function [refSeq, caseSeq, testSeq, idxCase] = randomSampleCaseRefTest(hapSeq, nCase, nRef, nTest)
 %randomly select k people from haplotpye sequence hapSeq, make sure that
 %the 2 happlotype sequences of one individual is adjacent row
 [m, nSnps] = size(hapSeq);

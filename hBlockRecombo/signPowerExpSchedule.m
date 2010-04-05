@@ -3,7 +3,7 @@
 %% prepare env
 if (~isdeployed)
     disp 'not deployed';
-    cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
+    %cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
     change_env();
 end
 startParallel();
@@ -15,6 +15,10 @@ startParallel();
 
 dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
 fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
+
+%data and file path for Windows
+dataPath = 'D:\IUBResearch\Projects\Bioinfor\data\1500';
+fastaFile = '600Snp.fasta';
 %filter1 =
 %[39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
 % filter2 = [27:36,39:43,63:79,94:107,114:122,132:142,143:150,166:179,190:196,203:210,224:230, ...
@@ -86,7 +90,8 @@ end
 %% begin exp with schedule
 fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
-sampleSize = [100, 200];%note this is individual size, sequence should 2*sampleSize
+%sampleSize = [100, 200, 500];%note this is individual size, sequence should 2*sampleSize
+sampleSize = [500];
 trials = 50;
 levels = 10;
 useEstR = 1;
