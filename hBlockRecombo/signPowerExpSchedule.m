@@ -56,7 +56,7 @@ hapSeqNoID = getSeqMatrix(hapIntSeq);
 %% filter
 evenFilter = [1:2:n];
 hapSeqNoID = hapSeqNoID(:, evenFilter);
-hapSeqNoID = hapSeqNoID(:,1:180);
+%hapSeqNoID = hapSeqNoID(:,1:180);
 %blocksEven180 = [1,19;20,29;31,47;48,55;56,61;62,71;72,83;84,94;94,101;102,116;117,128;129,149;150,157;158,166;167,180];
 blocksEven180 = [1,19;20,30;31,55;56,61;62,71;72,83;84,101;102,116;117,128;129,149;150,157;158,166;167,180];
 %% convert data
