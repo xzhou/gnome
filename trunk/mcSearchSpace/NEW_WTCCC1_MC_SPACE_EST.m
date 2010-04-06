@@ -151,6 +151,7 @@ for k = 1:K
     sampleSize = k*len;
     mcSolutionlog = sampleSize*log2(effectiveSize) - log2(perms(sampleSize));
     realSolutionlog = sampleSize*len - log2(perms(sampleSize));
+    %TODO: 
     blockSolutionlog = sampleSize*blockEstSizelog - log2(perms(sampleSize));
     constrainSpacelog = nchoosek(len, 2)*log2(sampleSize);
     avgConflictIndex(k, 1) = mcSolutionlog - constrainSpacelog;
