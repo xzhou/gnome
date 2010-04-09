@@ -4,20 +4,26 @@
 if (~isdeployed)
     disp 'not deployed';
     %cd('~/research_linux/gnome/bioWorkspace/genomeprj/common');
-    change_env();
+    %change_env();
 end
-startParallel();
+
+addpath '~/Mendel/code/hBlockRecombo/';
+addpath '~/Mendel/code/MyDrTest/';
+addpath '~/Mendel/code/genotypeRecomb/';
+addpath '~/Mendel/code/common/';
+startParallel(4);
+
 
 
 %% data source
 %dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
 %fastaFile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
 
-dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
-fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
+%dataPath = '~/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
+%fastaFile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta';
 
 %data and file path for Windows
-dataPath = 'D:\IUBResearch\Projects\Bioinfor\data\1500';
+dataPath = '~/Mendel/1500';
 fastaFile = '600Snp.fasta';
 %filter1 =
 %[39:62,94:112,123:142,166:179,190:202,203:210,249:256,259:277,299:313,323:331,450:478,480:497];
@@ -60,7 +66,7 @@ hapSeqNoID = getSeqMatrix(hapIntSeq);
 %% filter
 evenFilter = [1:2:n];
 hapSeqNoID = hapSeqNoID(:, evenFilter);
-%hapSeqNoID = hapSeqNoID(:,1:180);
+hapSeqNoID = hapSeqNoID(:,1:180);
 %blocksEven180 = [1,19;20,29;31,47;48,55;56,61;62,71;72,83;84,94;94,101;102,116;117,128;129,149;150,157;158,166;167,180];
 blocksEven180 = [1,19;20,30;31,55;56,61;62,71;72,83;84,101;102,116;117,128;129,149;150,157;158,166;167,180];
 %% convert data
@@ -71,8 +77,8 @@ for i= 1:m
     %1 major,  0 is minor
     hap01Seq(i,:) = (hapSeqNoID(i,:) == alleleMapping) + 0;
 end
-
-hap01Seq = unique(hap01Seq, 'rows');
+%I think we should not take unique here.
+%hap01Seq = unique(hap01Seq, 'rows');
 
 %% analysis LD structure
 r = calcRHapSeq(hap01Seq);
@@ -91,17 +97,21 @@ end
 fdrl = [0.01, 0.05];%list of false discover rate
 nSnps = [n];
 %sampleSize = [100, 200, 500];%note this is individual size, sequence should 2*sampleSize
-sampleSize = [500];
-trials = 50;
+%sampleSize = [500];
+sampleSize = [350];
+trials = 100;
 levels = 10;
 useEstR = 1;
 
+
+for l = 1:2
 for i = 1:length(fdrl)
     for j = 1:length(sampleSize);
         for k = 1:length(nSnps)
             %powerAnalysis(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), sampleSize(j), trials, nSnps(k), levels, useEstR);
             signPowerKeepBlock(hap01Seq, fdrl(i), sampleSize(j), sampleSize(j), ...
-                sampleSize(j), trials, nSnps(k), levels, useEstR, blocksEven180);
+                sampleSize(j), trials, nSnps(k), levels, useEstR, blocksEven180, l);
         end
     end
+end
 end
