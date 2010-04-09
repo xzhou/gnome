@@ -1,9 +1,9 @@
-function [] = signPowerKeepBlock(hap01Seq, FDR, caseSize, refSize, testSize, trial, nSnps, levels, useEstR, blocks)
+function [] = signPowerKeepBlock(hap01Seq, FDR, caseSize, refSize, testSize, trial, nSnps, levels, useEstR, blocks, l)
 %% begin configuration
 [m n] = size(hap01Seq);
 
 configStr = ['case', num2str(caseSize),' ref', num2str(refSize), ...
-    ' test', num2str(testSize), ' fdr', num2str(FDR), ' trial', num2str(trial), ' nSnps', num2str(nSnps), ' EstR', num2str(useEstR)];
+    ' test', num2str(testSize), ' test2 ', num2str(testSize), ' fdr', num2str(FDR), ' trial', num2str(trial), ' nSnps', num2str(nSnps), ' EstR', num2str(useEstR), ' TEST:', num2str(l)];
 fprintf(1, '%s\n', configStr);
 
 %% cut end snps
@@ -27,20 +27,26 @@ idrCS = zeros(1, trial);
 idrCSEst = idrCS;
 signAgreement = zeros(1, trial);
 maxIdrAll = zeros(levels, trial);
+maxIdrAll2 = zeros(levels, trial);
+maxIdrAllEsti = zeros(levels, trial);
+maxIdrAll2Esti = zeros(levels, trial);
 
 %Keep the case, ramdomly choose ref and test
-[caseSeq, refSeq, testSeq, idxCase] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
-hap01Seq(idxCase, :) = [];
+[refSeq, caseSeq, testSeq, test2Seq, idxCase] = randomSampleCaseRefTest(hap01Seq, caseSize, refSize, testSize);
+%hap01Seq(idxCase, :) = [];
 %profile on;
 parfor i = 1:trial
+%for i = 1:trial
     fprintf(1, '  %d  ', i);
     %randomly sample case, ref, test sample
-    
-    [~, refSeq, testSeq] = randomSampleCaseRefTest(hap01Seq, 0, refSize, testSize);
+    %Here we fix all the group.
+    %[refSeq, ~, testSeq, ~] = randomSampleCaseRefTest(hap01Seq, 0, refSize, testSize);
     caseGenoSeq = combineHapSeq(caseSeq);
     refGenoSeq = combineHapSeq(refSeq);
     testGenoSeq = combineHapSeq(testSeq);
+    test2GenoSeq = combineHapSeq(test2Seq);
     
+	
     caseR = corrcoef(caseSeq);
     caseR(isnan(caseR)) = 0;
     refR = corrcoef(refSeq);
@@ -61,8 +67,12 @@ parfor i = 1:trial
     zp = getThreshold(Tp_test, FDR);%get percentile
     idrP(i) = sum(Tp_case > zp);%get identification rate
     
-    [idrSignPower(:,i) T(:,i)] = signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseR, refR, blocks);
-        
+    [idrSignPower(:,i),  T(:,i), maxIdr, maxIdr2] = signRateIdrRandom(caseSeq, test2Seq, testSeq,  FDR, levels, caseR, refR, blocks);
+     maxIdrAll(:,i) = maxIdr;
+	%[idrSignPower(:,i),  T(:,i), maxIdr] = signRateIdrRandom(test2Seq, testSeq, FDR, levels, caseR, refR, blocks);
+     maxIdrAll2(:,i) = maxIdr2;
+	 
+	 
     %calculate Yong's attack using copy sign from reference calculate R
     caseRCopySign = abs(caseR).*sign(refR);
     idrCS(i) = getIdr(caseSeq, testSeq, FDR, caseRCopySign, refR);
@@ -73,10 +83,12 @@ parfor i = 1:trial
         caseEstR(isnan(caseEstR)) = 0;
 %         refEstR = estimateR(refGenoSeq);
 %         refEstR(isnan(refEstR)) = 0;
-        [avgIdr, ~, maxIdr]= signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseEstR, refR, blocks);
-        
+        %[avgIdr, ~, maxIdr]= signRateIdrRandom(caseSeq, testSeq, FDR, levels, caseEstR, refR, blocks);
+        [avgIdr, ~, maxIdrEsti, maxIdr2Esti]= signRateIdrRandom(caseSeq, test2Seq, testSeq,  FDR, levels, caseEstR, refR, blocks);
+		maxIdrAllEsti(:,i) = maxIdrEsti;
+		maxIdrAll2Esti(:,i) = maxIdr2Esti;
         idrEstSignPower(:,i) = avgIdr;
-        maxIdrAll(:,i) = maxIdr;
+        %maxIdrAll(:,i) = maxIdr;
         
         caseEstRCopySign = abs(caseEstR).*sign(refR);
         idrCSEst(i) = getIdr(caseSeq, testSeq, FDR, caseEstRCopySign, refR);
@@ -114,7 +126,10 @@ x = mean(T, 2);
 plot(x, mean(idrSignPower, 2), 'go-');
 plot(x, mean(idrEstSignPower, 2), 'bx-');
 plot(x, max(maxIdrAll, [], 2), 'rx-');
-legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 'idrEstSignPower', 2);
+plot(x, max(maxIdrAll2, [], 2), 'cx-');
+plot(x, max(maxIdrAllEsti, [], 2), 'ro-');
+plot(x, max(maxIdrAll2Esti, [], 2), 'co-');
+legend('Homer', 'calcR cp refCalcR sign', 'calcEstR refCalcR sign','max power', 'idrEstSignPower' , 'MaxIdrWithCalcRCase' , 'MaxIdrWithCalcRTest', 'MaxIdrWithEstiCase', 'MaxIdrWithEstiTest', 2);
 title(configStr);
 ylabel('identification rate');
 xlabel('level')
