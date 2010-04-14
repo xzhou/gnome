@@ -26,7 +26,8 @@ for i = 2:nState
     p(i)=p(i)+p(i-1);
 end
 if p(end)~=1
-    error('Not probability vector');
+    %fprintf(1, '%10f\n', p(end));
+    %disp 'Not probability vector';
 end
 
 % 
