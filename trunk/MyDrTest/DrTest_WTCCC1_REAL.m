@@ -1,4 +1,5 @@
 function out = DrTest(fastafile, threshold, precision, N)
+startParallel();
 cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
 cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
 nP = 100;
@@ -37,8 +38,8 @@ rawFastaData = fastaread(fastafile);
 
 [nInvariantSnps, indexs] = findInvariantSnps(hap01Seq);
 hap01Seq(:, indexs) = [];%remove invariant snps
-
 alleleMapping(:, indexs) = [];
+
 hap01Seq = unique(hap01Seq, 'rows');
 [nUnique Len] = size(hap01Seq);
 
@@ -76,7 +77,7 @@ end
 
 %% repeat for 10000 times and calculate the distribution of r_M0 r_MA
 %profile on;
-for i = 1:Trials
+parfor i = 1:Trials
     fprintf(1, '%d\n', i);
     
     hap01SeqTemp = hap01Seq;%make a copy
