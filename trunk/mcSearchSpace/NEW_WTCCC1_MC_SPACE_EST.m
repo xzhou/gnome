@@ -17,6 +17,7 @@ conf.logFileName = 'WTCCC1_200_SNP_ANALYSIS.log';
 conf.blocks = [1, 14;15, 25;26, 51;52, 78;79,119;120,136;137,154;155,177;178, 204];
 conf.verbose = 1;
 sampleSize = 100;%sequence to sample
+snpLen = 100;
 acurateSteps = 12;
 similarity = 0.9;
 %---begin config---
@@ -30,14 +31,14 @@ cd(conf.dataPath);
 
 rawFastaData = fastaread(conf.fastaFile);
 [hap01Seq, alleleMapping] = encodeRawFastaSeq(rawFastaData);
+hap01Seq = hap01Seq(:, 1:snpLen);
 [nInvariantSnps, indexs] = findInvariantSnps(hap01Seq);
-r = calcRHapSeq(hap01Seq);
-plotLD(r);
+% r = calcRHapSeq(hap01Seq);
+% plotLD(r);
 
 %profile on;
 %build MC model from real fasta data
 iMCmodel = iMCmodelBuild_N_state(hap01Seq, pseudoCount);
-save('iMCmodel.mat', 'iMCmodel');
 % try
 %     %load('iMCmodel.mat');
 % catch exception
@@ -92,24 +93,25 @@ end
 
 %% save old data
 allbinslog = [bin0;bin1];
-save('McEst.mat');
+save(['McEst', num2str(snpLen),'.mat']);
 
 
 %%
 % using block estimation
-blocks = conf.blocks;
-nBlock = size(conf.blocks, 1);
-seqType = 1;
-for i = 1:nBlock
-    a = blocks(i, 1);
-    b = blocks(i, 2);
-    blockSeq = hap01Seq(:, a:b);
-    u = unique(blockSeq, 'rows');
-    nType = size(u, 1);
-    seqType = seqType * nType;
-end
-blockEstSizelog = log2(seqType);
-fprintf(1, 'block effectiveSize %f\n', blockEstSizelog);
+% blocks = conf.blocks;
+% nBlock = size(conf.blocks, 1);
+% seqType = 1;
+% for i = 1:nBlock
+%     a = blocks(i, 1);
+%     b = blocks(i, 2);
+%     blockSeq = hap01Seq(:, a:b);
+%     u = unique(blockSeq, 'rows');
+%     nType = size(u, 1);
+%     seqType = seqType * nType;
+% end
+% blockEstSizelog = log2(seqType);
+% fprintf(1, 'block effectiveSize %f\n', blockEstSizelog);
+fsize = 22;
 
 % do analysis
 allbins = [pow2(allbinslog(:,1)), allbinslog(:,2)];
@@ -117,57 +119,92 @@ allbins = [pow2(allbinslog(:,1)), allbinslog(:,2)];
 %the probability distribution
 fp = allbins(idx,:);
 cfp = cumsum(fp(:,1).*fp(:,2));
+cfp = cfp(find(cfp, 1):end);
 
 % find effective size and real size
-cutIdx = find(cfp>0.99999, 1, 'first');
+cutIdx = find(cfp>0.999999, 1, 'first');
 effectiveSize = sum(fp(1:cutIdx,2));
 fprintf('effective size = pow2(%d)\n', log2(effectiveSize));
 realSeqSize = 2^len;
 
 % plot cfp
 h = figure;
+set(gca, 'FontSize', fsize);
 plot(cfp);
-line([cutIdx, cutIdx], [0, 1.5], 'LineStyle', '--', 'Color', 'red');
-title('cumulative distribution of p');
-xlabel('bins');
-ylabel('cumulative distribution of p');
-legend('cdf', '0.9999 cut');
+%line([cutIdx, cutIdx], [0, 1.1], 'LineStyle', '--', 'Color', 'red');
+vh = vline(cutIdx, 'r', ['cut index = ', num2str(cutIdx)]);
+%set(vh, 'FontSize', fsize);
+%title('cumulative distribution of p', 'FontSize', 16);
+xlabel('bins','FontSize', fsize);
+ylabel('cumulative distribution of p','FontSize', fsize);
+ylim([0, 1.1]);
+legend('cdf', '0.99999 cut', 'FontSize', fsize);
+set(gca, 'FontSize', fsize);
 saveas(h, 'cfp.epsc');
+saveas(h, 'cfp.fig');
 
-%plot(fp(:,1).*fp(:,2), 'r.');
+% plot counts
+h = figure;
+set(gca, 'FontSize', fsize);
+plot(log2(cumsum(fp(:,2))));
+%line([cutIdx, cutIdx], [0, 1.1], 'LineStyle', '--', 'Color', 'red');
+vh = vline(cutIdx, 'r', ['cut index = ', num2str(cutIdx)]);
+xlabel('bins','FontSize', fsize);
+ylabel('sequence counts (log_2)','FontSize', fsize);
+legend('cumulative counts', 'FontSize', fsize);
+set(gca, 'FontSize', fsize);
+saveas(h, 'cfp_count.epsc');
+saveas(h, 'cfp_count.fig');
 
-%find similarity space at alpha level
-alphaSnps = floor((1-similarity)*len);
-simSpace = 0;
-for i = 1:alphaSnps
-    simSpace = simSpace + nchoosek(len, i);
-end
-fprintf(1, 'simSpace = pow2(%f)', log2(simSpace));
 
 %plot confliction index
-K = 25;
-avgConflictIndex = zeros(K, 3);
+K = 50;
+avgConflictIndex = zeros(K, 3); %[MC, REAL, BLOCK]
+SS = 2^len;
 for k = 1:K
     sampleSize = k*len;
-    mcSolutionlog = sampleSize*log2(effectiveSize) - log2(perms(sampleSize));
-    realSolutionlog = sampleSize*len - log2(perms(sampleSize));
+    mcSolutionlog = log2_mchoosen(effectiveSize, sampleSize);
+    mcSolutionlog10 = log2_mchoosen(effectiveSize, 0.1*sampleSize);
+    mcSolutionlog50 = log2_mchoosen(effectiveSize, 0.5*sampleSize);
+    realSolutionlog = log2_mchoosen(SS, sampleSize);
+    realSolutionlog10 = log2_mchoosen(SS, 0.1*sampleSize);
+    realSolutionlog50 = log2_mchoosen(SS, 0.5*sampleSize);
+    
     %TODO: 
-    blockSolutionlog = sampleSize*blockEstSizelog - log2(perms(sampleSize));
-    constrainSpacelog = nchoosek(len, 2)*log2(sampleSize);
+    %blockSolutionlog = sampleSize*blockEstSizelog - log2(perms(sampleSize));
+    constrainSpacelog = (nchoosek(len, 2)+1)*log2(sampleSize+1);
     avgConflictIndex(k, 1) = mcSolutionlog - constrainSpacelog;
-    avgConflictIndex(k, 2) = realSolutionlog - constrainSpacelog;
-    avgConflictIndex(k, 3) = blockSolutionlog - constrainSpacelog;
+    avgConflictIndex(k, 2) = mcSolutionlog10 - constrainSpacelog;
+    avgConflictIndex(k, 3) = mcSolutionlog50 - constrainSpacelog; 
+    avgConflictIndex(k, 4) = realSolutionlog - constrainSpacelog;
+    avgConflictIndex(k, 5) = realSolutionlog10 - constrainSpacelog;
+    avgConflictIndex(k, 6) = realSolutionlog50 - constrainSpacelog;
+    %avgConflictIndex(k, 3) = blockSolutionlog - constrainSpacelog;
 end
 
+
+
 h = figure;
+set(gca,'FontSize',fsize);
 hold on;
+[a, b] = getN(len, 0.5);
 plot(avgConflictIndex(:,1), 'rx-');
-plot(avgConflictIndex(:,2), 'bo-');
-plot(avgConflictIndex(:,3), 'g.-');
+%plot(avgConflictIndex(:,2), 'r+-');
+plot(avgConflictIndex(:,3), 'ro-');
+plot(avgConflictIndex(:,4), 'bs-');
+%plot(avgConflictIndex(:,5), 'bd-');
+plot(avgConflictIndex(:,6), 'b.-');
+
+vline(ceil(a/len), 'g', '1');
+vline(ceil(b/len), 'r', '0.5');
+
 line([1, k], [0, 0]);
-legend('MC Model', 'REAL', 'Block Est', 2);
-title('avg unique solutions');
-xlabel('sample size x*nSnps');
-ylabel('confliction index');
+%legend('MC', 'MC0.1', 'MC0.5', 'REAL', 'REAL0.1', 'REAL0.5', 2);
+legend('MC', 'MC 0.5', 'REAL', 'REAL0.5', 2);
+%title('avg unique solutions', 'FontSize', 16);
+xlabel('sample size x*L', 'FontSize', fsize);
+ylabel('solutions (log2)', 'FontSize', fsize);
+
 hold off;
 saveas(h, 'conflictIndex.epsc');
+saveas(h, 'conflictIndex.fig');
