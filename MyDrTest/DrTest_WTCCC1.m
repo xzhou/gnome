@@ -1,58 +1,58 @@
 function out = DrTest(fastafile, threshold, precision, N)
-    loadFromFile = 0;
-    if loadFromFile == 0
-        cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/dist100x77'
-        %cd 'D:\IUBResearch\Projects\Bioinfor\data\dist100x77';
-        %*P means reference
-        % MA means sample
-        % M0 means sample without individual
-
-        %configuration
-        nP = 200;
-        nM = 200;
-        if nargin >=4
-            nP = N;
-            nM = N;
-        end
-        Trials = 10000;
-        Len = 100;
-        flag_usereal = 1;
-        degFreedomFlag = 0; % estimate the degree of freedom of the haplotypes
-        fastafile = '80SNP_CEU_sim_4000seq.fasta';
-        % fastafile = 'chr10_FGFR2_200kb_phased_yri.fasta';
-        frompairwise = 1; % compute the statistics from pairwise freq
-        % Tr_Tp = 1; % use Tr+Tp instead of Tr
-        estimateSign = 0; % estimate the sign of r in the target sample from the reference
-        removebySign = 0; % 1, remove the r values with the same sign in sample and reference.
-                            % -1, remove the r values with different sign in sample
-                            % and references
-                            % else, do not remove r values by sign
-        partialReverseSign = 0; % partially reverse the sign of the "removebySign" part; or totaly remove the "removebySign" part
-        pseudocount = 1;
-        if nargin < 2 || length(threshold)==0
-            threshold = 0.1; %0.5, 0.2, 0.1, 0.01, 0.001
-        end
-        removeSmallr = 0;
-        flag_twoPopulation = 0; % two models will be simulated for the references and the sample
-        if nargin < 3 || length(precision)==0
-            precision = 10; %1, 2, 3, 4, 5
-        end
-
-        %% get one model
-        if ~ flag_usereal
-        % Draw a model randomly
-            nState = 2;
-            iMCmodel = iMCmodelGen(Len, nState);
-        else
-        % or get from real data
-            iMCmodel = iMCmodelBuild(fastafile, pseudocount);
-            Len = size(iMCmodel.transition,3)+1;
-            % nState = length(iMCmodel.initial);
-        end
-        save;
-    else
-        load;
+cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
+try
+    load('DrDc.mat');
+catch e
+    
+    %cd 'D:\IUBResearch\Projects\Bioinfor\data\dist100x77';
+    %*P means reference
+    % MA means sample
+    % M0 means sample without individual
+    
+    %configuration
+    nP = 200;
+    nM = 200;
+    if nargin >=4
+        nP = N;
+        nM = N;
     end
+    Trials = 10000;
+    Len = 100;
+    flag_usereal = 1;
+    degFreedomFlag = 0; % estimate the degree of freedom of the haplotypes
+    fastafile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+    % fastafile = 'chr10_FGFR2_200kb_phased_yri.fasta';
+    frompairwise = 1; % compute the statistics from pairwise freq
+    % Tr_Tp = 1; % use Tr+Tp instead of Tr
+    estimateSign = 0; % estimate the sign of r in the target sample from the reference
+    removebySign = 0; % 1, remove the r values with the same sign in sample and reference.
+    % -1, remove the r values with different sign in sample
+    % and references
+    % else, do not remove r values by sign
+    partialReverseSign = 0; % partially reverse the sign of the "removebySign" part; or totaly remove the "removebySign" part
+    pseudocount = 1;
+    if nargin < 2 || length(threshold)==0
+        threshold = 0.1; %0.5, 0.2, 0.1, 0.01, 0.001
+    end
+    removeSmallr = 0;
+    flag_twoPopulation = 0; % two models will be simulated for the references and the sample
+    if nargin < 3 || length(precision)==0
+        precision = 10; %1, 2, 3, 4, 5
+    end
+    
+    %% get one model
+    if ~ flag_usereal
+        % Draw a model randomly
+        nState = 2;
+        iMCmodel = iMCmodelGen(Len, nState);
+    else
+        % or get from real data
+        iMCmodel = iMCmodelBuild(fastafile, pseudocount);
+        Len = size(iMCmodel.transition,3)+1;
+        % nState = length(iMCmodel.initial);
+    end
+    save('DrDc.mat');
+end
     
     % define allele as allele 1 for each of the SNP location, thus that SNP
     % with non 0/1 label can be converted to 0/1 label
@@ -294,6 +294,7 @@ function out = DrTest(fastafile, threshold, precision, N)
     xlabel('T_p');
     ylabel('Density of T_p');
     title('')
+    fprintf(1, 'T_p = %f\n', power_Dp);
 
 %     out = [threshold; countsmall; power_Dr; power_Dp; power_DrDp];
 %     textTitle = {['case:' num2str(nM) ' control:' num2str(nP) ' Tc: ' fastafile];'Null: M does not contain the individual'};
