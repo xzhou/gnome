@@ -1,7 +1,8 @@
 function out = DrTest(fastafile, threshold, precision, N)
 cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
-nP = 200;
-nM = 200;
+cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase523';
+nP = 100;
+nM = 100;
 if nargin >=4
     nP = N;
     nM = N;
@@ -11,6 +12,7 @@ Len = 100;
 flag_usereal = 1;
 degFreedomFlag = 0; % estimate the degree of freedom of the haplotypes
 fastafile = 'Affx_gt_58C_Chiamo_07.tped.200snp.extract.inp.fasta';
+fastafile = 'Affx_gt_58C_Chiamo_07.tped.600SNP.extract.inp.fasta'
 % fastafile = 'chr10_FGFR2_200kb_phased_yri.fasta';
 frompairwise = 1; % compute the statistics from pairwise freq
 % Tr_Tp = 1; % use Tr+Tp instead of Tr
@@ -32,8 +34,10 @@ end
 
 rawFastaData = fastaread(fastafile);
 [hap01Seq, alleleMapping] = encodeRawFastaSeq(rawFastaData);
+
 [nInvariantSnps, indexs] = findInvariantSnps(hap01Seq);
 hap01Seq(:, indexs) = [];%remove invariant snps
+
 alleleMapping(:, indexs) = [];
 hap01Seq = unique(hap01Seq, 'rows');
 [nUnique Len] = size(hap01Seq);
