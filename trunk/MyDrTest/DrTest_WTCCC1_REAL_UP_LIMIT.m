@@ -209,6 +209,9 @@ for i = 1:Trials
     %     D_pcorrection_M0(i) = (all_p_M0 - all_p_P)./p_correct* A1;
     %     D_pcorrection_MA(i) = (all_p_MA - all_p_P)./p_correct* A1;
 end
+save;
+save(['real', num2str(Trials), 'nP', num2str(nP), '.mat']);
+
 
 if frompairwise == 1
     Tc_MA = Tc_MA/sqrt(Len*(Len-1)/2);
@@ -236,6 +239,10 @@ uMA = sum(meanTcMA);
 deltaM0 = sqrt(sum(stdTcM0.*stdTcM0,3));
 deltaMA = sqrt(sum(stdTcMA.*stdTcMA,3));
 
+%assuming standard deviation calculate the max power
+q95 = norminv(0.95, uM0, deltaM0);
+power95 = norminv(q95, uMA, deltaMA);
+fprintf(1, 'MAX power %f', power95);
 
 
 %%normalize the Tr test
