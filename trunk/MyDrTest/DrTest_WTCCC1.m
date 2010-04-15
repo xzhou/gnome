@@ -1,6 +1,7 @@
 function out = DrTest(fastafile, threshold, precision, N)
 cd '/home/xzhou/research_linux/gnome/bioWorkspace/genomeprj/data/1500DataAnalysis/WTCCC1/fastPhase';
 try
+    error('ignore');
     load('DrDc.mat');
 catch e
     
@@ -30,7 +31,7 @@ catch e
     % and references
     % else, do not remove r values by sign
     partialReverseSign = 0; % partially reverse the sign of the "removebySign" part; or totaly remove the "removebySign" part
-    pseudocount = 1;
+    pseudocount = 0;
     if nargin < 2 || length(threshold)==0
         threshold = 0.1; %0.5, 0.2, 0.1, 0.01, 0.001
     end
