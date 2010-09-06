@@ -71,6 +71,8 @@ end
 options = cplexoptimset;
 options.Diagnostics = 'on';
 options.SolnPoolPop = 2;
+options.SolnPoolIntensity = 4;
+
 
 lb = zeros(nVar, 1);    %binary constraints >= 0
 ub = ones(nVar, 1);     %binary constrinats <= 1
@@ -81,7 +83,7 @@ end
 
 options = cplexoptimset;
 options.DIagnostics = 'on';
-optoins.SolnPoolPop = 2;
+options.SolnPoolPop = 2;
 
 %formalize cplex solver
 [x, fval, exitflag, output] = cplexmilp ...
