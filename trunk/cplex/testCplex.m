@@ -26,13 +26,15 @@ function testCplex()
     cplex.Model.rhs = rhs;
     cplex.Model.lhs = [-inf];
     cplex.Model.sense = 'maximize';
-    
+    %cplex.Model.indicator(1).sense = '';
     %optional
-    cplex.Model.ctype = 'II';
+    cplex.Model.ctype = 'I';
     cplex.Param.mip.pool.intensity.Cur = 4;
     %cplex.Param.mip.limits.populate.Cur = 3;
     cplex.Param.mip.pool.relgap.Cur = 0;
+    
     cplex.populate();
+    cplex.writeModel('test.lp');
     %control searching strategy
     numsoln = size (cplex.Solution.pool.solution, 1);
     
