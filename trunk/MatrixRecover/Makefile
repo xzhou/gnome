@@ -62,7 +62,7 @@ EXSRCC        = $(EXDIR)/src/c
 EXSRCCPP      = $(EXDIR)/src/cpp
 EXSRCJAVA     = $(EXDIR)/src/java
 
-CFLAGS  = $(COPT)  -I$(CPLEXINCDIR)
+CFLAGS  = $(COPT)  -I$(CPLEXINCDIR) -Issl
 CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) 
 JCFLAGS = $(JOPT)
 
@@ -72,7 +72,7 @@ JCFLAGS = $(JOPT)
 #  make execute  : to compile and execute the examples.
 #------------------------------------------------------------
 
-OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o
+OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o MatrixIndex.o
 TARGET = MatrixRecover
 
 CPP_EX = $(TARGET)
