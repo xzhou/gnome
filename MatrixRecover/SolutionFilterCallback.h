@@ -11,15 +11,19 @@
 
 #include <ilcplex/ilocplex.h>
 
-class SolutionFilterCallback : public IloCplex::IncumbentCallbackI {
+//export the function
+
+class SolutionFilterCallbackI : public IloCplex::IncumbentCallbackI  {
 public:
+	SolutionFilterCallbackI(IloEnv env) : IloCplex::IncumbentCallbackI(env){};
 	void main();	// the call back function
 
 	//the duplicate function to create new call back object
 	IloCplex::CallbackI* duplicateCallback() const {
-		return (new (getEnv()) MyCallbackI(*this));
+		return (new (getEnv()) SolutionFilterCallbackI(*this));
 	}
-}
+};
 
+IloCplex::Callback SolutionFilterCallback(IloEnv env);
 
 #endif /* INCUMBENTCALLBACK_H_ */

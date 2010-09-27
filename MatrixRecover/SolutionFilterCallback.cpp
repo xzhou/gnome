@@ -1,9 +1,13 @@
-#include "SolutionFilterCallback.h
+#include "SolutionFilterCallback.h"
 #include <iostream>
+#include <stdio.h>
 
-using namespace std;
 
-void SolutionFilterCallback::main(){
+void SolutionFilterCallbackI::main(){
 	//create filter
-	cout<< "calling incumbent callback"<<endl;
+	std::cout<< "calling incumbent callback"<<std::endl;
+}
+
+IloCplex::Callback SolutionFilterCallback(IloEnv env) {
+	return (IloCplex::Callback(new (env) SolutionFilterCallbackI(env)));
 }

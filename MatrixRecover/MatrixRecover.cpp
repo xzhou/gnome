@@ -11,6 +11,7 @@
 #include <ilcplex/ilocplex.h>
 #include "SnpMatrix.h"
 #include "AuxFunc.h"
+#include "SolutionFilterCallback.h"
 
 ILOSTLBEGIN
 
@@ -104,12 +105,14 @@ int main(void) {
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolGap, 0);
+		IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env));
 		cplex.populate();
 
 		//check the solutions
 		int numsol = cplex.getSolnPoolNsolns();
 		env.out()<<"the solution pool contains "<<numsol<<" solutions"<<endl;
 
+		mycallback.end();
 		env.end();
 	}
 	catch (IloException& e) {
