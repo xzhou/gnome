@@ -72,7 +72,7 @@ JCFLAGS = $(JOPT)
 #  make execute  : to compile and execute the examples.
 #------------------------------------------------------------
 
-OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o
+OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o
 TARGET = MatrixRecover
 
 CPP_EX = $(TARGET)
