@@ -14,6 +14,9 @@
 //export the function
 
 class SolutionFilterCallbackI : public IloCplex::IncumbentCallbackI  {
+private:
+	//build solution index
+
 public:
 	SolutionFilterCallbackI(IloEnv env) : IloCplex::IncumbentCallbackI(env){};
 	void main();	// the call back function
