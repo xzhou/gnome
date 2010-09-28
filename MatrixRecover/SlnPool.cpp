@@ -12,6 +12,8 @@
 #include <numeric>
 #include <vector>
 #include <openssl/md5.h>
+#include <stdio.h>
+#include <sstream>
 
 SlnPool::SlnPool() {
 	// TODO Auto-generated constructor stub
@@ -22,59 +24,67 @@ SlnPool::~SlnPool() {
 	// TODO Auto-generated destructor stub
 }
 
-int SlnPool::addToPool(int *M, int m, int n) {
+//try to add the new solution to the pool, return 1 if new solution found
+//return 0 if existed
+int SlnPool::addToPool(const int *M, int m, int n) {
 	string md = m2s(M, m, n);
-	bool exist = existInPool(md);
-	if (! exist) {
-		solutionPool.insert(md);
-		return true;
+	if(solutionPool[md] == 0){
+		solutionPool[md] ++;
+		cout<<md<<endl;
+		return 1;
+	}else{
+		solutionPool[md] ++;
+		return 0;
 	}
-	return false;
 }
 
 
 bool SlnPool::existInPool(string s) {
-
-	set<string>::iterator it;
+	SLNMAP_ITR it;
 	it = solutionPool.find(s);
 	if(it == solutionPool.end()) return false;
 	return true;
 }
 
-string SlnPool::m2s(int *M, int m, int n){
+string SlnPool::m2s(const int *M, int m, int n){
 	//convert a matrix to a	string
 	//convert
-	//sort
-	char s[m*n];
-	for(int i = 0; i < m*n; i ++){
-		s[i] = M[i] + 48;
-	}
-	string longS = string(s);
 	vector<string> ss(m);
-	for(int i = 0; i < n; i ++){
-		ss[i] = longS.substr(i*m, (i+1)*m-1);
+	for(int i = 0; i < m; i ++){
+		stringstream s;
+		for(int j = 0; j < n; j++)
+		{
+			s<<M[j*m+i];
+//			cout<<M[j*m+i];
+		}
+		s<<endl;
+		ss[i] = s.str();
 	}
 	sort(ss.begin(), ss.end());
-
 	//return matrix s
 	string	ms;
 	for(int i = 0; i < m; i ++ ) {
 		ms += ss[i];
+		//cout<<ss[i]<<endl;
 	}
-
-	return s2signature(ms);
+	//cout << ms << endl;
+	return ms;
 }
 
 string SlnPool::s2signature(string s) {
 	//calculate the hash value of a string
-	unsigned char result[MD5_DIGEST_LENGTH+1];
-	unsigned char *md =  MD5((unsigned char *)s.c_str(), s.length(), result);
-	char tmp[2];
+	//cout<<s<<endl;
+
+//	unsigned char result[MD5_DIGEST_LENGTH];
+//	unsigned char *md =  MD5((unsigned char *)s.c_str(), s.length(), result);
+//	char tmp[2];
 	string ss = "";
-	for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
-		sprintf(tmp, "%02x", result[i]);
-		ss += tmp;
-	}
+//	for(int i = 0; i < MD5_DIGEST_LENGTH; i++){
+//		sprintf(tmp, "%02x", result[i]);
+//		printf("%02x", result[i]);
+//		ss += tmp;
+//	}
+	cout<<ss;
 	return ss;
 }
 

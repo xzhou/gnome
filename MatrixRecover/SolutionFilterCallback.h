@@ -17,17 +17,25 @@
 class SolutionFilterCallbackI : public IloCplex::IncumbentCallbackI  {
 private:
 	//build solution index
-	SlnPool sp;
+	IloNumVarArray xVar;
+	int m;
+	int n;
+	SlnPool *sp;
 public:
-	SolutionFilterCallbackI(IloEnv env) : IloCplex::IncumbentCallbackI(env){};
+	SolutionFilterCallbackI	(IloEnv env, IloNumVarArray x, int m, int n, SlnPool* sp) : IloCplex::IncumbentCallbackI(env), xVar(x)
+	{
+		this->m = m;
+		this->n=n;
+		this->sp = sp;
+	};
 	void main();	// the call back function
-
 	//the duplicate function to create new call back object
 	IloCplex::CallbackI* duplicateCallback() const {
 		return (new (getEnv()) SolutionFilterCallbackI(*this));
 	}
+
 };
 
-IloCplex::Callback SolutionFilterCallback(IloEnv env);
+IloCplex::Callback SolutionFilterCallback(IloEnv env, IloNumVarArray x, int m, int n, SlnPool* sp);
 
 #endif /* INCUMBENTCALLBACK_H_ */
