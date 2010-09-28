@@ -10,13 +10,14 @@
 #define INCUMBENTCALLBACK_H_
 
 #include <ilcplex/ilocplex.h>
+#include "SlnPool.h"
 
 //export the function
 
 class SolutionFilterCallbackI : public IloCplex::IncumbentCallbackI  {
 private:
 	//build solution index
-
+	SlnPool sp;
 public:
 	SolutionFilterCallbackI(IloEnv env) : IloCplex::IncumbentCallbackI(env){};
 	void main();	// the call back function

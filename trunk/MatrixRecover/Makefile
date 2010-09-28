@@ -41,7 +41,7 @@ CPLEXJARDIR   = $(CPLEXDIR)/lib/cplex.jar
 CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 
-CCLNFLAGS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lm -pthread
+CCLNFLAGS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lm -pthread -lssl
 CLNFLAGS  = -L$(CPLEXLIBDIR) -lcplex -lm -pthread
 JAVA      = java -d64 -Djava.library.path=$(CPLEXDIR)/bin/x86-64_sles10_4.1 -classpath $(CPLEXJARDIR):
 
@@ -63,7 +63,7 @@ EXSRCCPP      = $(EXDIR)/src/cpp
 EXSRCJAVA     = $(EXDIR)/src/java
 
 CFLAGS  = $(COPT)  -I$(CPLEXINCDIR) -Issl
-CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) 
+CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR)
 JCFLAGS = $(JOPT)
 
 
@@ -72,7 +72,7 @@ JCFLAGS = $(JOPT)
 #  make execute  : to compile and execute the examples.
 #------------------------------------------------------------
 
-OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o MatrixIndex.o
+OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o SlnPool.o
 TARGET = MatrixRecover
 
 CPP_EX = $(TARGET)
