@@ -16,13 +16,16 @@
 #include <string>
 using namespace std;
 
+typedef map<string, int> SLNMAP;
+typedef map<string, int>::iterator SLNMAP_ITR;
+
 class SlnPool {
-	set<string> solutionPool;	//this is a solution MD5 code
+	SLNMAP solutionPool;	//this is a solution MD5 code
 public:
 	SlnPool();
-	int addToPool(int *M, int m, int n);
+	int addToPool(const int *M, int m, int n);
 	bool existInPool(string s);
-	string m2s(int *M, int m, int n);
+	string m2s(const int *M, int m, int n);
 	string s2signature(string s);
 
 	virtual ~SlnPool();

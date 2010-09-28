@@ -30,6 +30,8 @@ int main(void) {
 	int nAuxVar = m*nPair;
 	int nVar = m*n + nAuxVar;
 
+	SlnPool *sp = new SlnPool();
+
 	IloEnv env;
 	try {
 		IloModel model(env);	//create optimization model
@@ -105,7 +107,7 @@ int main(void) {
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolGap, 0);
-		IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env));
+		IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
 		cplex.populate();
 
 		//check the solutions
@@ -119,4 +121,5 @@ int main(void) {
 		cerr << "concert exception caught: " << e << endl;
 	}
 	env.end();
+	delete sp;
 }
