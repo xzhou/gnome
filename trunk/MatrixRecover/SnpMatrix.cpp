@@ -40,7 +40,7 @@ void SnpMatrix::readMatrixFromFile(string fileName)
 	//clear memory in case user call thsi function again
 	clearMem();
 
-	ifstream snpFile("test.txt");
+	ifstream snpFile(fileName.c_str());
 	string line;
 	if(snpFile.is_open()){
 		//count the number of lines
@@ -60,7 +60,7 @@ void SnpMatrix::readMatrixFromFile(string fileName)
 	}
 
 	snpFile.close();
-	ifstream snpFile1("test.txt");
+	ifstream snpFile1(fileName.c_str());
 	//read the file to the array
 	for(int i = 0; i < nInd; i ++) {
 		for(int j = 0; j < nSnp; j ++ ) {
