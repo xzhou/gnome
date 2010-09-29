@@ -21,7 +21,7 @@ ILOSTLBEGIN
 
 int main(void) {
 	//read data from file
-	SnpMatrix M = SnpMatrix("test.txt");
+	SnpMatrix M = SnpMatrix("test80.txt");
 
 	//create model, calculate the number of variables
 	int m = M.nInd;
