@@ -19,9 +19,16 @@ ILOSTLBEGIN
 //we need a database to remember all unique solutions seen so far
 
 
-int main(void) {
+int main(int argc, int **argv) {
 	//read data from file
-	SnpMatrix M = SnpMatrix("test80.txt");
+	string fileName = "";
+
+	if(argc == 2){
+		fileName = string(argv[2]);
+		cout<<fileName<<endl;
+	}
+
+	SnpMatrix M = SnpMatrix("test10.txt");
 
 	//create model, calculate the number of variables
 	int m = M.nInd;

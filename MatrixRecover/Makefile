@@ -41,7 +41,7 @@ CPLEXJARDIR   = $(CPLEXDIR)/lib/cplex.jar
 CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 
-CCLNFLAGS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lm -pthread -lssl
+CCLNFLAGS = -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lm -pthread
 CLNFLAGS  = -L$(CPLEXLIBDIR) -lcplex -lm -pthread
 JAVA      = java -d64 -Djava.library.path=$(CPLEXDIR)/bin/x86-64_sles10_4.1 -classpath $(CPLEXJARDIR):
 
@@ -62,7 +62,7 @@ EXSRCC        = $(EXDIR)/src/c
 EXSRCCPP      = $(EXDIR)/src/cpp
 EXSRCJAVA     = $(EXDIR)/src/java
 
-CFLAGS  = $(COPT)  -I$(CPLEXINCDIR) -Issl
+CFLAGS  = $(COPT)  -I$(CPLEXINCDIR)
 CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR)
 JCFLAGS = $(JOPT)
 
