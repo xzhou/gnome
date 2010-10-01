@@ -48,7 +48,6 @@ int main(int argc, char *argv[]) {
 
 	//random sample a matrix of size m and n and solve it
 
-
 	SnpMatrix M = SnpMatrix(fileName);
 
 	//create model, calculate the number of variables
