@@ -27,7 +27,7 @@ public:
 	bool existInPool(string s);
 	string m2s(const int *M, int m, int n);
 	string s2signature(string s);
-
+	
 	virtual ~SlnPool();
 };
 

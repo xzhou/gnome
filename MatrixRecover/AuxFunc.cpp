@@ -8,8 +8,43 @@
 #include "AuxFunc.h"
 #include <assert.h>
 #include <iostream>
+#include <stdio.h>
+#include <fstream>
 
 using namespace std;
+
+void readMatrixFromFile(string fileName, int **M, int &nInd, int &nSnp){
+	ifstream snpFile(fileName.c_str());
+	string line;
+	if(snpFile.is_open()){
+		//count the number of lines
+		while(getline(snpFile, line)) {
+			nInd ++;
+			if(nInd == 1){
+				nSnp = (line.length()+1)/2;
+			}
+		}
+	}
+	cout<<nInd<<"x"<<nSnp<<" matrix read"<<endl;
+
+	//dynamically allocate array;
+	M = new int*[nInd];
+	for(int i = 0; i < nInd; i++) {
+		M[i] = new int[nSnp];
+	}
+
+	snpFile.close();
+	ifstream snpFile1(fileName.c_str());
+	//read the file to the array
+	for(int i = 0; i < nInd; i ++) {
+		for(int j = 0; j < nSnp; j ++ ) {
+			snpFile1>>M[i][j];
+			cout<<M[i][j]<<" ";
+		}
+		cout<<endl;
+	}
+	snpFile.close();
+}
 
 //allocate m by n matrix, initilized it with defaultVal
 int ** newInt2d(int m, int n, int defaultVal) {
@@ -55,4 +90,23 @@ int calcdd(int i, int j, int k, int m, int n){
 	return (pairIndex-1)*m + i + 1;
 }
 
+//return a matrix of size subm x subn
+int ** randSubMatrix(const int **M, int m, int n, int subm, int subn){
+	int ** retM = newInt2d(subm, subn);
+
+	if(subm > m || subn > n){
+		cerr<<"can not get a sub matrix larger than the original one"<<endl;
+		return NULL;
+	}
+
+	int mStart = rand()%(m-subm);
+	int nStart = rand()%(n-subn);
+
+	for(int i = 0; i < m; i ++ ){
+		for(int j = 0; j < m; j ++){
+
+		}
+	}
+
+}
 

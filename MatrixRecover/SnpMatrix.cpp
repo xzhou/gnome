@@ -23,6 +23,26 @@ SnpMatrix::SnpMatrix(string fileName) {
 	readMatrixFromFile(fileName);
 }
 
+//initialized by
+SnpMatrix::SnpMatrix(const int **inM, int m , int n){
+
+	M = newInt2d(m, n);
+
+	//we need to copy the data
+	for(int i = 0; i < m; i ++){
+		for(int j = 0; j < n; j ++){
+			M[i][j] = inM[i][j];
+		}
+	}
+
+	nInd = m;
+	nSnp = n;
+
+	calculateP();
+	calculateR();
+	convLinearR();
+}
+
 void SnpMatrix::clearMem(){
 	if(M) delete M;
 	if(P) delete P;
