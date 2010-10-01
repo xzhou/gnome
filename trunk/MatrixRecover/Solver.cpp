@@ -15,3 +15,9 @@ Solver::Solver() {
 Solver::~Solver() {
 	// TODO Auto-generated destructor stub
 }
+
+
+//this function return the number solutions for M
+int Solver::solve(int **M, int m, int n){
+
+}

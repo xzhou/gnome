@@ -102,11 +102,11 @@ int ** randSubMatrix(const int **M, int m, int n, int subm, int subn){
 	int mStart = rand()%(m-subm);
 	int nStart = rand()%(n-subn);
 
-	for(int i = 0; i < m; i ++ ){
-		for(int j = 0; j < m; j ++){
-
+	for(int i = 0; i < subm; i ++ ){
+		for(int j = 0; j < subn; j ++){
+			retM[i][j] = M[i+mStart][j+nStart];
 		}
 	}
-
+	return retM;
 }
 

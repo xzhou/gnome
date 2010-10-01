@@ -13,6 +13,7 @@ class Solver {
 public:
 	Solver();
 	virtual ~Solver();
+	int solve(int **M, int m, int n);	//return the number of solutions
 };
 
 #endif /* SOLVER_H_ */
