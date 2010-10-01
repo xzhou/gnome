@@ -28,11 +28,26 @@ int main(int argc, char *argv[]) {
 	if(argc == 2){
 		fileName = string(argv[1]);
 		cout<<fileName<<endl;
+	}else if(argc == 3){
+		fileName = string(argv[1]);
+		outputFileName = string(argv[2]);	//the write the result to a file
 	}
 	else{
 		cout<<"usage: ./MatrixRecover [matrix_file_name]"<<endl;
 		return 0;
 	}
+
+	outputFile = ofstream(outputFileName);
+
+	//the total size of a snp file
+	int **allMatrix = NULL;
+	int mAll = 0;
+	int nAll = 0;
+
+	readMatrixFromFile(fileName.c_str(), allMatrix, mAll, nAll);
+
+	//random sample a matrix of size m and n and solve it
+
 
 	SnpMatrix M = SnpMatrix(fileName);
 
@@ -135,4 +150,5 @@ int main(int argc, char *argv[]) {
 	}
 	env.end();
 	delete sp;
+	if(allMatrix) delete allMatrix;
 }
