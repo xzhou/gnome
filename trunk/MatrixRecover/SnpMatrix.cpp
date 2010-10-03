@@ -44,10 +44,10 @@ SnpMatrix::SnpMatrix(int **inM, int m , int n){
 }
 
 void SnpMatrix::clearMem(){
-	if(M) delete M;
-	if(P) delete P;
-	if(R) delete R;
-	if(LR) delete LR;
+	if(M) delete2d(M, nInd, nSnp);
+	if(P) delete[] P;
+	if(R) delete2d(R, nSnp, nSnp);
+	if(LR) delete[] LR;
 }
 
 SnpMatrix::~SnpMatrix() {

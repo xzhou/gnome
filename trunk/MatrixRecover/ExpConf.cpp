@@ -14,6 +14,7 @@ ExpConf::ExpConf() {
 	mMin = 6;
 	mMax = 8;
 	repeat = 10;
+	diff = 5;
 }
 
 ExpConf::~ExpConf() {

@@ -9,6 +9,7 @@
 #define SOLVER_H_
 
 #include <fstream>
+#include "SnpMatrix.h"
 using namespace std;
 
 
@@ -20,7 +21,7 @@ private:
 public:
 	Solver(string logFileName = "solver.log");
 	virtual ~Solver();
-	int solve(int **M, int m, int n);	//return the number of solutions
+	int solve(SnpMatrix M);	//return the number of solutions
 };
 
 #endif /* SOLVER_H_ */

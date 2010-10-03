@@ -16,6 +16,7 @@ public:
 	int mMin;	//min individuals
 	int mMax;	//max individuals
 	int repeat;
+	int diff;	//difference to f(m);
 	ExpConf();
 	virtual ~ExpConf();
 };

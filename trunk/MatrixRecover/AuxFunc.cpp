@@ -94,6 +94,7 @@ int calcdd(int i, int j, int k, int m, int n){
 
 //return a matrix of size subm x subn
 int ** randSubMatrix(int **M, int m, int n, int subm, int subn){
+	//TODO need test case
 	int ** retM = newInt2d(subm, subn);
 
 	if(subm > m || subn > n){

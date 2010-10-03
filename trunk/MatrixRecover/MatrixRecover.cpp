@@ -58,25 +58,19 @@ int main(int argc, char *argv[]) {
 	ExpConf conf;
 
 	//random sample a matrix of size m and n and solve it, we need to explore the space
-	for(int mi = conf.mMin; mi < conf.mMax; mi ++){
-		for(int j = 0; j < conf.repeat; j++){
-			int mj_1 =	2*mi/log(mi+1);
-			int **M1 = randSubMatrix(allMatrix, mAll, nAll, mi, mj_1);
-			int sn1 = slv.solve(M1, mi, mj_1);
-			//ajacent scale matrix
-			int mj_2 = mj_1 + 1;
-			int mj_3 = mj_1 - 1;
-			int **M2 = randSubMatrix(allMatrix, mAll, nAll, mi, mj_2);
-			int **M3 = randSubMatrix(allMatrix, mAll, nAll, mi, mj_3);
-			int sn2 = slv.solve(M2, mi, mj_2);
-			int sn3 = slv.solve(M3, mi, mj_3);
-
-			//cout<<"mi = "<<mi<<" mj = "<<mj<<" mj_2 = "<<mj_2<<" mj_3 = "<<mj_3<<endl;
-			outputFile<<mi<<" "<< mj_1<< " "<<mj_2<<" "<<mj_3<<endl;
-			outputFile<<sn1<<" "<< sn2<<" "<<sn3<<endl<<endl;;
-			delete2d(M1, mi, mj_1);
-			delete2d(M2, mi, mj_2);
-			delete2d(M3, mi, mj_3);
+	for(int m= conf.mMin; m < conf.mMax; m ++){
+		int nBase = 2*m/log(m+1);
+		for(int k = 0; k < 2*conf.diff; k++){
+			int n = nBase + k - conf.diff;
+			if(n < 0) {
+				n = 1;
+			}
+			for(int r = 0; r < conf.repeat; r++){
+				int **M1 = randSubMatrix(allMatrix, mAll, nAll, m, n);
+				SnpMatrix M(M1, m, n);
+				int sn1 = slv.solve(M);
+				outputFile<<"m="<<m<<"\tn="<<n<<"\tsn="<<sn1<<endl;
+			}
 		}
 	}
 
