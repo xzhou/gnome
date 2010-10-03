@@ -24,7 +24,7 @@ SnpMatrix::SnpMatrix(string fileName) {
 }
 
 //initialized by
-SnpMatrix::SnpMatrix(const int **inM, int m , int n){
+SnpMatrix::SnpMatrix(int **inM, int m , int n){
 
 	M = newInt2d(m, n);
 

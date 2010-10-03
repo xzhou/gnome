@@ -17,6 +17,6 @@ long nchoosek(int n, int k);	//n choose k
 int calcdd(int i, int j, int k, int m, int n);	//calculate the index
 int calcPairIndex(int i, int j, int n);	//	calculate the pair index for p_ij
 void readMatrixFromFile(string fileName, int **M, int &m, int &n);
-int ** randSubMatrix(const int **M, int m, int n, int subm, int subn);
+int ** randSubMatrix(int **M, int m, int n, int subm, int subn);
 
 #endif /* AUXFUNC_H_ */

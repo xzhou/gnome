@@ -8,10 +8,14 @@
 //============================================================================
 
 #include <iostream>
+#include <fstream>
 #include <ilcplex/ilocplex.h>
+#include <math.h>
 #include "SnpMatrix.h"
 #include "AuxFunc.h"
 #include "SolutionFilterCallback.h"
+#include "ExpConf.h"
+#include "Solver.h"
 
 ILOSTLBEGIN
 
@@ -21,6 +25,7 @@ ILOSTLBEGIN
 int main(int argc, char *argv[]) {
 	//read data from file
 	string fileName = "";
+	string outputFileName = "solutionCount.log";
 
 	int mLim = 0;
 	int nLim = 0;
@@ -37,7 +42,7 @@ int main(int argc, char *argv[]) {
 		return 0;
 	}
 
-	outputFile = ofstream(outputFileName);
+	ofstream outputFile(outputFileName.c_str());
 
 	//the total size of a snp file
 	int **allMatrix = NULL;
@@ -46,12 +51,26 @@ int main(int argc, char *argv[]) {
 
 	readMatrixFromFile(fileName.c_str(), allMatrix, mAll, nAll);
 
+	Solver slv;
+	ExpConf conf;
+
 	//random sample a matrix of size m and n and solve it, we need to explore the space
+	for(int mi = conf.mMin; mi < conf.mMax; mi ++){
+		int mj_1 =	2*mi/log(mi+1);
+		int **M1 = randSubMatrix(allMatrix, mAll, nAll, mi, mj_1);
+		int sn1 = slv.solve(M1, mi, mj_1);
+		//ajacent scale matrix
+		int mj_2 = mj_1 + 1;
+		int mj_3 = mj_1 - 1;
+		int **M2 = randSubMatrix(allMatrix, mAll, nAll, mi, mj_2);
+		int **M3 = randSubMatrix(allMatrix, mAll, nAll, mi, mj_3);
+		int sn2 = slv.solve(M2, mi, mj_2);
+		int sn3 = slv.solve(M3, mi, mj_3);
 
-	int **M = randSubMatrix(allMatrix, mAll, nAll, 10, 10);
-
-	ExpConf conf();
-
+		//cout<<"mi = "<<mi<<" mj = "<<mj<<" mj_2 = "<<mj_2<<" mj_3 = "<<mj_3<<endl;
+		cout<<mi<<" "<< mj_1<< " "<<mj_2<<" "<<mj_3<<endl;
+		cout<<sn1<<" "<< sn2<<" "<<sn3<<endl;
+	}
 
 	if(allMatrix) delete allMatrix;
 }

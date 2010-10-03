@@ -5,11 +5,18 @@
  *      Author: xzhou
  */
 
+#include <fstream>
+#include <ilcplex/ilocplex.h>
+#include <string>
 #include "Solver.h"
+#include "AuxFunc.h"
+#include "SlnPool.h"
+#include "SnpMatrix.h"
+#include "SolutionFilterCallback.h"
 
-Solver::Solver(string logFileName) {
+Solver::Solver(string logFileName) :
+logs(logFileName.c_str()) {
 	// TODO Auto-generated constructor stub
-	logs = ofstream(logFileName);
 }
 
 Solver::~Solver() {
@@ -18,11 +25,10 @@ Solver::~Solver() {
 
 
 //this function return the number solutions for M
-int Solver::solve(int **M, int m, int n){
-	SnpMatrix M = SnpMatrix(M, m, n);
+int Solver::solve(int **M_in, int m, int n){
+	SnpMatrix M = SnpMatrix(M_in, m, n);
 	//create model, calculate the number of variables
-	int m = M.nInd;
-	int n = M.nSnp;
+
 	int nPair = nchoosek(n, 2);
 	int nAuxVar = m*nPair;
 	int nVar = m*n + nAuxVar;

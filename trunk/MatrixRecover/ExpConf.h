@@ -11,10 +11,10 @@
 class ExpConf {
 
 public:
-	static int nMin = 10;	//max snps
-	static int nMax = 20;	//min snps
-	static int mMin = 10;	//min individuals
-	static int mMax = 20;	//max individuals
+	int nMin;	//max snps
+	int nMax;	//min snps
+	int mMin;	//min individuals
+	int mMax;	//max individuals
 	ExpConf();
 	virtual ~ExpConf();
 };
