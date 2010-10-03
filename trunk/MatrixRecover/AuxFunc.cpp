@@ -14,7 +14,7 @@
 
 using namespace std;
 
-void readMatrixFromFile(string fileName, int **M, int &nInd, int &nSnp){
+int ** readMatrixFromFile(string fileName, int &nInd, int &nSnp){
 	ifstream snpFile(fileName.c_str());
 	string line;
 	if(snpFile.is_open()){
@@ -29,7 +29,7 @@ void readMatrixFromFile(string fileName, int **M, int &nInd, int &nSnp){
 	cout<<nInd<<"x"<<nSnp<<" matrix read"<<endl;
 
 	//dynamically allocate array;
-	M = new int*[nInd];
+	int **M = new int*[nInd];
 	for(int i = 0; i < nInd; i++) {
 		M[i] = new int[nSnp];
 	}
@@ -40,11 +40,12 @@ void readMatrixFromFile(string fileName, int **M, int &nInd, int &nSnp){
 	for(int i = 0; i < nInd; i ++) {
 		for(int j = 0; j < nSnp; j ++ ) {
 			snpFile1>>M[i][j];
-			cout<<M[i][j]<<" ";
+			//cout<<M[i][j]<<" ";
 		}
-		cout<<endl;
+		//cout<<endl;
 	}
 	snpFile.close();
+	return M;
 }
 
 //allocate m by n matrix, initilized it with defaultVal
@@ -103,6 +104,9 @@ int ** randSubMatrix(int **M, int m, int n, int subm, int subn){
 	int mStart = rand()%(m-subm);
 	int nStart = rand()%(n-subn);
 
+	cout<<mStart<<":"<<nStart<<endl;
+	cout<<subm+mStart<<":"<<subn+nStart<<endl;
+
 	for(int i = 0; i < subm; i ++ ){
 		for(int j = 0; j < subn; j ++){
 			retM[i][j] = M[i+mStart][j+nStart];
@@ -111,3 +115,18 @@ int ** randSubMatrix(int **M, int m, int n, int subm, int subn){
 	return retM;
 }
 
+void delete2d(int **M, int m, int n){
+	for(int i = 0; i < m; i ++){
+		delete[] M[i];
+	}
+	delete[] M;
+}
+
+void print2d(int **M, int m, int n){
+	for(int i = 0; i < m; i ++){
+		for(int j = 0; j < n; j ++){
+			printf("%1d ", M[i][j]);
+		}
+		printf("\n");
+	}
+}

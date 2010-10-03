@@ -33,7 +33,7 @@ int Solver::solve(int **M_in, int m, int n){
 	int nAuxVar = m*nPair;
 	int nVar = m*n + nAuxVar;
 
-	int numSolution = 0;
+	int numSolution = -1;
 
 	SlnPool *sp = new SlnPool();
 
