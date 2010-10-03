@@ -25,10 +25,11 @@ Solver::~Solver() {
 
 
 //this function return the number solutions for M
-int Solver::solve(int **M_in, int m, int n){
-	SnpMatrix M = SnpMatrix(M_in, m, n);
+int Solver::solve(SnpMatrix M){
+	//SnpMatrix M = SnpMatrix(M_in, m, n);
 	//create model, calculate the number of variables
-
+	int m = M.nInd;
+	int n = M.nSnp;
 	int nPair = nchoosek(n, 2);
 	int nAuxVar = m*nPair;
 	int nVar = m*n + nAuxVar;
