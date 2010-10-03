@@ -10,6 +10,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <fstream>
+#include <stdlib.h>
 
 using namespace std;
 
@@ -91,7 +92,7 @@ int calcdd(int i, int j, int k, int m, int n){
 }
 
 //return a matrix of size subm x subn
-int ** randSubMatrix(const int **M, int m, int n, int subm, int subn){
+int ** randSubMatrix(int **M, int m, int n, int subm, int subn){
 	int ** retM = newInt2d(subm, subn);
 
 	if(subm > m || subn > n){

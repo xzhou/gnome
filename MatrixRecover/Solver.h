@@ -11,11 +11,14 @@
 #include <fstream>
 using namespace std;
 
+
+ILOSTLBEGIN
+
 class Solver {
 private:
 	ofstream logs;
 public:
-	Solver(string logFileName);
+	Solver(string logFileName = "solver.log");
 	virtual ~Solver();
 	int solve(int **M, int m, int n);	//return the number of solutions
 };

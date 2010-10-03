@@ -28,7 +28,7 @@ public:
 	int *LR;	//linear representation of R;
 
 	SnpMatrix(string fileName);
-	SnpMatrix(const int **M, int m, int n);
+	SnpMatrix(int **M, int m, int n);
 	virtual ~SnpMatrix();
 	void readMatrixFromFile(string fileName);
 	void calculateP();	//calculate single allele freq
