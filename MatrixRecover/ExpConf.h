@@ -15,6 +15,7 @@ public:
 	int nMax;	//min snps
 	int mMin;	//min individuals
 	int mMax;	//max individuals
+	int repeat;
 	ExpConf();
 	virtual ~ExpConf();
 };
