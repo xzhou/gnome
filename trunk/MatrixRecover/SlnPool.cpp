@@ -28,6 +28,15 @@ SlnPool::~SlnPool() {
 //return 0 if existed
 int SlnPool::addToPool(const int *M, int m, int n) {
 	string md = m2s(M, m, n);
+	return addToPool(md);
+}
+
+int SlnPool::addToPool(IloNumArray &M, int m, int n){
+	string s = m2s(M, m, n);
+	return addToPool(s);
+}
+
+int SlnPool::addToPool(string md){
 	if(solutionPool[md] == 0){
 		solutionPool[md] ++;
 		cout<<md<<endl;
@@ -38,12 +47,36 @@ int SlnPool::addToPool(const int *M, int m, int n) {
 	}
 }
 
-
 bool SlnPool::existInPool(string s) {
 	SLNMAP_ITR it;
 	it = solutionPool.find(s);
 	if(it == solutionPool.end()) return false;
 	return true;
+}
+
+string SlnPool::m2s(IloNumArray &M, int m, int n){
+	//convert a matrix to a	string
+	//convert
+	vector<string> ss(m);
+	for(int i = 0; i < m; i ++){
+		stringstream s;
+		for(int j = 0; j < n; j++)
+		{
+			s<<M[j*m+i];
+//			cout<<M[j*m+i];
+		}
+		s<<endl;
+		ss[i] = s.str();
+	}
+	sort(ss.begin(), ss.end());
+	//return matrix s
+	string	ms;
+	for(int i = 0; i < m; i ++ ) {
+		ms += ss[i];
+		cout<<ss[i]<<endl;
+	}
+	cout << ms << endl;
+	return ms;
 }
 
 string SlnPool::m2s(const int *M, int m, int n){
@@ -65,9 +98,9 @@ string SlnPool::m2s(const int *M, int m, int n){
 	string	ms;
 	for(int i = 0; i < m; i ++ ) {
 		ms += ss[i];
-		//cout<<ss[i]<<endl;
+		cout<<ss[i]<<endl;
 	}
-	//cout << ms << endl;
+	cout << ms << endl;
 	return ms;
 }
 

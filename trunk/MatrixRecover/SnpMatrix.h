@@ -18,7 +18,7 @@ using namespace std;
 
 class SnpMatrix {
 private:
-
+	SnpMatrix(string fileName);
 public:
 	int **M;	//binary matrix
 	int nInd;	//number of individuals, aka number rows of M
@@ -27,7 +27,6 @@ public:
 	int **R;	//pairwise, r
 	int *LR;	//linear representation of R;
 
-	SnpMatrix(string fileName);
 	SnpMatrix(int **M, int m, int n);
 	virtual ~SnpMatrix();
 	void readMatrixFromFile(string fileName);
@@ -36,6 +35,11 @@ public:
 	//int ** newInt2d(int m, int n);	//create 2d array of m row, n col
 	void clearMem();	//clear memories
 	void convLinearR();	//convert to one dimension pairwise R
+	SnpMatrix* randSubMatrix(int subm, int subn);
+	void printMatrix();
+
 };
+
+SnpMatrix* readMatrixFromFile(string fileName);
 
 #endif /* SNPMATRIX_H_ */

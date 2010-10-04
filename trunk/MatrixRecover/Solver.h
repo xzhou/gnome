@@ -21,7 +21,8 @@ private:
 public:
 	Solver(string logFileName = "solver.log");
 	virtual ~Solver();
-	int solve(SnpMatrix M);	//return the number of solutions
+	int solve(SnpMatrix &M);	//return the number of solutions, use incumbent call back
+	int solveAndFilter(SnpMatrix &M);	//solve, store all solution and filter
 };
 
 #endif /* SOLVER_H_ */
