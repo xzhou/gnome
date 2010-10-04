@@ -56,12 +56,17 @@ int main(int argc, char *argv[]) {
 
 	ofstream outputFile(outputFileName.c_str());
 
-	//the total size of a snp file
+	Solver slv;
+	//test code here
+	SnpMatrix* testMatrix = readMatrixFromFile("test.txt");
+	int n1 = slv.solve(*testMatrix);
+	int n2 = slv.solveAndFilter(*testMatrix);
+	cout<<n1<< "?=" <<n2<<endl;
+	return 0;
 
 	SnpMatrix* allMatrix = readMatrixFromFile(fileName);
-	Solver slv;
-	ExpConf conf;
 
+	ExpConf conf;
 	//random sample a matrix of size m and n and solve it, we need to explore the space
 	outputFile<<"m\tn\tsn\n"<<endl;
 	for(int m= conf.mMin; m < conf.mMax; m ++){
@@ -74,7 +79,8 @@ int main(int argc, char *argv[]) {
 			for(int r = 0; r < conf.repeat; r++){
 				SnpMatrix *subM = allMatrix->randSubMatrix(m, n);
 				int sn1 = slv.solve(*subM);
-				outputFile<<m<<"\t"<<n<<"\t"<<sn1<<endl;
+				int sn2 = slv.solveAndFilter(*subM);
+				outputFile<<m<<"\t"<<n<<"\t"<<sn1<<"?"<<sn2<<endl;
 				delete subM;
 			}
 		}

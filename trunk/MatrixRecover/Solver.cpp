@@ -39,6 +39,8 @@ int Solver::solve(SnpMatrix &M){
 	SlnPool *sp = new SlnPool();
 
 	IloEnv env;
+	ofstream c1("c1.log");
+	env.setOut(c1);
 	try {
 		IloModel model(env);	//create optimization model
 
@@ -83,7 +85,7 @@ int Solver::solve(SnpMatrix &M){
 			}
 			con.add(M.LR[i] <= rcons <= M.LR[i]);
 		}
-		cout<<"r constraints added"<<endl;
+		//cout<<"r constraints added"<<endl;
 
 		//add x_ij ~ axu_ijk constraints
 		for (int j = 0; j < n-1; j ++) {
@@ -104,7 +106,7 @@ int Solver::solve(SnpMatrix &M){
 				}
 			}
 		}
-		cout<<"pairwise constraint added"<<endl;
+		//cout<<"pairwise constraint added"<<endl;
 		model.add(con);
 		//export the model for verification
 		IloCplex cplex(model);
@@ -119,13 +121,14 @@ int Solver::solve(SnpMatrix &M){
 		//check the solutions
 		numSolution = cplex.getSolnPoolNsolns();
 		env.out()<<"the solution pool contains "<<numSolution<<" solutions"<<endl;
-
 		mycallback.end();
 		env.end();
+		sp->printPool(cout);
 	}
 	catch (IloException& e) {
 		cerr << "concert exception caught: " << e << endl;
 	}
+	c1.close();
 	env.end();
 	delete sp;
 	return numSolution;
@@ -141,10 +144,12 @@ int Solver::solveAndFilter(SnpMatrix &M){
 	int nVar = m*n + nAuxVar;
 
 	int numSolution = -1;
-
+	int nRealSln = 0;
 	SlnPool *sp = new SlnPool();
 
 	IloEnv env;
+	ofstream c2("c2.log");
+	env.setOut(c2);
 	try {
 		IloModel model(env);	//create optimization model
 
@@ -176,7 +181,7 @@ int Solver::solveAndFilter(SnpMatrix &M){
 			}
 			con.add(M.P[j] <= pcons <= M.P[j]);
 		}
-		cout<<"p constraints added"<<endl;
+		//cout<<"p constraints added"<<endl;
 		//add R constraints, e.g. c00 constraints
 		int base = m*n;
 		for(int i = 0; i < nPair; i ++){
@@ -189,7 +194,7 @@ int Solver::solveAndFilter(SnpMatrix &M){
 			}
 			con.add(M.LR[i] <= rcons <= M.LR[i]);
 		}
-		cout<<"r constraints added"<<endl;
+		//cout<<"r constraints added"<<endl;
 
 		//add x_ij ~ axu_ijk constraints
 		for (int j = 0; j < n-1; j ++) {
@@ -210,7 +215,7 @@ int Solver::solveAndFilter(SnpMatrix &M){
 				}
 			}
 		}
-		cout<<"pairwise constraint added"<<endl;
+		//cout<<"pairwise constraint added"<<endl;
 		model.add(con);
 		//export the model for verification
 		IloCplex cplex(model);
@@ -224,25 +229,25 @@ int Solver::solveAndFilter(SnpMatrix &M){
 
 		//check the solutions
 		numSolution = cplex.getSolnPoolNsolns();
-
-		SlnPool sp();
-
 		//TODO access solutions and remove duplicate solutions
 		for(int si = 0; si < numSolution; si++){
 			IloNumArray vals(env);
 			cplex.getValues(vals, x, si);
-
+			if(sp->addToPool(vals, m, n)){
+				nRealSln ++;
+			}
 		}
 
-		env.out()<<"the solution pool contains "<<numSolution<<" solutions"<<endl;
+		sp->printPool(cout);
 
-		mycallback.end();
+		env.out()<<"the solution pool contains "<<numSolution<<" solutions"<<endl;
 		env.end();
 	}
 	catch (IloException& e) {
 		cerr << "concert exception caught: " << e << endl;
 	}
+	c2.close();
 	env.end();
 	delete sp;
-	return numSolution;
+	return nRealSln;
 }

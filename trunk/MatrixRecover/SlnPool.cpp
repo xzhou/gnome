@@ -39,7 +39,7 @@ int SlnPool::addToPool(IloNumArray &M, int m, int n){
 int SlnPool::addToPool(string md){
 	if(solutionPool[md] == 0){
 		solutionPool[md] ++;
-		cout<<md<<endl;
+		//cout<<md<<endl;
 		return 1;
 	}else{
 		solutionPool[md] ++;
@@ -73,9 +73,9 @@ string SlnPool::m2s(IloNumArray &M, int m, int n){
 	string	ms;
 	for(int i = 0; i < m; i ++ ) {
 		ms += ss[i];
-		cout<<ss[i]<<endl;
+		//cout<<ss[i]<<endl;
 	}
-	cout << ms << endl;
+	//cout << ms << endl;
 	return ms;
 }
 
@@ -98,11 +98,19 @@ string SlnPool::m2s(const int *M, int m, int n){
 	string	ms;
 	for(int i = 0; i < m; i ++ ) {
 		ms += ss[i];
-		cout<<ss[i]<<endl;
+		//cout<<ss[i]<<endl;
 	}
-	cout << ms << endl;
+	//cout << ms << endl;
 	return ms;
 }
+
+void SlnPool::printPool(ostream &o){
+	SLNMAP_ITR it;
+	for(it = solutionPool.begin(); it != solutionPool.end(); it++){
+		o<<it->first<<"====\n"<<it->second<<endl<<endl;
+	}
+}
+
 
 string SlnPool::s2signature(string s) {
 	//calculate the hash value of a string
@@ -117,7 +125,7 @@ string SlnPool::s2signature(string s) {
 //		printf("%02x", result[i]);
 //		ss += tmp;
 //	}
-	cout<<ss;
+	//cout<<ss;
 	return ss;
 }
 
