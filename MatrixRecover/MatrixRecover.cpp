@@ -16,6 +16,7 @@
 #include "SolutionFilterCallback.h"
 #include "ExpConf.h"
 #include "Solver.h"
+#include "AuxFunc.h"
 
 ILOSTLBEGIN
 
@@ -23,6 +24,14 @@ ILOSTLBEGIN
 //we need a database to remember all unique solutions seen so far
 
 int main(int argc, char *argv[]) {
+
+//	//test code
+//	string x = "   1 1 1       ";
+//	trimSpace(x);
+//	cout<<x<<" "<<(x.length()+1)/2<<endl;
+//	return 0;
+
+
 	//read data from file
 	string fileName = "test80.txt";
 	string outputFileName = "solutionCount.log";
@@ -48,16 +57,13 @@ int main(int argc, char *argv[]) {
 	ofstream outputFile(outputFileName.c_str());
 
 	//the total size of a snp file
-	int **allMatrix = NULL;
-	int mAll = 0;
-	int nAll = 0;
 
-	allMatrix = readMatrixFromFile(fileName.c_str(), mAll, nAll);
-	print2d(allMatrix, mAll, nAll);
+	SnpMatrix* allMatrix = readMatrixFromFile(fileName);
 	Solver slv;
 	ExpConf conf;
 
 	//random sample a matrix of size m and n and solve it, we need to explore the space
+	outputFile<<"m\tn\tsn\n"<<endl;
 	for(int m= conf.mMin; m < conf.mMax; m ++){
 		int nBase = 2*m/log(m+1);
 		for(int k = 0; k < 2*conf.diff; k++){
@@ -66,13 +72,12 @@ int main(int argc, char *argv[]) {
 				n = 1;
 			}
 			for(int r = 0; r < conf.repeat; r++){
-				int **M1 = randSubMatrix(allMatrix, mAll, nAll, m, n);
-				SnpMatrix M(M1, m, n);
-				int sn1 = slv.solve(M);
-				outputFile<<"m="<<m<<"\tn="<<n<<"\tsn="<<sn1<<endl;
+				SnpMatrix *subM = allMatrix->randSubMatrix(m, n);
+				int sn1 = slv.solve(*subM);
+				outputFile<<m<<"\t"<<n<<"\t"<<sn1<<endl;
+				delete subM;
 			}
 		}
 	}
-
-	if(allMatrix) delete2d(allMatrix, mAll, nAll);
+	delete allMatrix;
 }

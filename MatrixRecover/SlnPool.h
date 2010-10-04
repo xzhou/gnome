@@ -24,8 +24,11 @@ class SlnPool {
 public:
 	SlnPool();
 	int addToPool(const int *M, int m, int n);
+	int addToPool(IloNumArray &M, int m, intn);
+	int addToPool(string s);
 	bool existInPool(string s);
 	string m2s(const int *M, int m, int n);
+	string m2s(IloNumArray &M, int m, int t);
 	string s2signature(string s);
 	
 	virtual ~SlnPool();

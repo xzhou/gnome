@@ -19,8 +19,7 @@ SnpMatrix::SnpMatrix(string fileName) {
 	P = NULL;
 	R = NULL;
 	LR = NULL;
-
-	readMatrixFromFile(fileName);
+	//readMatrixFromFile(fileName);
 }
 
 //initialized by
@@ -149,6 +148,77 @@ void SnpMatrix::convLinearR(){
 	}
 }
 
+//return a sub matrix of size subm X subn
+SnpMatrix* SnpMatrix::randSubMatrix(int subm, int subn){
+	//TODO need test case
+	int ** retM = newInt2d(subm, subn);
+	int m = nInd;
+	int n = nSnp;
 
+	if(subm > m || subn > n){
+		cerr<<"can not get a sub matrix larger than the original one"<<endl;
+		return NULL;
+	}
 
+	int mStart = rand()%(m-subm);
+	int nStart = rand()%(n-subn);
 
+	cout<<mStart<<":"<<nStart<<endl;
+	cout<<subm+mStart<<":"<<subn+nStart<<endl;
+
+	for(int i = 0; i < subm; i ++ ){
+		for(int j = 0; j < subn; j ++){
+			retM[i][j] = M[i+mStart][j+nStart];
+		}
+	}
+	return new SnpMatrix(retM, subm, subn);
+}
+
+void SnpMatrix::printMatrix(){
+	for(int i = 0; i < nInd; i ++){
+		for(int j = 0; j < nSnp; j ++){
+			printf("%1d ", M[i][j]);
+		}
+		printf("\n");
+	}
+}
+
+SnpMatrix* readMatrixFromFile(string fileName){
+//TODO improve the code so we don't have to deal with matrix allocation and deletion, wrap it in SnpMatrix
+	int nInd = 0;
+	int nSnp = 0;
+
+	ifstream snpFile(fileName.c_str());
+	string line;
+	if(snpFile.is_open()){
+		//count the number of lines
+		while(getline(snpFile, line)) {
+			nInd ++;
+			if(nInd == 1){
+				trimSpace(line);
+				nSnp = (line.length()+1)/2;
+			}
+		}
+	}
+	cout<<nInd<<"x"<<nSnp<<" matrix read"<<endl;
+
+	//dynamically allocate array;
+	int **M = new int*[nInd];
+	for(int i = 0; i < nInd; i++) {
+		M[i] = new int[nSnp];
+	}
+
+	snpFile.close();
+	ifstream snpFile1(fileName.c_str());
+	//read the file to the array
+	for(int i = 0; i < nInd; i ++) {
+		for(int j = 0; j < nSnp; j ++ ) {
+			snpFile1>>M[i][j];
+			//cout<<M[i][j]<<" ";
+		}
+		//cout<<endl;
+	}
+	snpFile.close();
+
+	return new SnpMatrix(M, nInd, nSnp);
+}
