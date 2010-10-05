@@ -85,8 +85,8 @@ int main(int argc, char *argv[]) {
 				if(sp1->getNumSln() != sp2->getNumSln()){
 					sp1->printPool(cout);
 					sp2->printPool(cout);
+					subM->printMatrix();
 				}
-
 				delete subM;
 			}
 		}
