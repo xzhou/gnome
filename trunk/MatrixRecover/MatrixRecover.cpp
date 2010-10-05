@@ -58,29 +58,35 @@ int main(int argc, char *argv[]) {
 
 	Solver slv;
 	//test code here
-	SnpMatrix* testMatrix = readMatrixFromFile("test.txt");
-	int n1 = slv.solve(*testMatrix);
-	int n2 = slv.solveAndFilter(*testMatrix);
-	cout<<n1<< "?=" <<n2<<endl;
-	return 0;
+//	SnpMatrix* testMatrix = readMatrixFromFile("test.txt");
+//	int n1 = slv.solve(*testMatrix);
+//	int n2 = slv.solveAndFilter(*testMatrix);
+//	cout<<n1<< "?=" <<n2<<endl;
+//	return 0;
 
 	SnpMatrix* allMatrix = readMatrixFromFile(fileName);
 
 	ExpConf conf;
 	//random sample a matrix of size m and n and solve it, we need to explore the space
 	outputFile<<"m\tn\tsn\n"<<endl;
-	for(int m= conf.mMin; m < conf.mMax; m ++){
+	for(int m = conf.mMin; m <= conf.mMax; m ++){
 		int nBase = 2*m/log(m+1);
-		for(int k = 0; k < 2*conf.diff; k++){
+		for(int k = 0; k <= 2*conf.diff; k++){
 			int n = nBase + k - conf.diff;
 			if(n < 0) {
 				n = 1;
 			}
 			for(int r = 0; r < conf.repeat; r++){
 				SnpMatrix *subM = allMatrix->randSubMatrix(m, n);
-				int sn1 = slv.solve(*subM);
-				int sn2 = slv.solveAndFilter(*subM);
-				outputFile<<m<<"\t"<<n<<"\t"<<sn1<<"?"<<sn2<<endl;
+				SlnPool* sp1 = slv.solve(*subM);
+				SlnPool* sp2 = slv.solveAndFilter(*subM);
+				outputFile<<m<<"\t"<<n<<"\t"<<sp1->getNumSln()<<"?"<<sp2->getNumSln()<<endl;
+				cout<<m<<"\t"<<n<<"\t"<<sp1->getNumSln()<<"?"<<sp2->getNumSln()<<endl;
+				if(sp1->getNumSln() != sp2->getNumSln()){
+					sp1->printPool(cout);
+					sp2->printPool(cout);
+				}
+
 				delete subM;
 			}
 		}

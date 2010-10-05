@@ -25,7 +25,7 @@ Solver::~Solver() {
 
 
 //this function return the number solutions for M
-int Solver::solve(SnpMatrix &M){
+SlnPool * Solver::solve(SnpMatrix &M){
 	//SnpMatrix M = SnpMatrix(M_in, m, n);
 	//create model, calculate the number of variables
 	int m = M.nInd;
@@ -123,18 +123,17 @@ int Solver::solve(SnpMatrix &M){
 		env.out()<<"the solution pool contains "<<numSolution<<" solutions"<<endl;
 		mycallback.end();
 		env.end();
-		sp->printPool(cout);
+		//sp->printPool(cout);
 	}
 	catch (IloException& e) {
 		cerr << "concert exception caught: " << e << endl;
 	}
 	c1.close();
 	env.end();
-	delete sp;
-	return numSolution;
+	return sp;
 }
 
-int Solver::solveAndFilter(SnpMatrix &M){
+SlnPool * Solver::solveAndFilter(SnpMatrix &M){
 	//SnpMatrix M = SnpMatrix(M_in, m, n);
 	//create model, calculate the number of variables
 	int m = M.nInd;
@@ -238,7 +237,7 @@ int Solver::solveAndFilter(SnpMatrix &M){
 			}
 		}
 
-		sp->printPool(cout);
+		//sp->printPool(cout);
 
 		env.out()<<"the solution pool contains "<<numSolution<<" solutions"<<endl;
 		env.end();
@@ -248,6 +247,5 @@ int Solver::solveAndFilter(SnpMatrix &M){
 	}
 	c2.close();
 	env.end();
-	delete sp;
-	return nRealSln;
+	return sp;
 }

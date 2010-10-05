@@ -47,6 +47,10 @@ int SlnPool::addToPool(string md){
 	}
 }
 
+int SlnPool::getNumSln(){
+	return solutionPool.size();
+}
+
 bool SlnPool::existInPool(string s) {
 	SLNMAP_ITR it;
 	it = solutionPool.find(s);
