@@ -32,6 +32,7 @@ public:
 	string m2s(const int *M, int m, int n);
 	string m2s(IloNumArray &M, int m, int t);
 	string s2signature(string s);
+	int getNumSln();
 	
 	void printPool(ostream &o);
 	virtual ~SlnPool();
