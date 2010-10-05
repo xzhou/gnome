@@ -17,6 +17,9 @@
 #include "ExpConf.h"
 #include "Solver.h"
 #include "AuxFunc.h"
+#include <sstream>
+
+int my_debug = 0;
 
 ILOSTLBEGIN
 
@@ -55,6 +58,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	ofstream outputFile(outputFileName.c_str());
+	ofstream slnLog("sln.log");
 
 	Solver slv;
 	//test code here
@@ -78,18 +82,24 @@ int main(int argc, char *argv[]) {
 			}
 			for(int r = 0; r < conf.repeat; r++){
 				SnpMatrix *subM = allMatrix->randSubMatrix(m, n);
-				SlnPool* sp1 = slv.solve(*subM);
+				//SlnPool* sp1 = slv.solve(*subM);
 				SlnPool* sp2 = slv.solveAndFilter(*subM);
-				outputFile<<m<<"\t"<<n<<"\t"<<sp1->getNumSln()<<"?"<<sp2->getNumSln()<<endl;
-				cout<<m<<"\t"<<n<<"\t"<<sp1->getNumSln()<<"?"<<sp2->getNumSln()<<endl;
-				if(sp1->getNumSln() != sp2->getNumSln()){
-					sp1->printPool(cout);
-					sp2->printPool(cout);
-					subM->printMatrix();
-				}
+				stringstream ss;
+				ss<<m<<"\t"<<n<<"\t"<<sp2->getNumSln()<<endl;
+				string tmp = ss.str();
+				cout<<tmp;
+				outputFile<<tmp<<endl;
+
+				slnLog<<"**********"<<endl;
+				slnLog<<tmp;
+				subM->printMatrix(slnLog);
+				slnLog<<"--"<<endl;
+				sp2->printPool(slnLog);
 				delete subM;
 			}
 		}
 	}
 	delete allMatrix;
+	outputFile.close();
+	slnLog.close();
 }

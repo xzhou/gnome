@@ -174,12 +174,12 @@ SnpMatrix* SnpMatrix::randSubMatrix(int subm, int subn){
 	return new SnpMatrix(retM, subm, subn);
 }
 
-void SnpMatrix::printMatrix(){
+void SnpMatrix::printMatrix(ostream &o){
 	for(int i = 0; i < nInd; i ++){
 		for(int j = 0; j < nSnp; j ++){
-			printf("%1d ", M[i][j]);
+			o<<M[i][j];
 		}
-		printf("\n");
+		o<<endl;
 	}
 }
 

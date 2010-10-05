@@ -36,7 +36,7 @@ public:
 	void clearMem();	//clear memories
 	void convLinearR();	//convert to one dimension pairwise R
 	SnpMatrix* randSubMatrix(int subm, int subn);
-	void printMatrix();
+	void printMatrix(ostream &o = cout);
 
 };
 
