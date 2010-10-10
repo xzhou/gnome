@@ -110,8 +110,9 @@ string SlnPool::m2s(const int *M, int m, int n){
 
 void SlnPool::printPool(ostream &o){
 	SLNMAP_ITR it;
+	int n = 0;
 	for(it = solutionPool.begin(); it != solutionPool.end(); it++){
-		o<<it->first<<"====\n"<<it->second<<endl<<endl;
+		o<<it->first<<"=="<<++n<<"=="<<it->second<<"=="<<endl<<endl;
 	}
 }
 
