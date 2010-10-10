@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
 	outputFile<<"m\tn\tsn\n"<<endl;
 	for(int m = conf.mMin; m <= conf.mMax; m ++){
 		int nBase = 4*m/log(m+1);
-		for(int k = conf.nMin; k <= conf.mMax; k++){
+		for(int k = conf.nMin; k <= conf.nMax; k++){
 			//int n = nBase + k - conf.diff;
 			int n = k;
 			if(n < 0) {
