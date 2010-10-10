@@ -10,9 +10,9 @@
 ExpConf::ExpConf() {
 	// TODO Auto-generated constructor stub
 	nMin = 9;
-	nMax = 10;
-	mMin = 7;
-	mMax = 30;
+	nMax = 30;
+	mMin = 9;
+	mMax = 10;
 	repeat = 10;
 	diff = 5;
 }
