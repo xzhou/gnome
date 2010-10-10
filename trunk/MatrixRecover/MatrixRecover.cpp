@@ -33,11 +33,13 @@ int main(int argc, char *argv[]) {
 //	trimSpace(x);
 //	cout<<x<<" "<<(x.length()+1)/2<<endl;
 //	return 0;
-
+	ExpConf conf("expconf");
+	cout<<conf.toString()<<endl;
+	string confstr = conf.toString();
 
 	//read data from file
 	string fileName = "test80.txt";
-	string outputFileName = "solutionCount.log";
+	string outputFileName = "slnct_"+confstr+".log";
 
 	int mLim = 0;
 	int nLim = 0;
@@ -58,7 +60,9 @@ int main(int argc, char *argv[]) {
 	}
 
 	ofstream outputFile(outputFileName.c_str());
-	ofstream slnLog("sln.log");
+	string name = "sln_v_"+confstr+".log";
+	ofstream slnLog(name.c_str());//verbose log
+
 
 	Solver slv;
 	//test code here
@@ -70,7 +74,7 @@ int main(int argc, char *argv[]) {
 
 	SnpMatrix* allMatrix = readMatrixFromFile(fileName);
 
-	ExpConf conf;
+
 	//random sample a matrix of size m and n and solve it, we need to explore the space
 	outputFile<<"m\tn\tsn\n"<<endl;
 	for(int m = conf.mMin; m <= conf.mMax; m ++){
