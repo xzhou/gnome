@@ -74,9 +74,10 @@ int main(int argc, char *argv[]) {
 	//random sample a matrix of size m and n and solve it, we need to explore the space
 	outputFile<<"m\tn\tsn\n"<<endl;
 	for(int m = conf.mMin; m <= conf.mMax; m ++){
-		int nBase = 2*m/log(m+1);
-		for(int k = 0; k <= 2*conf.diff; k++){
-			int n = nBase + k - conf.diff;
+		int nBase = 4*m/log(m+1);
+		for(int k = conf.nMin; k <= conf.mMax; k++){
+			//int n = nBase + k - conf.diff;
+			n = k;
 			if(n < 0) {
 				n = 1;
 			}
