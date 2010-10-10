@@ -8,6 +8,11 @@
 #ifndef EXPCONF_H_
 #define EXPCONF_H_
 
+#include <string>
+
+using namespace std;
+
+
 class ExpConf {
 
 public:
@@ -17,8 +22,10 @@ public:
 	int mMax;	//max individuals
 	int repeat;
 	int diff;	//difference to f(m);
-	ExpConf();
+	ExpConf(string fileName);
 	virtual ~ExpConf();
+	string toString();
+	void readConf(string fileName);
 };
 
 #endif /* EXPCONF_H_ */
