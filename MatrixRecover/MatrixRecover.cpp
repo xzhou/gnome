@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
 			for(int r = 0; r < conf.repeat; r++){
 				//SnpMatrix *subM = allMatrix->randSubMatrix(m, n);		//use human genome to generate matrix
 				//SlnPool* sp1 = slv.solve(*subM);
-				SnpMatrix *subM = new SnpMatrix(m, n);
+				SnpMatrix *subM = new SnpMatrix(m, n);	//use
 				SlnPool* sp2 = slv.solveAndFilter(*subM);
 				stringstream ss;
 				ss<<m<<"\t"<<n<<"\t"<<sp2->getNumSln()<<endl;
