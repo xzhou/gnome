@@ -42,6 +42,25 @@ SnpMatrix::SnpMatrix(int **inM, int m , int n){
 	convLinearR();
 }
 
+SnpMatrix::SnpMatrix(int m, int n){
+	//random generate a matrix
+	M = newInt2d(m, n);
+	for(int i = 0; i < m; i ++){
+		for(int j = 0; j < n; j ++){
+			M[i][j] = rand()%2;
+		}
+	}
+	nInd = m;
+	nSnp = n;
+	calculate();
+}
+
+void SnpMatrix::calculate(){
+	calculateP();
+	calculateR();
+	convLinearR();
+}
+
 void SnpMatrix::clearMem(){
 	if(M) delete2d(M, nInd, nSnp);
 	if(P) delete[] P;
@@ -171,7 +190,9 @@ SnpMatrix* SnpMatrix::randSubMatrix(int subm, int subn){
 			retM[i][j] = M[i+mStart][j+nStart];
 		}
 	}
-	return new SnpMatrix(retM, subm, subn);
+	SnpMatrix *retSnpM = new SnpMatrix(retM, subm, subn);
+	delete2d(retM, subm, subn); 	//we don't need this since the constructor will copy the data
+	return retSnpM;
 }
 
 void SnpMatrix::printMatrix(ostream &o){
