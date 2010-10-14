@@ -16,9 +16,9 @@ LIBFORMAT  = static_pic
 # the directories where CPLEX and CONCERT are installed.
 #
 #------------------------------------------------------------
-
-CPLEXDIR      = /home/xzhou/Applications/ILOG/CPLEX_Studio_AcademicResearch122/cplex
-CONCERTDIR    = /home/xzhou/Applications/ILOG/CPLEX_Studio_AcademicResearch122/concert
+ILOGHOME = ${ILOG_HOME}
+CPLEXDIR      = $(ILOGHOME)/CPLEX_Studio_AcademicResearch122/cplex
+CONCERTDIR    = $(ILOGHOME)/CPLEX_Studio_AcademicResearch122/concert
 # ---------------------------------------------------------------------
 # Compiler selection 
 # ---------------------------------------------------------------------
