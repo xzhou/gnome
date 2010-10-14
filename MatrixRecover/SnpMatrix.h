@@ -28,6 +28,7 @@ public:
 	int *LR;	//linear representation of R;
 
 	SnpMatrix(int **M, int m, int n);
+	SnpMatrix(int m, int n); //random matrix generator
 	virtual ~SnpMatrix();
 	void readMatrixFromFile(string fileName);
 	void calculateP();	//calculate single allele freq
@@ -37,7 +38,7 @@ public:
 	void convLinearR();	//convert to one dimension pairwise R
 	SnpMatrix* randSubMatrix(int subm, int subn);
 	void printMatrix(ostream &o = cout);
-
+	void calculate();
 };
 
 SnpMatrix* readMatrixFromFile(string fileName);
