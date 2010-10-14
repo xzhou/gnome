@@ -78,10 +78,14 @@ int main(int argc, char *argv[]) {
 	//random sample a matrix of size m and n and solve it, we need to explore the space
 	outputFile<<"m\tn\tsn\n"<<endl;
 	for(int m = conf.mMin; m <= conf.mMax; m ++){
-		int nBase = 4*m/log(m+1);
-		for(int k = conf.nMin; k <= conf.nMax; k++){
+		int nBase = 2*m/log(m+1);
+		int N[3];
+		N[0] = nBase/2;	//smaller space
+		N[1] = nBase;	//border space
+		N[2] = nBase*2;	//"unique" space
+		for(int k = 0; k < 3; k++){
 			//int n = nBase + k - conf.diff;
-			int n = k;
+			int n = N[k];
 			if(n < 0) {
 				n = 1;
 			}
