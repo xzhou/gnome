@@ -9,6 +9,8 @@
 #include <sstream>
 #include <fstream>
 #include <string>
+#include <time.h>
+#include "AuxFunc.h"
 
 using namespace std;
 
@@ -39,5 +41,7 @@ void ExpConf::readConf(string fileName){
 string ExpConf::toString(){
 	stringstream s;
 	s<<mMin<<"-"<<mMax<<":"<<nMin<<"-"<<nMax<<"x"<<repeat;
+	//add current time stamp
+	s<<" "<<getTime();
 	return s.str();
 }

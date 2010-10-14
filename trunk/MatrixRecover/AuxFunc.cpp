@@ -94,3 +94,17 @@ void trimSpace(string& str)
         str = str.substr( startpos, endpos-startpos+1 );
     }
 }
+
+string getTime(){
+	time_t t;
+	char timeStr[200];
+	struct tm *localTime;
+	t = time(NULL);
+	localTime = localtime(&t);
+	if(localTime == NULL){
+		perror("local time");
+		exit(EXIT_FAILURE);
+	}
+	strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", localTime);
+	return string(timeStr);
+}
