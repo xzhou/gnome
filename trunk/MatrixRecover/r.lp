@@ -5,19 +5,19 @@ Maximize
 Subject To
  id104: id1 + id2 + id3 + id4 + id5 + id6 + id7 + id8 + id9 + id10  = 6
  id106: id11 + id12 + id13 + id14 + id15 + id16 + id17 + id18 + id19 + id20
-         = 5
- id108: id21 + id22 + id23 + id24 + id25 + id26 + id27 + id28 + id29 + id30
-         = 5
- id110: id31 + id32 + id33 + id34 + id35 + id36 + id37 + id38 + id39 + id40
          = 4
+ id108: id21 + id22 + id23 + id24 + id25 + id26 + id27 + id28 + id29 + id30
+         = 6
+ id110: id31 + id32 + id33 + id34 + id35 + id36 + id37 + id38 + id39 + id40
+         = 5
  id112: id41 + id42 + id43 + id44 + id45 + id46 + id47 + id48 + id49 + id50
-         = 2
- id114: id51 + id52 + id53 + id54 + id55 + id56 + id57 + id58 + id59 + id60
          = 3
+ id114: id51 + id52 + id53 + id54 + id55 + id56 + id57 + id58 + id59 + id60
+         = 4
  id116: id61 + id62 + id63 + id64 + id65 + id66 + id67 + id68 + id69 + id70
-         = 2
+         = 3
  id118: id71 + id72 + id73 + id74 + id75 + id76 + id77 + id78 + id79 + id80
-         = 1
+         = 2
  id120: id81 + id82 + id83 + id84 + id85 + id86 + id87 + id88 + id89 + id90
          = 1
  id122: id91 + id92 + id93 + id94 + id95 + id96 + id97 + id98 + id99 + id100
