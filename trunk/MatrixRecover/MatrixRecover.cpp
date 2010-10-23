@@ -83,7 +83,7 @@ int main(int argc, char *argv[]) {
 		N[0] = nBase/2;	//smaller space
 		N[1] = nBase;	//border space
 		N[2] = nBase*2;	//"unique" space
-		for(int n = N[0]; n < N[2]; n++){
+		for(int n = conf.nMin; n <= conf.nMax; n++){
 			//int n = nBase + k - conf.diff;
 			//int n = N[k];
 			if(n < 0) {
