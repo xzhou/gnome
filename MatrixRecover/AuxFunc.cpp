@@ -11,9 +11,13 @@
 #include <stdio.h>
 #include <fstream>
 #include <stdlib.h>
+#include <math.h>
 
 using namespace std;
 
+void spaceRatio(int m, int n){
+
+}
 
 //allocate m by n matrix, initilized it with defaultVal
 int ** newInt2d(int m, int n, int defaultVal) {

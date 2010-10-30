@@ -21,6 +21,6 @@ void delete2d(int **M, int m, int n);
 void print2d(int **M, int m, int n);
 void trimSpace(string& s);
 string getTime();
-
+void spaceRatio(int m, int n);
 
 #endif /* AUXFUNC_H_ */
