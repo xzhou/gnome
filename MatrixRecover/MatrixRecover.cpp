@@ -87,8 +87,6 @@ int main(int argc, char *argv[]) {
 			//int n = nBase + k - conf.diff;
 			//int n = N[k];
 
-
-
 			if(n < 0) {
 				n = 1;
 			}
