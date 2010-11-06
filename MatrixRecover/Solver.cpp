@@ -384,7 +384,6 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolGap, 0);
-		IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
 		cplex.populate();
 
 		//check the solutions
