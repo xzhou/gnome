@@ -22,6 +22,7 @@ public:
 	int mMax;	//max individuals
 	int repeat;
 	int diff;	//difference to f(m);
+	ExpConf();
 	ExpConf(string fileName);
 	virtual ~ExpConf();
 	string toString();
