@@ -24,6 +24,8 @@ public:
 	virtual ~Solver();
 	SlnPool* solve(SnpMatrix &M);	//return the number of solutions, use incumbent call back
 	SlnPool* solveAndFilter(SnpMatrix &M);	//solve, store all solution and filter
+	SlnPool* fixAndSolve(SnpMatrix &M, int fixRow);
+
 };
 
 #endif /* SOLVER_H_ */

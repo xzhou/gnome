@@ -1,10 +1,12 @@
 function plotSpace()
-    N = 10;
-    ratio = [];
-    L = 2:20;
-    for i = 1:size(L,2)
-        ratio = [ratio, spaceRatioExact(N, L(i))];
+    close all;
+    for L = 8
+        figure;
+        ratio = [];
+        N = 2:50;
+        for i = 1:size(N,2)
+            ratio = [ratio, spaceRatioExact(N(i), L)];
+        end
+        line(N, ratio);
     end
-    plot(L, ratio);
-    
 end
