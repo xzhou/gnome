@@ -80,10 +80,9 @@ void Experiments::largeScaleFixRow(){
 	int repeat = conf.repeat;
 	*slnCtLog<<"m\tm\tfix\t#sln"<<endl;
 	for(int i = 0; i < repeat; i ++){
-		*slnCtLog<<"#repeat: "<<i<<end;
+		*slnCtLog<<"#repeat: "<<i<<endl;
 		SnpMatrix *M = new SnpMatrix(m, n);
 		for(int j = 0; j < m; j ++){
-			*slnCtLog<<
 			SlnPool* sp = slv.fixAndSolve(*M, j);
 			int nSln = sp->getNumSln();
 			*slnCtLog<<m<<"\t"<<n<<"\t"<<j<<"\t"<<nSln<<endl;
