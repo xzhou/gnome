@@ -28,5 +28,6 @@ ILOSTLBEGIN
 
 int main(int argc, char *argv[]) {
 	Experiments exp;
-	exp.largeScaleFixRow();
+	//exp.largeScaleFixRow();
+	exp.findMultipleSolution();
 }
