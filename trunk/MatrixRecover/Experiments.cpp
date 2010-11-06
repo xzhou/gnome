@@ -31,7 +31,8 @@ Experiments::Experiments() {
 
 
 Experiments::~Experiments() {
-
+	slnCtLog->close();
+	slnLog->close();
 }
 
 void Experiments::findMultipleSolution(){
@@ -77,15 +78,16 @@ void Experiments::largeScaleFixRow(){
 	int m = conf.mMin;
 	int n = conf.nMin;
 	int repeat = conf.repeat;
+	*slnCtLog<<"m\tm\tfix\t#sln"<<endl;
 	for(int i = 0; i < repeat; i ++){
+		*slnCtLog<<"#repeat: "<<i<<end;
 		SnpMatrix *M = new SnpMatrix(m, n);
 		for(int j = 0; j < m; j ++){
+			*slnCtLog<<
 			SlnPool* sp = slv.fixAndSolve(*M, j);
 			int nSln = sp->getNumSln();
-			*slnCtLog<<"Sln = "<<nSln<<endl;
-			if(nSln == 0){
-				*slnCtLog<<"fixed: j = "<<j<<endl;
-			}
+			*slnCtLog<<m<<"\t"<<n<<"\t"<<j<<"\t"<<nSln<<endl;
+			cout<<m<<"\t"<<n<<"\t"<<j<<"\t"<<nSln<<endl;
 		}
 	}
 }
