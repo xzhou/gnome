@@ -381,8 +381,6 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
 		IloCplex cplex(model);
 		cplex.exportModel("fixSolve.lp");
 
-		//debug
-		exit(0);
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolGap, 0);
