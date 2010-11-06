@@ -383,13 +383,28 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
 
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
-		cplex.setParam(IloCplex::SolnPoolGap, 0);
+		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
+//		cplex.setParam(IloCplex::PopulateLim, 1e15);	//the top of solutions
+//		cplex.setParam(IloCplex::PopulateSolLim, );
+//		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
+		//IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
 		cplex.populate();
 
 		//check the solutions
 		numSolution = cplex.getSolnPoolNsolns();
+		int nRealSln = 0;
+		//TODO access solutions and remove duplicate solutions
+		for(int si = 0; si < numSolution; si++){
+			IloNumArray vals(env);
+			cplex.getValues(vals, x, si);
+			if(sp->addToPool(vals, m, n)){
+				nRealSln ++;
+			}
+		}
+
+		//sp->printPool(cout);
+
 		env.out()<<"the solution pool contains "<<numSolution<<" solutions"<<endl;
-		mycallback.end();
 		env.end();
 	}
 	catch (IloException &e)
