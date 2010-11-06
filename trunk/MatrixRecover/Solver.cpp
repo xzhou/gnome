@@ -370,11 +370,11 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
 		//constraints for fixing variable
 		for(int i = 0; i < m; i ++){
 			IloExpr fcons(env);
-			for(int j = 0; i < m; j ++){
+			for(int j = 0; j < n; j ++){
 				int idx = fixVarBeginIndex + j*m+i;
 				fcons += x[idx]*1;
 			}
-			con.add(0<=fcons<=n);
+			con.add(0<=fcons<=n);	//for each row, at least one bit different.
 		}
 		model.add(con);
 

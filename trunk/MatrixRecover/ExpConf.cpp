@@ -14,6 +14,10 @@
 
 using namespace std;
 
+ExpConf::ExpConf(){
+
+}
+
 ExpConf::ExpConf(string fileName) {
 	// TODO Auto-generated constructor stub
 //	nMin = 9;

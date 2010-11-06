@@ -52,7 +52,7 @@ all:
 
 execute: all
 	make execute_cpp
-	
+
 CONCERTINCDIR = $(CONCERTDIR)/include
 CPLEXINCDIR   = $(CPLEXDIR)/include
 
@@ -73,7 +73,7 @@ JCFLAGS = $(JOPT)
 #  make execute  : to compile and execute the examples.
 #------------------------------------------------------------
 
-OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o SlnPool.o Solver.o ExpConf.o
+OBJS = MatrixRecover.o SnpMatrix.o AuxFunc.o SolutionFilterCallback.o SlnPool.o Solver.o ExpConf.o Experiments.o
 TARGET = MatrixRecover
 
 CPP_EX = $(TARGET)
@@ -88,7 +88,6 @@ execute_cpp: $(CPP_EX)
 # --------make target---------------------------
 $(TARGET): $(OBJS)
 	$(CCC) $(CCFLAGS) -o $(TARGET) $(OBJS) $(CCLNFLAGS)
-	
 #-------- make clean ---------------------------
 clean :
 	/bin/rm -rf *.o *~ *.class
