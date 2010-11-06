@@ -27,7 +27,21 @@ ILOSTLBEGIN
 //we need a database to remember all unique solutions seen so far
 
 int main(int argc, char *argv[]) {
+
+	string type = "";
+	if(argc > 1){
+		type = string(argv[1]);
+	}
+
 	Experiments exp;
-	//exp.largeScaleFixRow();
-	exp.findMultipleSolution();
+
+	if(type == "fix"){
+		cout<<"fixing and solve"<<endl;
+		exp.largeScaleFixRow();
+	}
+	if(type == "find"){
+		cout<<"find multiple solution"<<endl;
+		exp.findMultipleSolution();
+	}
+
 }
