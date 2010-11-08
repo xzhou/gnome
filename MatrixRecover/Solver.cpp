@@ -133,6 +133,8 @@ SlnPool * Solver::solveWithCallback(SnpMatrix &M){
 	return sp;
 }
 
+
+//find experiments
 SlnPool * Solver::solveAndFilter(SnpMatrix &M){
 	//SnpMatrix M = SnpMatrix(M_in, m, n);
 	//create model, calculate the number of variables
@@ -223,9 +225,9 @@ SlnPool * Solver::solveAndFilter(SnpMatrix &M){
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
-		cplex.setParam(IloCplex::PopulateLim, 1e15);	//the top of solutions
+		cplex.setParam(IloCplex::PopulateLim, 100000000000);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
-		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
+//		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
 		//IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
 		cplex.populate();
 
