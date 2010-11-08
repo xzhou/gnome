@@ -22,7 +22,7 @@ private:
 public:
 	Solver(string logFileName = "solver.log");
 	virtual ~Solver();
-	SlnPool* solve(SnpMatrix &M);	//return the number of solutions, use incumbent call back
+	SlnPool* solveWithCallback(SnpMatrix &M);	//return the number of solutions, use incumbent call back
 	SlnPool* solveAndFilter(SnpMatrix &M);	//solve, store all solution and filter
 	SlnPool* fixAndSolve(SnpMatrix &M, int fixRow);
 

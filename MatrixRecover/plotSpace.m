@@ -1,6 +1,6 @@
 function plotSpace()
     close all;
-    for L = 8
+    for L = 7:8
         figure;
         ratio = [];
         N = 2:50;

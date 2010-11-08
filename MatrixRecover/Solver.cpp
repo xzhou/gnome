@@ -25,7 +25,7 @@ Solver::~Solver() {
 
 
 //this function return the number solutions for M
-SlnPool * Solver::solve(SnpMatrix &M){
+SlnPool * Solver::solveWithCallback(SnpMatrix &M){
 	//SnpMatrix M = SnpMatrix(M_in, m, n);
 	//create model, calculate the number of variables
 	int m = M.nInd;
@@ -386,8 +386,7 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
 		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
 //		cplex.setParam(IloCplex::PopulateLim, 1e15);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
-//		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
-		//IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
+		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
 		cplex.populate();
 
 		//check the solutions
