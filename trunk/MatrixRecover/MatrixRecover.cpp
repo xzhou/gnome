@@ -39,9 +39,15 @@ int main(int argc, char *argv[]) {
 		cout<<"fixing and solve"<<endl;
 		exp.largeScaleFixRow();
 	}
-	if(type == "find"){
+	else if(type == "find"){
 		cout<<"find multiple solution"<<endl;
 		exp.findMultipleSolution();
 	}
+	else if(type == "true"){
+		//true snps sequence sampling
+		//TODO
+	}
+
+	return 0;
 
 }
