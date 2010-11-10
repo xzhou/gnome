@@ -225,7 +225,7 @@ SlnPool * Solver::solveAndFilter(SnpMatrix &M){
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
-		cplex.setParam(IloCplex::PopulateLim, 10000);	//the top of solutions
+		cplex.setParam(IloCplex::PopulateLim, 1000);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
 //		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
 		//IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
@@ -255,16 +255,22 @@ SlnPool * Solver::solveAndFilter(SnpMatrix &M){
 	return sp;
 }
 
+SlnPool* Solver::fixAndSolve(SnpMatrix &M, const int fixRow){
+	int *fixVar = M.M[fixRow];
+
+	return fixAndSolve(M, fixVar);
+}
+
 /*
  *	This method try to prove that given a solution,
  *  the attacker can not fix one of them using fix and solve method
  *	This
  */
-SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
+SlnPool* Solver::fixAndSolve(SnpMatrix &M, const int* fixVar){
 	int m = M.nInd;
 	int n = M.nSnp;
 
-	int *fixVar = M.M[fixRow];
+	//int *fixVar = M.M[fixRow];
 
 	int nPair = nchoosek(n, 2);		//number of pairwise constraints
 	int nAuxVar = m*nPair;			//auxiliary variable
@@ -386,9 +392,9 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, int fixRow){
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
-//		cplex.setParam(IloCplex::PopulateLim, 1e15);	//the top of solutions
+		cplex.setParam(IloCplex::PopulateLim, 100);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
-		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
+//		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
 		cplex.populate();
 
 		//check the solutions

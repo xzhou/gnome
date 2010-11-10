@@ -2,7 +2,7 @@ function slnSpaceDist(fileName)
 % this function extract the solution distribution
 close all;
 if nargin == 0
-    fileName = 'slnct_40-40:7-7x3000 2010-11-03 15:26:49.log';
+    fileName = 'slnct_40-40:7-7x3000 2010-11-08 22:44:46.log';
 end
     slnData = importdata(fileName);
     slnData = slnData.data;

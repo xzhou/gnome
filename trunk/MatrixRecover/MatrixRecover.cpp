@@ -43,9 +43,10 @@ int main(int argc, char *argv[]) {
 		cout<<"find multiple solution"<<endl;
 		exp.findMultipleSolution();
 	}
-	else if(type == "true"){
+	else if(type == "test"){
 		//true snps sequence sampling
-		//TODO
+		cout<<"testing code"<<endl;
+		exp.testCode();
 	}
 
 	return 0;

@@ -91,7 +91,18 @@ void Experiments::largeScaleFixRow(){
 	}
 }
 
-void samllScaleFixRow(int m, int n, int repeat){
+void Experiments::testCode(){
+	//this code verifies the correctness of the solver
+	SnpMatrix *M = new SnpMatrix("test.txt");
+	cout<<"testing with matrix"<<endl;
+	//M->printMatrix(cout);
+	Solver slv;
+	int x[3] = {1, 1, 1};
+	SlnPool *sp = slv.fixAndSolve(*M, x);
+	cout<<"solutions found: "<<sp->getNumSln()<<endl;
+}
+
+void Experiments::smallScaleFixRow(int m, int n, int repeat){
 
 }
 
