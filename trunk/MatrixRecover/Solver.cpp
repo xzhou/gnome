@@ -352,26 +352,26 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, const int* fixVar){
 		}
 		//adding fixing constraints
 		int fixVarBeginIndex = m*n + nAuxVar;	//beginning of aux variable
-		for(int i = 0; i < m; i ++){
-			for(int j = 0; j < n; j ++){
-				int x_ij = j*m + i;	//index variable
-				int fixVarIdx = fixVarBeginIndex + x_ij;
+		for(int i = 0; i < m; i ++){		//for each row
+			for(int j = 0; j < n; j ++){	//for each col
+				int x_ij = j*m+i;	//index variable
+				int fixVarIdx = fixVarBeginIndex + j*m+i;
 
 				IloExpr fixVarCons1(env);
-				fixVarCons1 = x[fixVarIdx] - x[x_ij] - fixVar[j];
-				con.add(-INFINITY <= fixVarCons1 <= 0);
+				fixVarCons1 = x[fixVarIdx] - x[x_ij];
+				con.add(-INFINITY <= fixVarCons1 <= fixVar[j]);
 
 				IloExpr fixVarCons2(env);
-				fixVarCons2 = x[fixVarIdx] + x[x_ij] + fixVar[j];
-				con.add(-INFINITY <= fixVarCons2 <= 2);
+				fixVarCons2 = x[fixVarIdx] + x[x_ij];
+				con.add(-INFINITY <= fixVarCons2 <= 2 - fixVar[j]);
 
 				IloExpr fixVarCons3(env);
-				fixVarCons3 = x[fixVarIdx] + x[x_ij] - fixVar[j];
-				con.add(0 <= fixVarCons3 <= INFINITY);
+				fixVarCons3 = x[fixVarIdx] + x[x_ij];
+				con.add(fixVar[j] <= fixVarCons3 <= INFINITY);
 
 				IloExpr fixVarCons4(env);
-				fixVarCons4 = x[fixVarIdx] - x[x_ij] + fixVar[j];
-				con.add(0 <= fixVarCons4 <= INFINITY);
+				fixVarCons4 = x[fixVarIdx] - x[x_ij];
+				con.add(-fixVar[j] <= fixVarCons4 <= INFINITY);
 			}
 		}
 
@@ -382,7 +382,7 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, const int* fixVar){
 				int idx = fixVarBeginIndex + j*m+i;
 				fcons += x[idx]*1;
 			}
-			con.add(0<=fcons<=n);	//for each row, at least one bit different.
+			con.add(1 <= fcons <= n);	//for each row, at least one bit different.
 		}
 		model.add(con);
 

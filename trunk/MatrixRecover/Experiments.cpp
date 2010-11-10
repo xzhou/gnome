@@ -100,6 +100,7 @@ void Experiments::testCode(){
 	int x[3] = {1, 1, 1};
 	SlnPool *sp = slv.fixAndSolve(*M, x);
 	cout<<"solutions found: "<<sp->getNumSln()<<endl;
+	sp->printPool(cout);
 }
 
 void Experiments::smallScaleFixRow(int m, int n, int repeat){
