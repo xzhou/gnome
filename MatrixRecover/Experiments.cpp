@@ -97,7 +97,7 @@ void Experiments::testCode(){
 	cout<<"testing with matrix"<<endl;
 	//M->printMatrix(cout);
 	Solver slv;
-	int x[3] = {1, 1, 1};
+	int x[3] = {1, 1, 0};
 	SlnPool *sp = slv.fixAndSolve(*M, x);
 	cout<<"solutions found: "<<sp->getNumSln()<<endl;
 	sp->printPool(cout);
