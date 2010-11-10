@@ -18,7 +18,7 @@ using namespace std;
 
 class SnpMatrix {
 private:
-	SnpMatrix(string fileName);
+
 public:
 	int **M;	//binary matrix
 	int nInd;	//number of individuals, aka number rows of M
@@ -27,6 +27,8 @@ public:
 	int **R;	//pairwise, r
 	int *LR;	//linear representation of R;
 
+
+	SnpMatrix(string fileName);		//read matrix from a file
 	SnpMatrix(int **M, int m, int n);
 	SnpMatrix(int m, int n); //random matrix generator
 	virtual ~SnpMatrix();

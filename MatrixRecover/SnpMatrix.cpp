@@ -19,7 +19,7 @@ SnpMatrix::SnpMatrix(string fileName) {
 	P = NULL;
 	R = NULL;
 	LR = NULL;
-	//readMatrixFromFile(fileName);
+	readMatrixFromFile(fileName);
 }
 
 //initialized by

@@ -24,7 +24,8 @@ public:
 	virtual ~Solver();
 	SlnPool* solveWithCallback(SnpMatrix &M);	//return the number of solutions, use incumbent call back
 	SlnPool* solveAndFilter(SnpMatrix &M);	//solve, store all solution and filter
-	SlnPool* fixAndSolve(SnpMatrix &M, int fixRow);
+	SlnPool* fixAndSolve(SnpMatrix &M, const int rowIndex);	//fix a row in M
+	SlnPool* fixAndSolve(SnpMatrix &M, const int* fixVar);	//fix arbitrary
 
 };
 

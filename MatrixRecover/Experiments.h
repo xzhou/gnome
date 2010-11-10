@@ -23,9 +23,11 @@ private:
 public:
 	Experiments();
 	virtual ~Experiments();
-	void largeScaleFixRow();
-	void smallScaleFixRow(int m, int n, int repeat);
+	void largeScaleFixRow();		//for large scale problem, we verify the difficulty
+	void smallScaleFixRow(int m, int n, int repeat);		//
 	void findMultipleSolution();
+
+	void testCode();
 };
 
 #endif /* EXPERIMENTS_H_ */
