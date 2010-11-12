@@ -2,7 +2,7 @@ function slnSpaceDist(fileName)
 % this function extract the solution distribution
 close all;
 if nargin == 0
-    fileName = 'slnct_40-40:7-7x3000 2010-11-08 22:44:46.log';
+    fileName = 'slnct_40-40:7-7x3000 2010-11-10 22:04:55.log';
 end
     slnData = importdata(fileName);
     slnData = slnData.data;
@@ -29,11 +29,12 @@ end
 %             filteredM = filteredM(filteredM(:,3)<outlierLim, :);
             
             maxSln = max(filteredM(:,3));
-            bins = 0:1:maxSln;
+            bins = 0:20:maxSln;
             h = figure;
             counts = histc(filteredM(:,3), bins);
-            bar(counts(2:end));
+            %bar(counts(2:end));
             ratio = spaceRatioExact(m, n);
+            hist(filteredM(:,3));
 
             %standard deviation
             s = std(filteredM(:,3));
@@ -45,16 +46,14 @@ end
             vline(avg, 'r', 'mean');
             vline(avg-s, 'g', '\sigma');
             vline(avg-2*s, 'g', '\sigma');
-            vline(ratio, 'y', 'est');
+            vline(ratio, 'b', 'est');
             
             title(titleStr);
             xlabel('number of solutions');
             ylabel('count');
             %ylim([0, size(filteredM,1)]);
             
-            titleStr
-            
-            saveas(h, [titleStr, '.pdf']);
+            saveas(h, [titleStr, '.epsc']);
         end
     end
 end
