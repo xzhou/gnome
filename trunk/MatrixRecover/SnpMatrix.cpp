@@ -44,6 +44,7 @@ SnpMatrix::SnpMatrix(int **inM, int m , int n){
 
 SnpMatrix::SnpMatrix(int m, int n){
 	//random generate a matrix
+	srand ( time(NULL) );
 	M = newInt2d(m, n);
 	for(int i = 0; i < m; i ++){
 		for(int j = 0; j < n; j ++){
@@ -169,6 +170,7 @@ void SnpMatrix::convLinearR(){
 
 //return a sub matrix of size subm X subn
 SnpMatrix* SnpMatrix::randSubMatrix(int subm, int subn){
+
 	//TODO need test case
 	int ** retM = newInt2d(subm, subn);
 	int m = nInd;
