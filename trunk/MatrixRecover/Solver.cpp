@@ -225,7 +225,7 @@ SlnPool * Solver::solveAndFilter(SnpMatrix &M){
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
-		cplex.setParam(IloCplex::PopulateLim, 500);	//the top of solutions
+		cplex.setParam(IloCplex::PopulateLim, POP_LIM);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
 //		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
 		//IloCplex::Callback mycallback = cplex.use(SolutionFilterCallback(env, x, m, n, sp));
@@ -392,7 +392,7 @@ SlnPool* Solver::fixAndSolve(SnpMatrix &M, const int* fixVar){
 		//set parameters before populate solutions
 		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
 		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
-		cplex.setParam(IloCplex::PopulateLim, 1000);	//the top of solutions
+		cplex.setParam(IloCplex::PopulateLim, POP_LIM);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
 //		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
 		cplex.populate();

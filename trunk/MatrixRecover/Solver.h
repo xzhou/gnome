@@ -13,6 +13,7 @@
 #include "SnpMatrix.h"
 using namespace std;
 
+#define POP_LIM 300
 
 ILOSTLBEGIN
 
