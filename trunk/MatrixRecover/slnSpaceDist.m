@@ -2,10 +2,14 @@ function slnSpaceDist(fileName)
 % this function extract the solution distribution
 close all;
 if nargin == 0
+    fileName = './find/merge.log';
     fileName = 'slnct_40-40:7-7x3000 2010-11-11 23:15:04.log';
 end
     slnData = importdata(fileName);
     slnData = slnData.data;
+    
+    offset = 0;
+    %offset = 238;   %different sampling rate
     
 %   [nInd, nSnp, probability]
     pMatrix = [];
@@ -27,14 +31,14 @@ end
             
 %             outlierLim = 40;
 %             filteredM = filteredM(filteredM(:,3)<outlierLim, :);
-            
+            filteredM(:,3) = filteredM(:,3) + offset;
             maxSln = max(filteredM(:,3));
-            bins = 0:20:maxSln;
+            bins = 0:10:maxSln;
             h = figure;
             counts = histc(filteredM(:,3), bins);
-            %bar(counts(2:end));
+            bar(counts(2:end));
             ratio = spaceRatioExact(m, n);
-            hist(filteredM(:,3));
+            %hist(filteredM(:,3));
 
             %standard deviation
             s = std(filteredM(:,3));
