@@ -427,8 +427,6 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 	int m = M.nInd;
 	int n = M.nSnp;
 
-	int *fixVar;
-
 	int nPair = nchoosek(n, 2);		//number of pairwise constraints
 	int nAuxVar = m*nPair;			//auxiliary variable
 	int nFixVar = m*n * m;				//fix all row
@@ -508,11 +506,10 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 			}
 		}
 
-
 		//adding fixing constraints for each row
 		for(int f = 0; f < m; f++){
 			int fixVarBeginIndex = m*n + nAuxVar + m*n*f;	//beginning of aux variable
-			fixVar = M[f];
+			int *fixVar = M.M[f];
 			for(int i = 0; i < m; i ++){		//for each row
 				for(int j = 0; j < n; j ++){	//for each col
 					int x_ij = j*m+i;	//index variable
@@ -539,6 +536,7 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 
 		//constraints for fixing variable
 		for(int f = 0; f < m; f++){
+			int fixVarBeginIndex = m*n + nAuxVar + f*m*n;
 			for(int i = 0; i < m; i ++){
 				IloExpr fcons(env);
 				for(int j = 0; j < n; j ++){
