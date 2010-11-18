@@ -27,7 +27,7 @@ public:
 	SlnPool* solveAndFilter(SnpMatrix &M);	//solve, store all solution and filter
 	SlnPool* fixAndSolve(SnpMatrix &M, const int rowIndex);	//fix a row in M
 	SlnPool* fixAndSolve(SnpMatrix &M, const int* fixVar);	//fix arbitrary
-
+	SlnPool* excludeAll(SnpMatrix &M);	//fix arbitrary
 };
 
 #endif /* SOLVER_H_ */
