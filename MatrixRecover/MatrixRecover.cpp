@@ -47,6 +47,9 @@ int main(int argc, char *argv[]) {
 		//true snps sequence sampling
 		cout<<"testing code"<<endl;
 		exp.testCode();
+	}else if(type == "exclude"){
+		cout<<"exclude code"<<endl;
+		exp.exclucde();
 	}
 
 	return 0;
