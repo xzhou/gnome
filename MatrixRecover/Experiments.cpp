@@ -121,6 +121,7 @@ void Experiments::exclucde(){
 			found = true;
 			//found one solution
 			M->printMatrix(cout);
+			cout<<"===sln==="<<endl;
 			sp->printPool(cout);
 		}
 	}

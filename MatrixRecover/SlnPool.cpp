@@ -39,7 +39,7 @@ int SlnPool::addToPool(IloNumArray &M, int m, int n){
 int SlnPool::addToPool(string md){
 	if(solutionPool[md] == 0){
 		solutionPool[md] ++;
-		//cout<<md<<endl;
+//		cout<<md<<endl;
 		return 1;
 	}else{
 		solutionPool[md] ++;
@@ -64,9 +64,12 @@ string SlnPool::m2s(IloNumArray &M, int m, int n){
 	vector<string> ss(m);
 	for(int i = 0; i < m; i ++){
 		stringstream s;
+		string sep = "";
 		for(int j = 0; j < n; j++)
 		{
+			s<<sep;
 			s<<M[j*m+i];
+			sep = " ";
 //			cout<<M[j*m+i];
 		}
 		s<<endl;
@@ -109,11 +112,13 @@ string SlnPool::m2s(const int *M, int m, int n){
 }
 
 void SlnPool::printPool(ostream &o){
+	o<<endl<<"begin sln print"<<endl;
 	SLNMAP_ITR it;
 	int n = 0;
 	for(it = solutionPool.begin(); it != solutionPool.end(); it++){
-		o<<it->first<<"=="<<++n<<"=="<<it->second<<"=="<<endl<<endl;
+		o<<it->first<<"=="<<++n<<"th=="<<it->second<<"=="<<endl<<endl;
 	}
+	o<<"end sln print"<<endl;
 }
 
 
