@@ -109,12 +109,12 @@ void Experiments::smallScaleFixRow(int m, int n, int repeat){
 
 void Experiments::exclucde(){
 	int m = conf.mMin;
-	int n = conf.nMax;
+	int n = conf.nMIn;
 	bool found = false;
 	Solver slv;
-//	while(!found){
-//		SnpMatrix *M = new SnpMatrix(m, n);
-		SnpMatrix *M = new SnpMatrix("test.txt");
+	while(!found){
+		SnpMatrix *M = new SnpMatrix(m, n);
+		//SnpMatrix *M = new SnpMatrix("test.txt");
 		SlnPool *sp = slv.excludeAll(*M);
 		if(sp->getNumSln() > 0)
 		{
@@ -123,6 +123,6 @@ void Experiments::exclucde(){
 			M->printMatrix(cout);
 			sp->printPool(cout);
 		}
-//	}
+	}
 }
 
