@@ -109,7 +109,7 @@ void Experiments::smallScaleFixRow(int m, int n, int repeat){
 
 void Experiments::exclucde(){
 	int m = conf.mMin;
-	int n = conf.nMIn;
+	int n = conf.nMin;
 	bool found = false;
 	Solver slv;
 	while(!found){
