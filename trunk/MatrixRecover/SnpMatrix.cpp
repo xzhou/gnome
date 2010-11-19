@@ -199,8 +199,10 @@ SnpMatrix* SnpMatrix::randSubMatrix(int subm, int subn){
 
 void SnpMatrix::printMatrix(ostream &o){
 	for(int i = 0; i < nInd; i ++){
+		string sep = "";
 		for(int j = 0; j < nSnp; j ++){
-			o<<M[i][j];
+			o<<sep<<M[i][j];
+			sep = " ";
 		}
 		o<<endl;
 	}

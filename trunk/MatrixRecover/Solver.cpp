@@ -437,8 +437,8 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 	SlnPool *sp = new SlnPool();
 
 	IloEnv env;
-	ofstream c2("c2.log");
-	env.setOut(cout);
+	ofstream c2("exclude.log");
+	env.setOut(c2);
 
 	try{
 		IloModel model(env);
@@ -565,10 +565,13 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 			IloNumArray vals(env);
 			cplex.getValues(vals, x);
 			sp->addToPool(vals, m, n);
-			M.printMatrix(cout);
-			sp->printPool(cout);
+			c2<<"original"<<endl;
+			M.printMatrix(c2);
+			c2<<"sln"<<endl;
+			sp->printPool(c2);
 		}else{
 			env.out()<<"sln status"<<cplex.getStatus()<<endl;
+			cout<<"fail"<<endl;
 		}
 		//print solutions
 //		//check the solutions
