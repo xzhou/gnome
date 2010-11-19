@@ -26,7 +26,7 @@ public:
 	void largeScaleFixRow();		//for large scale problem, we verify the difficulty
 	void smallScaleFixRow(int m, int n, int repeat);		//
 	void findMultipleSolution();
-
+	void exclucde();	//find exclude code
 	void testCode();
 };
 

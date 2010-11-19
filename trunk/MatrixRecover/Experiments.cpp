@@ -107,4 +107,22 @@ void Experiments::smallScaleFixRow(int m, int n, int repeat){
 
 }
 
+void Experiments::exclucde(){
+	int m = conf.mMin;
+	int n = conf.nMax;
+	bool found = false;
+	Solver slv;
+//	while(!found){
+//		SnpMatrix *M = new SnpMatrix(m, n);
+		SnpMatrix *M = new SnpMatrix("test.txt");
+		SlnPool *sp = slv.excludeAll(*M);
+		if(sp->getNumSln() > 0)
+		{
+			found = true;
+			//found one solution
+			M->printMatrix(cout);
+			sp->printPool(cout);
+		}
+//	}
+}
 

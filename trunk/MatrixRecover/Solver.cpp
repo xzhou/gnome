@@ -438,7 +438,7 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 
 	IloEnv env;
 	ofstream c2("c2.log");
-	env.setOut(c2);
+	env.setOut(cout);
 
 	try{
 		IloModel model(env);
@@ -550,27 +550,38 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 		model.add(con);
 
 		IloCplex cplex(model);
-		cplex.exportModel("fixSolve.lp");
+		cplex.exportModel("exclude.lp");
 
 		//set parameters before populate solutions
-		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
-		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
-		cplex.setParam(IloCplex::PopulateLim, 1000);	//the top of solutions
+//		cplex.setParam(IloCplex::SolnPoolIntensity, 4);	//enum all solutions
+//		cplex.setParam(IloCplex::SolnPoolAGap, 0.0);
+//		cplex.setParam(IloCplex::PopulateLim, 1000);	//the top of solutions
 //		cplex.setParam(IloCplex::PopulateSolLim, );
 //		cplex.setParam(IloCplex::SolnPoolCapacity, 10000000000);
-		cplex.populate();
+		bool found = cplex.solve();
 
-		//check the solutions
-		numSolution = cplex.getSolnPoolNsolns();
-		int nRealSln = 0;
-		//TODO access solutions and remove duplicate solutions
-		for(int si = 0; si < numSolution; si++){
+		if(found){
+			cout<<"found solution"<<endl;
 			IloNumArray vals(env);
-			cplex.getValues(vals, x, si);
-			if(sp->addToPool(vals, m, n)){
-				nRealSln ++;
-			}
+			cplex.getValues(vals, x);
+			sp->addToPool(vals, m, n);
+			M.printMatrix(cout);
+			sp->printPool(cout);
+		}else{
+			env.out()<<"sln status"<<cplex.getStatus()<<endl;
 		}
+		//print solutions
+//		//check the solutions
+//		numSolution = cplex.getSolnPoolNsolns();
+//		int nRealSln = 0;
+//		//TODO access solutions and remove duplicate solutions
+//		for(int si = 0; si < numSolution; si++){
+//			IloNumArray vals(env);
+//			cplex.getValues(vals, x, si);
+//			if(sp->addToPool(vals, m, n)){
+//				nRealSln ++;
+//			}
+//		}
 
 		//sp->printPool(cout);
 
@@ -582,7 +593,6 @@ SlnPool* Solver::excludeAll(SnpMatrix &M){
 		cerr<<"concert exception caught: "<< e << endl;
 	}
 
-	env.end();
 	return sp;
 }
 
